@@ -1,11 +1,10 @@
-To run the tests for a localization, use the following command:
+## How to run locally?
+* `go test k8s.io/website/content/<lang>/examples`
+  * Run the tests for a localization
+  * `go test k8s.io/website/content/en/examples`
+    * Run the examples placed under en folder
 
-```
-go test k8s.io/website/content/<lang>/examples
-```
-
-where `<lang>` is the two character representation of a language. For example:
-
-```
-go test k8s.io/website/content/en/examples
-```
+## Notes:
+* Problems:
+  * Problem1: "k8s.io/kubernetes/pkg/api/legacyscheme" does not exist
+    * Attempt1: `go get`
