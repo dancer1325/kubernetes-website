@@ -6,6 +6,7 @@
   * "registry.k8s.io"  TODO: Which one is the concrete url for ?
   * "e2e-test-images/agnhost:2.39"
     * [DockerHub](https://hub.docker.com/layers/opsdockerimage/e2e-test-images-agnhost/2.39/images/sha256-93c166faf53dba3c9c4227e2663ec1247e2a9a193d7b59eddd15244a3e331c3e)
+      * === application packaged in a Docker container
     * [agnhost](https://pkg.go.dev/k8s.io/kubernetes/test/images/agnhost#section-readme)
       * agnostic - host
       * Extendable CLI which outputs and behaves same in any underlying OS
