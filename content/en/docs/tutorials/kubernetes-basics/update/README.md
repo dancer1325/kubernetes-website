@@ -27,4 +27,6 @@
       * Different pod is hit / request
 * `kubectl rollout status deployments/DeploymentName`
   * Display the rollout status
+* `kubectl delete deployments/DeploymentName services/ServiceName`
+  * Delete all resources created through this tutorial
   
