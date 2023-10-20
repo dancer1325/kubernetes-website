@@ -1,0 +1,11 @@
+configMapGenerator:
+- name: generator-fromfiles-default
+  options:
+    labels:
+        generator: fromfiles-default
+  files:
+# Not able to find files in another ancestor
+#  - ../../files/game.properties
+#  - ../../files/ui.properties
+  - files/game.properties
+  - files/ui.properties

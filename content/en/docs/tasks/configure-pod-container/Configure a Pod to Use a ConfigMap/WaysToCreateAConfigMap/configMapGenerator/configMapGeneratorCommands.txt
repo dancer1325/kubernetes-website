@@ -1,0 +1,35 @@
+1. From files - Default key
+cat <<EOF >./kustomization.yaml \
+configMapGenerator: \
+- name: generator-fromfiles-default \
+  options:
+    labels:
+        generator: fromfiles-default
+  files:
+  - files/game.properties
+  - files/ui.properties
+EOF
+
+2. From files - Custom key
+cat <<EOF >./kustomization.yaml \
+configMapGenerator: \
+- name: generator-fromfiles-customkey \
+  options:
+    labels:
+        generator: fromfiles-customkey
+  files:
+  - customkeygame=files/game.properties
+  - customkeyui=files/ui.properties
+EOF
+
+3. From literals
+cat <<EOF >./kustomization.yaml \
+configMapGenerator: \
+- name: generator-fromliterals \
+  options:
+    labels:
+        generator: fromliterals
+  literals:
+  - special.how=very
+  - special.type=charm
+EOF

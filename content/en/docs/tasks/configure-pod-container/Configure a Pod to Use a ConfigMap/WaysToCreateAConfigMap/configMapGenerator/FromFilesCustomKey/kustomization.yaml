@@ -1,0 +1,11 @@
+configMapGenerator:
+- name: generator-fromfiles-customkey
+  options:
+    labels:
+        generator: fromfiles-customkey
+  files:
+# Not able to find files in another ancestor
+#  - customkeygame=../../files/game.properties
+#  - customkeyui=../../files/ui.properties
+    - customkeygame=files/game.properties
+    - customkeyui=files/ui.properties
