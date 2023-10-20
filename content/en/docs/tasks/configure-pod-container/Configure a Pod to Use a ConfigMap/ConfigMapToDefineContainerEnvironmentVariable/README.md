@@ -12,4 +12,9 @@
   * [busybox](https://hub.docker.com/_/busybox)
   * `kubectl create -f pod-several-configmap-envvariable.yaml`
   * `kubectl logs podName`
+    * Check logs of the pod, displaying environment variables -- also the already including in the container and no passed by us --
+* ConfigMapWithAllKeyValuePairs
+  * `kubectl create -f configmap.yaml`
+  * `kubectl create -f pod-allkeyvaluepairs-configmap.yaml`
+  * `kubectl logs podName`
     * Check logs of the pod, displaying environment variables -- also the already including in the container and no passed by us -- 
