@@ -29,4 +29,6 @@
 * ConfigMap data — to define → container environment variable
   * Check '1!ConfigMap/'
   * Check 'SeveralConfigMaps/'
+  * Check 'ConfigMapWithAllKeyValuePairs'
+  * Check 'UseAsPodCommands/'
 
