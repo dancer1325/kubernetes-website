@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  # name     RFC1123
+  # 1. invalid capital letter
+  # name: OneConfigMapDefineContainerEnvironmentVariable
+  # 2. invalid '_'
+  #name: one_configmap_define_container_environment_variable
+  name: one-configmap-define-container-environment-variable
+spec:
+  containers:
+    # 1. Invalid capital letters
+    #- name: OneConfigMapDefineContainerEnvironmentVariable-container
+    - name: one-configmap-define-container-environment-variable-container
+      image: registry.k8s.io/busybox
+      # command   Executed when the container starts
+      # /bin/sh   Shell interpreter
+      # -c        Flag to indicate that the following argument is a command
+      # env       It's a command which typically prints the environment variables container
+      command: [ "/bin/sh", "-c", "env" ]
+      # Define the environment variable
+      env:
+        - name: SPECIAL_LEVEL_KEY
+          valueFrom:
+            configMapKeyRef:
+              # The ConfigMap name containing the value you want to assign to SPECIAL_LEVEL_KEY
+              name: 1-configmap
+              # Specify the key associated with the value
+              key: special.how
+  restartPolicy: Never
