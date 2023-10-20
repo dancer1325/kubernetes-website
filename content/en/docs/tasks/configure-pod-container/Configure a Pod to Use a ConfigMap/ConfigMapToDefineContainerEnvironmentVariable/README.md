@@ -16,5 +16,6 @@
 * ConfigMapWithAllKeyValuePairs
   * `kubectl create -f configmap.yaml`
   * `kubectl create -f pod-allkeyvaluepairs-configmap.yaml`
+    * `envFrom` is the key
   * `kubectl logs podName`
     * Check logs of the pod, displaying environment variables -- also the already including in the container and no passed by us -- 
