@@ -27,8 +27,12 @@
 * `kubectl delete configmap -l 'keyName in (Value1,Value2, ...)'`
   * `kubectl delete configmap -l 'generator in (fromliterals,fromfiles-customkey,fromfiles-default)'`
 * ConfigMap data — to define → container environment variable
-  * Check '1!ConfigMap/'
-  * Check 'SeveralConfigMaps/'
-  * Check 'ConfigMapWithAllKeyValuePairs'
-  * Check 'UseAsPodCommands/'
+  * Check 'ConfigMapToDefineContainerEnvironmentVariable/'
+    * Check '1!ConfigMap/'
+    * Check 'SeveralConfigMaps/'
+    * Check 'ConfigMapWithAllKeyValuePairs'
+    * Check 'UseAsPodCommands/'
+* ConfigMap’s data - to populate -> Volume
+  * Check 'ConfigMapToPopulateAVolume/'
+    * Check 'simple/'
 
