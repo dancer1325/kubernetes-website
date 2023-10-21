@@ -35,4 +35,5 @@
 * ConfigMap’s data - to populate -> Volume
   * Check 'ConfigMapToPopulateAVolume/'
     * Check 'simple/'
+    * Check 'SpecifyPath/'
 

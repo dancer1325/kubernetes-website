@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-configmap-populate-volume-specifypath
+spec:
+  containers:
+    - name: container-pod-configmap-populate-volume-specifypath
+      image: registry.k8s.io/busybox
+      # command   Executed when the container starts
+      # /bin/sh   Shell interpreter
+      # -c        Flag to indicate that the following argument is a command
+      # cat /etc/config/keys       Display the files under /etc/config/keys
+      command: [ "/bin/sh","-c","cat /etc/config/keys" ]
+      volumeMounts:
+        - name: config-volume
+          # mountPath     Path in which to mount the volume
+          mountPath: /etc/config
+  volumes:
+    - name: config-volume
+      configMap:
+        # Provide the name of the ConfigMap containing the files you want
+        # to add to the container
+        name: special-config
+        # Path of some items to mount in the volume can be specified
+        items:
+          - key: SPECIAL_LEVEL
+            path: keys
+  restartPolicy: Never
