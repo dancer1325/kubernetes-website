@@ -37,4 +37,5 @@
     * Check 'simple/'
     * Check 'SpecifyPath/'
     * Check 'DelayProjectingToThePod/'
+    * Check 'DelayProjectingToThePodAsSubpath/'
 

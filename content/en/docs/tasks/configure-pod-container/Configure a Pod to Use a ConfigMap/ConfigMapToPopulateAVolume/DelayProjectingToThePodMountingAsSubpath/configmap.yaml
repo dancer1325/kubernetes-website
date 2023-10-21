@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-toupdate-subpath
+# In a pod, if you mount as volume -> it will be created as file
+data:
+  # Name of the file in the pod
+  # 1. First time
+#  app.properties: |
+#    key1:value1
+#    key2:value2
+  # 2. Updating data
+  app.properties: |
+    key1:updated-value1
+    key2:updated-value2
+
+
+
+
+
+
+
