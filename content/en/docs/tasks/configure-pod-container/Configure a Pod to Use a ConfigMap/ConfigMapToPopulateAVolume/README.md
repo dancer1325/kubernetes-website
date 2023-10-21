@@ -12,3 +12,10 @@
         * Solution: Run the previous command
   * `kubectl logs pod-configmap-populate-volume-specifypath`
     * Check the value of the configMap's data in that path is displayed
+* If you update a configMap mounted in a volume -> there is a delay to project to the pod
+  * `kubectl apply -f configmap.yaml`
+  * `kubectl apply -f pod.yaml`
+  * `kubectl exec -it pod-withadelay-updatingavolume -- cat /etc/config/app.properties`
+  * If you update the configMap's data & `kubectl apply -f configmap.yaml` & `kubectl exec -it pod-withadelay-updatingavolume -- cat /etc/config/app.properties`
+    * if you are fast enough (< delay time) -> the change is not projected in the pod !!
+    * if you leave a time (> delay time) -> the change is projected in the pod !!

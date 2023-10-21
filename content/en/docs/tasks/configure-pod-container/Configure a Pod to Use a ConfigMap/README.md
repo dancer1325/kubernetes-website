@@ -36,4 +36,5 @@
   * Check 'ConfigMapToPopulateAVolume/'
     * Check 'simple/'
     * Check 'SpecifyPath/'
+    * Check 'DelayProjectingToThePod/'
 
