@@ -38,6 +38,7 @@
     * Check 'SpecifyPath/'
     * Check 'DelayProjectingToThePod/'
     * Check 'DelayProjectingToThePodAsSubpath/'
+    * Check 'simpleViaDataAndBinaryData/'
 * As configuration for a component
 * `binaryData` field
 
