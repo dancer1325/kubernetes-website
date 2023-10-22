@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: special-config-dataandbinarydata
+  namespace: default
+data:
+  # key: value
+  SPECIAL_LEVEL: very
+  SPECIAL_TYPE: charm
+binaryData:
+  key1test: dHNldHZhbA==
+

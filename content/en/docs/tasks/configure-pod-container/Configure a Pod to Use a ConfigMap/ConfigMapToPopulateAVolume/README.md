@@ -25,3 +25,8 @@
   * `kubectl exec -it pod-withadelay-updatingavolume-subpath -- cat /etc/config/app.properties`
   * If you update the configMap's data & `kubectl apply -f configmap.yaml` & `kubectl exec -it pod-withadelay-updatingavolume-subpath -- cat /etc/config/app.properties`
     * Independently the time spent -> the change is not projected in the pod !!
+* simpleViaDataAndBinaryData
+  * `kubectl create -f configmap.yaml`
+  * `kubectl create -f pod.yaml`
+  * `kubectl logs pod-configmap-populate-volume-viadataandbinarydata`
+    * Check the logs of the pod, displaying the files -- which are the configMap's data and binaryData --

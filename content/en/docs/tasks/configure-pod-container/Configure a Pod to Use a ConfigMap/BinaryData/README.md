@@ -6,3 +6,7 @@
   * `kubectl apply -f configmap.yaml`
   * `kubectl get configmap -o jsonpath='{.binaryData}' configMapName`
     * Check binaryData's entries
+* 'DataAndBinaryData'
+  * `kubectl apply -f configmap.yaml`
+  * `kubectl get configmap -o jsonpath='{.binaryData}' configMapName`
+    * Check binaryData's entries

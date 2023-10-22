@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-binarydata
+# data  field is used
+data:
+  # Neither ASCII, nor UTF8 -> binary data, encoded Base64
+  # binary-data     data's key
+  binary-data-base64: SGVsbG8gV2VsdCB5b3UgYXJlIGNvbmRpdGlvbmVkIGluIFRlY2huaWNhbCBTdHJlYW0=
+  binary-data-ascii: "Hello, ASCII World!"
+  binary-data-ascii-utf8: "Hello, UTF-8 World! こんにちは、世界！"
+binaryData:
+  key1test: dHNldHZhbA==
