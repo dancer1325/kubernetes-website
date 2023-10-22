@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-optionalconfigmap
+spec:
+  containers:
+    - name: container--optionalconfigmap
+      image: gcr.io/google_containers/busybox
+      # command   Executed when the container starts
+      # /bin/sh   Shell interpreter
+      # -c        Flag to indicate that the following argument is a command
+      # env       It's a command which typically prints the environment variables container
+      command: ["/bin/sh", "-c", "env"]
+      # Define the environment variable
+      env:
+        - name: SPECIAL_LEVEL_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: optional-configmap
+              key: akey
+              optional: true # mark the variable as optional
+  restartPolicy: Never
