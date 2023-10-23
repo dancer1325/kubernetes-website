@@ -7,3 +7,6 @@ data:
   # key: value
   SPECIAL_LEVEL: very
   SPECIAL_TYPE: charm
+  22-222: other
+  # Next one is an invalid key
+  #$aaa: otherone
