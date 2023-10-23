@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-optionalconfigmap-byreference
+spec:
+  containers:
+    - name: container--optionalconfigmap-byreference
+      image: gcr.io/google_containers/busybox
+      # command   Executed when the container starts
+      # /bin/sh   Shell interpreter
+      # -c        Flag to indicate that the following argument is a command
+      # ls /etc/config       Display the content in the path /etc/config
+      command: ["/bin/sh", "-c", "ls /etc/config"]
+      volumeMounts:
+        - mountPath: /etc/config
+          name: optionalvolume
+  volumes:
+    - name: optionalvolume
+      configMap:
+        name: optionalconfigmap-byreference
+        optional: true # mark the source ConfigMap as optional
+  restartPolicy: Never

@@ -43,6 +43,15 @@
       * `kubectl create -f podOptionalConfigMap.yaml`
       * `kubectl logs pod-optionalconfigmap`
         * Since configMap and key are found -> environment variable added
-    * Case4: Non optinal configMap
+    * Case4: Non optional configMap
       * `kubectl create -f podNonOptionalConfigMap.yaml`
-        * Since it's non-optional and it doesn't exist -> not created the pod properly
+        * Since it's non-optional, and it doesn't exist -> not created the pod properly
+    * Case5: configMap by reference, no existing
+      * `kubectl create -f podOptionalConfigMapByReference.yaml`
+      * `kubectl logs pod-optionalconfigmap-byreference`
+        * Since configMap is optional, and it doesn't exist -> nothing displayed or existing in that path
+    * Case6: configMap by reference exists
+      * `kubectl create -f configmap.yaml`
+      * `kubectl create -f podOptionalConfigMapByReference.yaml`
+      * `kubectl logs pod-optionalconfigmap-byreference`
+        * Since configMap exists -> resources existing in that path, displayed 
