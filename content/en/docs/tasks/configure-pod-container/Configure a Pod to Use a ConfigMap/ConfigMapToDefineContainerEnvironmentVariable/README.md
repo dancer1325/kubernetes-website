@@ -54,4 +54,9 @@
       * `kubectl create -f configmap.yaml`
       * `kubectl create -f podOptionalConfigMapByReference.yaml`
       * `kubectl logs pod-optionalconfigmap-byreference`
-        * Since configMap exists -> resources existing in that path, displayed 
+        * Since configMap exists -> resources existing in that path, displayed
+* InvalidEnvironmentVariableNames
+  * `kubectl create -f pod.yaml`
+    * Pod started
+  * `kubectl logs invalid-env-pod`
+    * Display environment variables, skipping the invalid one
