@@ -41,4 +41,6 @@
     * Check 'simpleViaDataAndBinaryData/'
 * As configuration for a component
 * `binaryData` field
+* Restrictions
+
 
