@@ -8,3 +8,5 @@
   * `kubectl get pods -n namespace-b`
     * Check the pods in namespace-b
     * You realize that the previous pod is in "CreateContainerConfigError" status
+* StaticPodsWithConfigMap
+  * Check the own README.md
