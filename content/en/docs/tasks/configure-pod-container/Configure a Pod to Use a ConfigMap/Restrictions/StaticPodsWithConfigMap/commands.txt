@@ -1,0 +1,29 @@
+1. Create static pod without any configmap related information
+cat <<EOF >/etc/kubernetes/manifests/static-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+
+2. Create static pod using a configmap
+cat <<EOF >/etc/kubernetes/manifests/static-configmap-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-configmap-nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/nginx/nginx-config.conf
+      subPath: nginx-config.conf
+  volumes:
+  - name: config-volume
+    configMap:
+      name: restrictions-staticpods
