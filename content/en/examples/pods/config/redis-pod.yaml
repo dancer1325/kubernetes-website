@@ -6,6 +6,9 @@ spec:
   containers:
   - name: redis
     image: redis:5.0.4
+    # Next commands are to start redis server with a configuration file -- https://raw.githubusercontent.com/redis/redis/7.2/redis.conf
+    # redis-server /path/to/redis.conf
+    # That, here are split in 2 entries in command
     command:
       - redis-server
       - "/redis-master/redis.conf"
@@ -23,11 +26,16 @@ spec:
     - mountPath: /redis-master
       name: config
   volumes:
+    # spec.volumes[0]
     - name: data
       emptyDir: {}
+    # spec.volumes[1]
     - name: config
       configMap:
+        # ConfigMap previously created
         name: example-redis-config
+        # Path of some items to mount in the volume can be specified
         items:
         - key: redis-config
+          # File in which the configMap with the data content is created
           path: redis.conf
