@@ -1,3 +1,4 @@
+# Pod used as sample to check PSS at cluster level
 apiVersion: v1
 kind: Pod
 metadata:

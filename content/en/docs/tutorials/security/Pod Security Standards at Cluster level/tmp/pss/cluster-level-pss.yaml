@@ -1,0 +1,22 @@
+apiVersion: apiserver.config.k8s.io/v1
+# Consumed by the Pod Security Admission Controller to implement Pod Security Standards
+# https://kubernetes.io/docs/reference/config-api/apiserver-config.v1/
+kind: AdmissionConfiguration
+plugins:
+  - name: PodSecurity
+    configuration:
+      # Similar as passed via kubectl previously
+      apiVersion: pod-security.admission.config.k8s.io/v1
+      # https://github.com/kubernetes/pod-security-admission/blob/master/admission/api/types.go#L25
+      kind: PodSecurityConfiguration
+      defaults:
+        enforce: "baseline"
+        enforce-version: "latest"
+        audit: "restricted"
+        audit-version: "latest"
+        warn: "restricted"
+        warn-version: "latest"
+      exemptions:
+        usernames: []
+        runtimeClasses: []
+        namespaces: [kube-system]
