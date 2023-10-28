@@ -54,6 +54,10 @@
   * Pod.yaml got it from this documentation
   * Output displays that the pod is started but with a warning
 
+---
+
+* `kind delete cluster --name psa-with-cluster-pss` & `kind delete cluster --name psa-wo-cluster-pss`
+  * Delete the previous clusters
 
 # Via minikube
 * TODO: 
