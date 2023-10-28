@@ -18,7 +18,7 @@
     * `docker ps -a`
       * Identify the related to the Kind node
 * `docker exec -it DockerKindName sh`
-  * We will run sh commands into the docker container
+  * We will run sh commands into the docker container, which is a Linux OS
   * `apt update` & `apt install apparmor`
     * Update apt dependencies and install apparmor
   * `zgrep -i apparmor /proc/config.gz`
