@@ -7,6 +7,7 @@ metadata:
 spec:
   securityContext:
     seccompProfile:
+      # https://github.com/kubernetes/kubernetes/blob/master/pkg/apis/core/types.go#L3531
       type: Localhost
       localhostProfile: profiles/audit.json
   containers:
@@ -15,4 +16,5 @@ spec:
     args:
     - "-text=just made some syscalls!"
     securityContext:
+      # Let, if the container running in a pod is allowed to change its own process privilege
       allowPrivilegeEscalation: false
