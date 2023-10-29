@@ -28,17 +28,32 @@
 * `kubectl apply -f https://k8s.io/examples/pods/security/seccomp/ga/audit-pod.yaml`
   * Problems:
     * Problem1: "runtime: failed to create new OS thread (have 2 already; errno=22)"
-      * Attempt1: Update image to 1.0
-      * Solution: ?
+      * Solution: Update image to 1.0, and run here `kubectl apply -f ga/audit-pod.yaml`
 * `kubectl expose pod audit-pod --type NodePort --port 5678`
   * Create a NodePort service to access inside the control plane container
   * `kubectl get service audit-pod`
     * Check in the column PORT, with the structure <NodeIP>:<NodePortNumber>
-* `docker exec -it DockerNameOfTheKindClusterControlPlane curl localhost:NodePortNumber`
+* `docker exec -it DockerIdOfTheKindClusterControlPlane curl localhost:NodePortNumber`
   * Make curl request into the cluster to reach the service
-  * The outputs should match with the ones done in your local computer, since the syscalls belong to your own computer
-    * `tail -f /var/log/syslog | grep 'http-echo'`
-      * Run in our own computer that it matches with the previous outputs
+  * The outputs should match with the ones done in your local computer, since the syscalls belong to your own computer. Run in your own computer
+    * [MacOs] Problem: How to find it properly?
+      * Attempt1: `log show --predicate 'eventMessage contains[c] "just made some syscalls"'`
+      * Solution: `log show --predicate 'eventMessage contains[c] "http-echo"'`
+    * [Linux] `tail -f /var/log/syslog | grep 'http-echo'`
+      *  that it matches with the previous outputs
 
 # Create a Pod with a seccomp profile for syscall violated
 * `kubectl apply -f https://k8s.io/examples/pods/security/seccomp/ga/violation-pod.yaml`
+  * Problems:
+    * Problem1: "runtime: failed to create new OS thread (have 2 already; errno=22)"
+      * Solution: Update image to 1.0, and run here `kubectl apply -f ga/violation-pod.yaml`
+* `kubectl get pod violation-pod`
+  * The status is "CrashLoopBackOff" because "http-echo" require syscalls -> pod is rejected
+
+# Create a Pod with a seccomp profile for necessary syscall 
+* `kubectl apply -f https://k8s.io/examples/pods/security/seccomp/ga/fine-pod.yaml`
+  * Problems:
+    * Problem1: "runtime: failed to create new OS thread (have 2 already; errno=22)"
+      * Solution: Update image to 1.0, and run here `kubectl apply -f ga/fine-pod.yaml`
+    * Problem2: "server is listening on :5678 runtime: pipe failed with 1 fatal error: runtime: pipe failed"
+* TODO: Rest of the program

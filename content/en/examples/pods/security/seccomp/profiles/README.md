@@ -11,7 +11,7 @@
 * "SCMP_ACT_ERRNO"
   * If the containerized process make a system call matching the filter rule
   * [Reference link](https://man7.org/linux/man-pages/man3/seccomp_rule_add.3.html)
-  * [errno](errno)
+  * [errno](https://man7.org/linux/man-pages/man3/errno.3.html)
 
 # fine-grained.json
 * "architectures"
