@@ -1,0 +1,23 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+#name: kind-withseccompprofiles-default
+nodes:
+  # 2 nodes hosting the control plane and worker
+  - role: control-plane
+    image: kindest/node:v1.23.0@sha256:49824ab1727c04e56a21a5d8372a402fcd32ea51ac96a2706a12af38934f81ac
+    kubeadmConfigPatches:
+      - |
+        kind: JoinConfiguration
+        name: "control-plane-node"
+        nodeRegistration:
+          kubeletExtraArgs:
+            seccomp-default: "true"
+  - role: worker
+    image: kindest/node:v1.23.0@sha256:49824ab1727c04e56a21a5d8372a402fcd32ea51ac96a2706a12af38934f81ac
+    kubeadmConfigPatches:
+      - |
+        kind: JoinConfiguration
+        name: "worker-node"
+        nodeRegistration:
+          kubeletExtraArgs:
+            seccomp-default: "true"

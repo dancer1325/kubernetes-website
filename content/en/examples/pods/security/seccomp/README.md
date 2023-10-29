@@ -57,3 +57,17 @@
       * Solution: Update image to 1.0, and run here `kubectl apply -f ga/fine-pod.yaml`
     * Problem2: "server is listening on :5678 runtime: pipe failed with 1 fatal error: runtime: pipe failed"
 * TODO: Rest of the program
+
+# Ways to run RuntimeDefault as default seccomp profile for all workloads
+1. `kubelet --seccomp-default: true` / each node
+2. Via KubeletConfiguration -- TODO: Add configuration file --
+3. Via kind cluster configuration
+   * `kind create cluster --config=kind-seccompdefault.yaml`
+     * Problems:
+       * Problem1: During "Joining worker nodes" phase
+         * Attempt1: Delete all the previous clusters created under "./kube.config"
+         * Attempt2: `log show --predicate 'process == "kubelet"' --style syslog` check logs for kubelet, but nothing found
+         * Attempt3: `kind get clusters` & `kind delete cluster -n NameOfThePreviousClustersFound`
+         * Attempt4: Add custom name to the kind
+         * Solution: ?
+   * TODO: Complete the rest
