@@ -8,7 +8,6 @@ nodes:
     kubeadmConfigPatches:
       - |
         kind: JoinConfiguration
-        name: "control-plane-node"
         nodeRegistration:
           kubeletExtraArgs:
             seccomp-default: "true"
@@ -17,7 +16,6 @@ nodes:
     kubeadmConfigPatches:
       - |
         kind: JoinConfiguration
-        name: "worker-node"
         nodeRegistration:
           kubeletExtraArgs:
             seccomp-default: "true"
