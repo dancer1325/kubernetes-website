@@ -9,8 +9,9 @@ metadata:
     tier: backend
 spec:
   ports:
-  - port: 6379
-    targetPort: 6379
+  - port: 6379            # Service is listening on service's ClusterIp:Port
+    targetPort: 6379      # pod's ClusterIP:TargetPort
+    # Pods are filtered by the next selectors
   selector:
     app: redis
     role: leader

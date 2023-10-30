@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: redis-follower
   labels:
+    # Next are just simple key-value pairs to categorize your resources
     app: redis
     role: follower
     tier: backend
@@ -22,9 +23,12 @@ spec:
       containers:
       - name: follower
         image: gcr.io/google_samples/gb-redis-follower:v2
+        # https://console.cloud.google.com/gcr/images/google-samples/GLOBAL/gb-redis-follower:v2/details
         resources:
           requests:
+          # Minimum amount of resources needed by the container to run === Guaranteed to allocate by the container
             cpu: 100m
             memory: 100Mi
         ports:
         - containerPort: 6379
+          # Port number in which the container is accessible within the Pod

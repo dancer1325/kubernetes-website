@@ -7,13 +7,15 @@ metadata:
     app: guestbook
     tier: frontend
 spec:
-  # if your cluster supports it, uncomment the following to automatically create
-  # an external load-balanced IP for the frontend service.
+  # 1. LoadBalancer
+  # If your cluster supports it
   # type: LoadBalancer
-  #type: LoadBalancer
+  # 2. ClusterIP
+  # Default one if you don't specify anything
   ports:
-    # the port that this service should serve on
   - port: 80
+    # Service listening on this port
+    # Incoming traffic on this port -> service forwards to -> pods with the next selectors on the same port
   selector:
     app: guestbook
     tier: frontend

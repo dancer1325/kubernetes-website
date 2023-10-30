@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: redis-leader
   labels:
+    # Next are just simple key-value pairs to categorize your resources
     app: redis
     role: leader
     tier: backend
@@ -22,9 +23,12 @@ spec:
       containers:
       - name: leader
         image: "docker.io/redis:6.0.5"
+        # https://hub.docker.com/layers/library/redis/6.0.5/images/sha256-247208e594f3b0efb5d0974a5f064f15a21456d509d006268428baafbb0fa502?context=explore
         resources:
           requests:
+          # Minimum amount of resources needed by the container to run === Guaranteed to allocate by the container
             cpu: 100m
             memory: 100Mi
         ports:
         - containerPort: 6379
+          # Port number in which the container is accessible within the Pod

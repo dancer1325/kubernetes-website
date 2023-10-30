@@ -18,12 +18,15 @@ spec:
       containers:
       - name: php-redis
         image: gcr.io/google_samples/gb-frontend:v5
+        # https://console.cloud.google.com/gcr/images/google-samples/GLOBAL/gb-frontend:v5/details
         env:
         - name: GET_HOSTS_FROM
           value: "dns"
         resources:
           requests:
+          # Minimum amount of resources needed by the container to run === Guaranteed to allocate by the container
             cpu: 100m
             memory: 100Mi
         ports:
         - containerPort: 80
+          # Port number in which the container is accessible within the Pod

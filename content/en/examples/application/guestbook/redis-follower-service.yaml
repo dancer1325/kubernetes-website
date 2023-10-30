@@ -9,8 +9,9 @@ metadata:
     tier: backend
 spec:
   ports:
-    # the port that this service should serve on
   - port: 6379
+    # Service listening on this port
+    # Incoming traffic on this port -> service forwards to -> pods with the next selectors on the same port
   selector:
     app: redis
     role: follower
