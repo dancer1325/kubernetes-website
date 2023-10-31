@@ -10,6 +10,9 @@
     * [minikube]  `minikube start`
     * [kind] `kind create cluster`
 
+# Namespaces of Services
+* Follow the steps indicated in the own README.md
+
 # ForServices
 * TODO;
 
