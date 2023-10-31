@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+# Pod to check the records returned based on the IPv4 or IPv6 address
+metadata:
+  name: dns-lookup-pod
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command:
+        - sleep
+        - "3600"

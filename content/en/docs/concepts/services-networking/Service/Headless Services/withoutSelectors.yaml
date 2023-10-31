@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: headlessservice-withoutselectors
+spec:
+  clusterIP: None   # Indicating that there are Headless Service
+  # No selectors to route traffic to certain pods
+  ports:
+    - protocol: TCP
+      port: 80
+      # targetPort not defined -> port == targetPort
+      # TODO: Build a sample, showing incompatibilities / errors adding targetPort != Port -- targetPort: 8080 --
+      # https://github.com/kubernetes/kubernetes/issues/20488#issuecomment-178682638
