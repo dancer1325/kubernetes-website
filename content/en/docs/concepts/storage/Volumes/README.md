@@ -32,4 +32,9 @@
 * Different medium which backs it
   * `kubectl get storageclass PVCStorageClassName`
 * Content
-  * `kubectl describe configmap/my-config-map` vs (`kubectl exec -it pod-multivolume -- /bin/sh` + `ls /var/data` or `kubectl cp pod-multivolume:/var/data`) 
+  * `kubectl describe configmap/my-config-map` vs (`kubectl exec -it pod-multivolume -- /bin/sh` + `ls /var/data` or `kubectl cp pod-multivolume:/var/data`)
+## Volume within other volume
+### without using subpath
+* `kubectl apply -f VolumeWithinOtherVolume/pvc1.yaml` & `kubectl apply -f VolumeWithinOtherVolume/pvc2.yaml`
+* `kubectl apply -f VolumeWithinOtherVolume/withoutSubPath.yaml`
+  * pod not started ever, since it's not possible to mount directly a volume within other volume

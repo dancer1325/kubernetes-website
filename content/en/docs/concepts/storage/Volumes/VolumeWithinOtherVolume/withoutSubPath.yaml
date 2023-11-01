@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  volumes:
+    - name: pvc1
+      persistentVolumeClaim:
+        claimName: pvc-volume1
+    - name: pvc2
+      persistentVolumeClaim:
+        claimName: pvc-volume2
+  containers:
+    - name: my-container
+      image: your-image:your-tag
+      volumeMounts:
+        - mountPath: /mnt/volume1
+          name: pvc1
+        # Next volume is tried to be mounted into pvc1 directly, without succeed
+        - mountPath: /mnt/volume1/subpath
+          name: pvc2
