@@ -23,4 +23,4 @@
 ## If you restart a container with volumes - volumes are preserved
 * Update `spec.container[x].image` & `kubectl apply -f PodWithSeveralVolumes/pod.yaml`
   * pod is restarted
-  * volumes are preserved
+  * volumes are preserved -- `kubectl get pvc` & `kubectl get pods` --
