@@ -20,3 +20,7 @@
   * Although you run this command before, and not running till volumes are up, pod listens on
 
 # Containers
+## If you restart a container with volumes - volumes are preserved
+* Update `spec.container[x].image` & `kubectl apply -f PodWithSeveralVolumes/pod.yaml`
+  * pod is restarted
+  * volumes are preserved

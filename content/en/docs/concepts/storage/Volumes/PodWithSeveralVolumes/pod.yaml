@@ -5,7 +5,9 @@ metadata:
 spec:
   containers:
     - name: container-multivolume
-      image: nginx:latest
+      #image: nginx:latest
+      image: nginx:stable   # Update the pod, updating the tag
+      # command: ["sleep", "60"]    # Forbidden to update the pod with this change, once the pod is running
       # Where to mount the volumes into each container
       volumeMounts:
         - name: config-volume
