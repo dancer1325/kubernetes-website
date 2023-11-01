@@ -24,3 +24,12 @@
 * Update `spec.container[x].image` & `kubectl apply -f PodWithSeveralVolumes/pod.yaml`
   * pod is restarted
   * volumes are preserved -- `kubectl get pvc` & `kubectl get pods` --
+
+# Volume
+## Depending on type of volume
+* Different directory's structure
+  * `kubectl describe configmap/my-config-map` vs `kubectl describe pvc/my-pvc`
+* Different medium which backs it
+  * `kubectl get storageclass PVCStorageClassName`
+* Content
+  * `kubectl describe configmap/my-config-map` vs (`kubectl exec -it pod-multivolume -- /bin/sh` + `ls /var/data` or `kubectl cp pod-multivolume:/var/data`) 
