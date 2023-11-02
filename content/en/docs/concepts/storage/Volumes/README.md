@@ -38,3 +38,11 @@
 * `kubectl apply -f VolumeWithinOtherVolume/pvc1.yaml` & `kubectl apply -f VolumeWithinOtherVolume/pvc2.yaml`
 * `kubectl apply -f VolumeWithinOtherVolume/withoutSubPath.yaml`
   * pod not started ever, since it's not possible to mount directly a volume within other volume
+
+## Types of volume
+### ceph
+* Check https://github.com/dancer1325/examples/tree/master/volumes/cephfs
+* Check https://github.com/ceph/ceph-csi/tree/devel/examples
+### ConfigMap
+* Check https://github.com/dancer1325/website/blob/main/content/en/docs/tasks/configure-pod-container/Configure%20a%20Pod%20to%20Use%20a%20ConfigMap/README.md
+* Check 'TypesOfVolume/configMap'
