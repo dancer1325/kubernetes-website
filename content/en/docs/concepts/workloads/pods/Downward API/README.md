@@ -12,6 +12,8 @@
 
 # fieldRef
 * Pod-level fields
+* Check 'fieldRef/'
 
 # resourceFieldRef
 * Container-level fields
+* Check 'resourceFieldRef/'

@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-resourcefieldref-viadownwardvolumefiles
+spec:
+  volumes:
+    - name: pod-info
+      downwardAPI:
+        items:
+          - path: "limits_cpu"
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viadownwardvolumefiles
+              resource: limits.cpu
+          - path: "requests_cpu"
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viadownwardvolumefiles
+              resource: requests.cpu
+          - path: "limits_memory"
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viadownwardvolumefiles
+              resource: limits.memory
+          - path: "requests_memory"
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viadownwardvolumefiles
+              resource: requests.memory
+          # TODO: How to use hugepages to export it?
+#          - path: "limits_hugepages"
+#            resourceFieldRef:
+#              containerName: container-resourcefieldref-viadownwardvolumefiles
+#              resource: limits.hugepages-*
+#          - path: "requests_hugepages"
+#            resourceFieldRef:
+#              containerName: container-resourcefieldref-viadownwardvolumefiles
+#              resource: requests.hugepages-*
+#          - path: "requests_hugepages"
+#            resourceFieldRef:
+#              containerName: container-resourcefieldref-viadownwardvolumefiles
+#              resource: requests.hugepages-2Mi
+#              divisor: 1Mi  # Divisor to convert to MiB
+          - path: "limits_ephemeral_storage"
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viadownwardvolumefiles
+              resource: limits.ephemeral-storage
+          - path: "requests_ephemeral-storage"
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viadownwardvolumefiles
+              resource: requests.ephemeral-storage
+  containers:
+    - name: container-resourcefieldref-viadownwardvolumefiles
+      image: busybox
+      command: ["sh", "-c", "cat /etc/pod_info/limits_cpu && cat /etc/pod_info/requests_cpu && cat /etc/pod_info/limits_memory && cat /etc/pod_info/requests_memory && cat /etc/pod_info/limits_hugepages && cat /etc/pod_info/limits_ephemeral_storage && cat /etc/pod_info/requests_ephemeral-storage"]
+      volumeMounts:
+        - name: pod-info
+          mountPath: /etc/pod_info

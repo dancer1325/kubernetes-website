@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-resourcefieldref-viaenv
+  namespace: default
+spec:
+  containers:
+    - name: container-resourcefieldref-viaenv
+      image: busybox
+      command: ["sh", "-c", "env"]
+#      resources:
+#        limits:
+#          cpu: "8"
+#          hugepages-2Mi: "2048Mi"
+      env:
+        - name: LIMITS_CPU
+          valueFrom:
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viaenv
+              resource: limits.cpu
+        - name: REQUESTS_CPU
+          valueFrom:
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viaenv
+              resource: requests.cpu
+        - name: LIMITS_MEMORY
+          valueFrom:
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viaenv
+              resource: limits.memory
+        - name: REQUESTS_MEMORY
+          valueFrom:
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viaenv
+              resource: requests.memory
+        # TODO: How to use hugepages to export it?
+#        - name: LIMITS_HUGE_PAGES
+#          valueFrom:
+#            resourceFieldRef:
+#              containerName: container-resourcefieldref-viaenv
+#              resource: limits.hugepages-*
+#        - name: REQUESTS_HUGE_PAGES
+#          valueFrom:
+#            resourceFieldRef:
+#              containerName: container-resourcefieldref-viaenv
+#              resource: requests.hugepages-*
+        - name: LIMITS_EPHEMERAL_STORAGE
+          valueFrom:
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viaenv
+              resource: limits.ephemeral-storage
+        - name: REQUESTS_EPHEMERAL_STORAGE
+          valueFrom:
+            resourceFieldRef:
+              containerName: container-resourcefieldref-viaenv
+              resource: requests.ephemeral-storage
+
