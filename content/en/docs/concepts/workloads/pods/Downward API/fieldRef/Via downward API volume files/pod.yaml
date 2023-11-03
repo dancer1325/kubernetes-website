@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: podfields-viadownwardvolumefiles
+  annotations:
+    description: "pod to expose via downward API volume files"
+  labels:
+    environment: test
+spec:
+  volumes:
+    - name: pod-info
+      downwardAPI:
+        items:
+          - path: "metadata_labels"
+            fieldRef:
+              fieldPath: metadata.labels
+          - path: "metadata_annotations"
+            fieldRef:
+              fieldPath: metadata.annotations
+  containers:
+    - name: container-viadownwardvolumefiles
+      image: busybox
+      #command: ["sh", "-c", "cat /etc/pod_info/metadata_labels"]
+      command: ["sh", "-c", "cat /etc/pod_info/metadata_labels && cat /etc/pod_info/metadata_annotations"]
+#      command:
+#        - "sh"
+#        - "-c"
+#        - "cat /etc/pod_info/metadata_labels && cat /etc/pod_info/metadata_annotations"
+      volumeMounts:
+        - name: pod-info
+          mountPath: /etc/pod_info

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: podfields-bothfields-viaenv
+  namespace: default
+  annotations:
+    description: "pod to expose via env variables"
+    mechanisms: "both"
+  labels:
+    purpose: "best"
+    environment: test
+spec:
+  containers:
+    - name: container-bothfields-viaenv
+      image: busybox
+      command: ["sh", "-c", "env"]
+      env:
+        - name: METADATA_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: METADATA_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: METADATA_UID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
+        - name: METADATA_ANNOTATION_DESCRIPTION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['description']
+        - name: METADATA_LABEL_PURPOSE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['purpose']
+
