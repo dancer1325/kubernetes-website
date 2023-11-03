@@ -46,3 +46,5 @@
 ### ConfigMap
 * Check https://github.com/dancer1325/website/blob/main/content/en/docs/tasks/configure-pod-container/Configure%20a%20Pod%20to%20Use%20a%20ConfigMap/README.md
 * Check 'TypesOfVolume/configMap'
+### downward API
+* Check https://github.com/dancer1325/website/tree/main/content/en/docs/concepts/workloads/pods/Downward%20API
