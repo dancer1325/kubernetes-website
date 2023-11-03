@@ -32,3 +32,8 @@ Certain pod's fields can just be accessed via a determined way
     * Problem1: It doesn't work since the container is continuously restarting
 * `kubectl logs pods/podfields-viadownwardvolumefiles -c container-viadownwardvolumefiles`
   * Check the logs of the container, with the added by the entry command of the container
+
+# Notes
+* For any of the previous fields exposed, if you `kubectl exec -it PodName sh`
+  * `rm /PathOfTheFieldsExported` -> you can NOT remove it, since it's READ-ONLY file system
+  * if you check the format of the files with the fields exported is plain text
