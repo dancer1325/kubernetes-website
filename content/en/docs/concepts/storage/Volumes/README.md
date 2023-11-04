@@ -50,3 +50,5 @@
 * Check https://github.com/dancer1325/website/tree/main/content/en/docs/concepts/workloads/pods/Downward%20API
 ### emptyDir
 * Check 'TypesOfVolume/emptyDir'
+### fibreChannel
+* Check https://github.com/dancer1325/examples/tree/master/staging/volumes/fibre_channel
