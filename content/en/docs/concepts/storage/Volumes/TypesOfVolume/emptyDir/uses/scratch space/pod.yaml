@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: scratch-space-pod
+spec:
+  containers:
+    - name: container-1
+      image: busybox
+      # Use emptyDir volume to store temporary information
+      command: ["sh", "-c", "echo 'Temporary data from Container 1' > /scratch-space/data.txt"]
+      volumeMounts:
+        - name: scratch-volume
+          mountPath: /scratch-space
+
+    - name: container-2
+      image: busybox
+      # Retrieve the information stored by the other contaier
+      command: ["sh", "-c", "cat /scratch-space/data.txt"]
+      volumeMounts:
+        - name: scratch-volume
+          mountPath: /scratch-space
+
+  volumes:
+    - name: scratch-volume
+      emptyDir: {}

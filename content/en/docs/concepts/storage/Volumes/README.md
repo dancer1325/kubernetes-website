@@ -48,3 +48,5 @@
 * Check 'TypesOfVolume/configMap'
 ### downward API
 * Check https://github.com/dancer1325/website/tree/main/content/en/docs/concepts/workloads/pods/Downward%20API
+### emptyDir
+* Check 'TypesOfVolume/emptyDir'

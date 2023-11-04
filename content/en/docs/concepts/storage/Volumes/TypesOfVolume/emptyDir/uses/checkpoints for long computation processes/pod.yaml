@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: checkpoint-pod
+spec:
+  containers:
+    - name: computation-container
+      image: python:3.9
+      # 1. via args
+      #command: ["python"]
+      # python -u   comes from unbuffered mode === data is immediately written to the console as soon as it's produced
+      # TODO: Error in the next args
+      # args: ["-u", "-c", "import time; n = 0; while True: print(f'Iteration {n}'); n += 1; time.sleep(5)"]
+      # 2. via command all
+#      command:
+#        - python
+#        - computation.py
+      command: ["python", "computation.py"]
+      volumeMounts:
+        - name: checkpoint-volume
+          #mountPath: /
+          mountPath: /data
+          #subPath: computation.py
+
+  volumes:
+    - name: checkpoint-volume
+      emptyDir: {}
