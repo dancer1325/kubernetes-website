@@ -52,3 +52,5 @@
 * Check 'TypesOfVolume/emptyDir'
 ### fibreChannel
 * Check https://github.com/dancer1325/examples/tree/master/staging/volumes/fibre_channel
+### hostPath
+* Check 'TypesOfVolume/hostPath'

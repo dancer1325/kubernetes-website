@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  containers:
+    # Switch to another image which doesn't present problem1
+    #- image: registry.k8s.io/test-webserver
+    #- image: busybox0@sha256:1fa89c01cd0473cedbd1a470abb8c139eeb80920edf1bc55de87851bfb63ea11
+    - image: busybox:latest
+      name: test-container
+      command:
+        - sleep
+        - "3600"
+      imagePullPolicy: IfNotPresent
+#      ports:
+#        - containerPort: 90
+      volumeMounts:
+        - mountPath: /test-pd
+          name: test-volume
+          # Recommendation to be safer
+          readOnly: true
+#      readinessProbe:
+#        httpGet:
+#          path: /healthz
+#          port: 8080
+#        initialDelaySeconds: 5  # Delay before the first probe
+#        periodSeconds: 60       # How often the probe is executed
+#        timeoutSeconds: 10       # Maximum time for the probe to respond
+#      livenessProbe:
+#        httpGet:
+#          path: /healthz
+#          port: 8080
+#        initialDelaySeconds: 20  # Delay before the first probe
+#        periodSeconds: 30       # How often the probe is executed
+#        timeoutSeconds: 10        # Maximum time for the probe to respond
+#      resources:
+#        limits:
+#          cpu: "4"
+#        requests:
+#          cpu: '3'
+  volumes:
+    - name: test-volume
+      hostPath:
+        # directory location on host
+        #path: /data
+        path: /Users/dancer13/Pictures

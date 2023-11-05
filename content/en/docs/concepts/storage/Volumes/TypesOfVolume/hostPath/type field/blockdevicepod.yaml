@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-blockdevice
+spec:
+  containers:
+    - image: busybox:latest
+      name: container-blockdevice
+      command:
+        - sleep
+        - "3600"
+      volumeMounts:
+        - mountPath: /test-pd
+          name: test-volume
+  volumes:
+    - name: test-volume
+      hostPath:
+        # directory location on host
+        path: /Users/dancer13/Pictures
+        type: BlockDevice # # Check if a block device with name defined in "mountPath" on the container

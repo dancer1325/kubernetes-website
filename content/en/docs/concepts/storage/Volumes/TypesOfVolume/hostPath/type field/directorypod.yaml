@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-directory
+spec:
+  containers:
+    - image: busybox:latest
+      name: container-directory
+      command:
+        - sleep
+        - "3600"
+      volumeMounts:
+        - mountPath: /test-pd
+          name: test-volume
+  volumes:
+    - name: test-volume
+      hostPath:
+        # directory location on host
+        path: /Users/dancer13/Pictures/directory
+        type: Directory   # Check if a directory with the name defined in "mountPath" exists on the container
