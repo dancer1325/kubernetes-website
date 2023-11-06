@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem  # Default value. If "Block" === local volume -- is exposed as -- raw block device
+  accessModes:    # for the volume
+    - ReadWriteOnce
+  # persistentVolumeReclaimPolicy     === if the volume is released -> what to do
+  # Retain    === If the PVC is deleted -> data are retained
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage   # random name
+  # For local volumes -> recommended to create a custom StorageClass object,
+  # specifying volumeBindingMode == WaitForFirstConsumer
+  local:    # local volume
+    path: /Users/dancer13/Pictures
+  # nodeAffinity    -- used by the Kubernetes scheduler to schedule the pods -- to the -> correct node
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          #- kind-control-plane
+            - kind-worker

@@ -54,3 +54,8 @@
 * Check https://github.com/dancer1325/examples/tree/master/staging/volumes/fibre_channel
 ### hostPath
 * Check 'TypesOfVolume/hostPath'
+### iSCSI
+* Check https://github.com/dancer1325/examples/tree/master/volumes/iscsi
+### local
+* Check 'TypesOfVolume/local'
+* Check https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner/tree/master/examples
