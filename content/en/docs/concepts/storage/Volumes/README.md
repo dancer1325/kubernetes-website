@@ -59,3 +59,5 @@
 ### local
 * Check 'TypesOfVolume/local'
 * Check https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner/tree/master/examples
+### nfs
+* Check https://github.com/dancer1325/examples/tree/master/staging/volumes/nfs
