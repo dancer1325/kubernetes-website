@@ -1,0 +1,14 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: standard
+# if PVC are made -> create the PV
+provisioner: kubernetes.io/aws-ebs    # suitable for EBS volumes
+# parameter for the provisioner
+parameters:
+  type: gp2   # general purpose SSD volumes
+# Once the volume is released -> how to handle it
+reclaimPolicy: Delete   # If the PVC is deleted -> PV is deleted
+mountOptions:
+  - debug
+  - nolock

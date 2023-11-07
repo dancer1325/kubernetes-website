@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  # minimum resources that the volume should have
+  resources:
+    requests:
+      storage: 1Gi
+  # Common name for the default storage class in many managed Kubernetes services (GKE, EKS)
+  # abstraction from the storage class (=== storage infrastructure) just required the name
+  storageClassName: standard
