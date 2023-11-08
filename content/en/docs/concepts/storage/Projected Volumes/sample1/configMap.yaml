@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myconfigmap
+data:
+  # As key:value pairs
+  max_replicas: "5"
+  log_level: "INFO"
+  feature_flag: "true"
+  config: "true"

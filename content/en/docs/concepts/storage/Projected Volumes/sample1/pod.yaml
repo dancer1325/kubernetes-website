@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-test
+  labels:
+    label1: "value1"
+spec:
+  containers:
+    - name: container-test
+      image: busybox:1.28
+      command: ["sleep", "3600"]
+      volumeMounts:
+        - name: all-in-one
+          mountPath: "/projected-volume"
+          readOnly: true
+      resources:
+        limits:
+          cpu: "750m"
+  volumes:
+    - name: all-in-one
+      projected:
+        sources:
+          - secret:
+              name: mysecret    # === secretName in Kind Secret
+              items:
+                - key: username
+                  path: my-group/my-username  # sub path under mountPath to mount secret
+          - downwardAPI:
+              items:
+                - path: "labels"  # Add file under the mountPath
+                  fieldRef:
+                    fieldPath: metadata.labels
+                - path: "cpu_limit"   # Add file under the mountPath
+                  resourceFieldRef:
+                    containerName: container-test
+                    resource: limits.cpu
+          - configMap:
+              name: myconfigmap
+              items:
+                - key: config
+                  path: my-group/my-config  # sub path under mountPath to mount secret
