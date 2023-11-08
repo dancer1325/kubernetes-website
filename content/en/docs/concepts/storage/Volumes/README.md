@@ -63,3 +63,7 @@
 * Check https://github.com/dancer1325/examples/tree/master/staging/volumes/nfs
 ### pvc
 * Check 'TypesOfVolume/pvc'
+### projected volumes
+* Check '/projectedvolumes'
+### secret
+* Check '/secret'
