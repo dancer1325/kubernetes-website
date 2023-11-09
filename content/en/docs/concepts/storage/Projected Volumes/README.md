@@ -45,16 +45,6 @@
 * Check 'sample2/'
 * Projected volume with volumes
   * secret with non-default permission mode set
-
-
-# Notes
-* File permissions in Unix-like OS
-  * Owners'permissions Group'permissions Others'permissions
-    * X'spermissions can be represented in
-      * [mode](https://www.nexcess.net/help/what-is-chmod/) 
-        * octal or
-        * integer
-      * string
 * `kubectl apply -f secret1.yaml`
 * `kubectl apply -f secret2.yaml`
 * `kubectl apply -f pod.yaml`
@@ -66,3 +56,12 @@
   * `cat my-password`
     * Problems:
       * Problem1: Why it's not displayed the value?
+
+# Notes
+* File permissions in Unix-like OS
+  * Owners'permissions Group'permissions Others'permissions
+    * X'spermissions can be represented in
+      * [mode](https://www.nexcess.net/help/what-is-chmod/) 
+        * octal or
+        * integer
+      * string
