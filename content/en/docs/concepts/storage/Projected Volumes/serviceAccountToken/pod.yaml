@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-satoken
+spec:
+  containers:
+    - name: container-satoken
+      image: busybox:1.28
+      command: ["sleep", "3600"]
+      volumeMounts:
+        - name: token-vol
+          mountPath: "/service-account"
+          readOnly: true
+  serviceAccountName: default
+  volumes:
+    - name: token-vol
+      projected:
+        sources:
+          - serviceAccountToken:
+              audience: api
+              expirationSeconds: 3600   # expected duration validity of the service account token
+              path: token   # subpath under the mountPath

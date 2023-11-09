@@ -10,8 +10,8 @@
     * [minikube]  `minikube start`
     * [kind] `kind create cluster`
   
-# Sample1
-* Check 'sample1/'
+# secretAndDownwardAPIAndConfigMap
+* Check 'secretAndDownwardAPIAndConfigMap/'
 * Projected volume with volumes
   * secret
   * downward api
@@ -41,8 +41,8 @@
       * Problems:
         * Problem1: Why it's not displayed the value?
 
-# Sample2
-* Check 'sample2/'
+# secretsWithNonDefaultPermissions
+* Check 'secretsWithNonDefaultPermissions/'
 * Projected volume with volumes
   * secret with non-default permission mode set
 * `kubectl apply -f secret1.yaml`
@@ -56,6 +56,18 @@
   * `cat my-password`
     * Problems:
       * Problem1: Why it's not displayed the value?
+
+# serviceAccountToken
+* Check 'serviceAccountToken/'
+* Projected volume with volumes
+  * service account tokens
+* `kubectl apply -f pod.yaml`
+* `kubectl exec -it pod-satoken -- sh`
+* `kubectl exec -it pod-satoken -- sh`
+  * `cd service-account/`
+  * `cat token`
+    * Display the service account token, which is automatically created by the API server
+
 
 # Notes
 * File permissions in Unix-like OS
