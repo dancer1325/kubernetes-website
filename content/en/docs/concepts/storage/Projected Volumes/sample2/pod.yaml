@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-test-2
+spec:
+  containers:
+    - name: container-test-2
+      image: busybox:1.28
+      command: ["sleep", "3600"]
+      volumeMounts:
+        - name: all-in-one
+          mountPath: "/projected-volume"
+          readOnly: true
+  volumes:
+    - name: all-in-one
+      projected:
+        #defaultMode: ModeToSpecifyAtProjectedLevel
+        sources:
+          - secret:
+              name: mysecret21
+              items:
+                - key: username
+                  path: my-group/my-username  # sub path under mountPath to mount secret
+          - secret:
+              name: mysecret22
+              items:
+                - key: password
+                  path: my-group/my-password  # sub path under mountPath to mount secret
+                  mode: 511
