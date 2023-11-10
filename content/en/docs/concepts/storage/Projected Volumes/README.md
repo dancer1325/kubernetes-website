@@ -68,6 +68,11 @@
   * `cat token`
     * Display the service account token, which is automatically created by the API server
 
+# Windows pods
+* TODO: Do after security context
+
+# Linux pods
+* TODO: Do after security context
 
 # Notes
 * File permissions in Unix-like OS
