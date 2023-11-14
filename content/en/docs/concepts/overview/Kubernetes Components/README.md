@@ -78,4 +78,19 @@
   * 'cloud-controller-manager' is not present since we are running it locally
 
 # Worker Node Components
-
+* Using the previous cluster with 1 control plane + 2 worker nodes set up
+* `kubectl get pods -n kube-system --field-selector spec.nodeName=kind-worker -o wide` / `kubectl get pods -n kube-system --field-selector spec.nodeName=kind-worker-2 -o wide`
+  * display the Worker Node's components
+    * [kindnet](https://github.com/aojea/kindnet)
+      * Network plugin for kind
+    * kube-proxy
+      * Check that it's a kube-proxy really
+        * `kubectl describe pods/kube-proxy-RandomNameSet -n kube-system` and check that it contains a container with a kube-proxy image
+      * Check that it contains network rules
+        * `kubectl logs pods/kube-proxy-RandomNameSet -n kube-system` checking references to iptables
+        * `docker exec -it ControlPlaneContainer sh` and `iptables -t nat -L -n -v` to check the iptables rules
+      * Check the kube-proxy configuration served in a configmap
+        * `kubectl get configmap kube-proxy -n kube-system -o json | jq '.data' | jq -r '.["config.conf"]'`
+          * If you want to extract the KubeProxyConfiguration
+      * Check the logic about OS' packet filtering layer
+        * TODO:
