@@ -1,0 +1,9 @@
+apiVersion: example.com/v1
+kind: MyApp
+metadata:
+  name: myapp-instance-2
+spec:
+  # If there is just 1! CRD version -> use the default one. But if you create another CRD -> problems updating for the existing one CRD's instance
+  key1: "example-value"
+  key2: 42
+  # city property is not specified, by a default value is added

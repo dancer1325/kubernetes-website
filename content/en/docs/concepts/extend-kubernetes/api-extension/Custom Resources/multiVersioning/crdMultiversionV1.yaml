@@ -1,0 +1,8 @@
+apiVersion: example.com/v1alpha1
+kind: Multi
+metadata:
+  name: multi-instance1
+spec:
+  version: v1alpha1
+  key1: "value1"
+

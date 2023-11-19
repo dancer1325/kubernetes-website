@@ -1,0 +1,8 @@
+apiVersion: example.com/v1
+kind: MyApp
+metadata:
+  name: instance-notvalidbyopenapischema
+spec:
+  key1: "example-value"
+  key2: 42
+  another: 2      # Invalid OpenAPI v3 field for the current CRD
