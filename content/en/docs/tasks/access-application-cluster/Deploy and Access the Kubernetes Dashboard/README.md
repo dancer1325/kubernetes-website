@@ -16,6 +16,7 @@
   * create all the resources in an own namespace
 * `kubectl apply -f serviceAccountDashboard.yaml`
 * `kubectl apply -f clusterRoleBindingDashboard.yaml`
+* `kubectl proxy`
 * `kubectl -n kubernetes-dashboard create token admin-user`
   * Create a token that it's printed
   * Copy the value and access to the Dashboard in 'http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/'
