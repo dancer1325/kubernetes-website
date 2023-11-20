@@ -13,6 +13,23 @@
 # Custom Resources
 * Structured data
   * _Example:_  For CRD, you have got all freedom given by OpenAPIv3 to define the schema to use in the CRD -- `spec.versions[x].schema.openAPIV3Schema`
+* Storage
+  * CR consume storage space
+    * TODO:
+* ways to access to them
+  * kubectl
+    * Check next section
+  * REST calls
+    * Check next section
+  * Kubernetes dynamic client
+    * TODO:
+  * Kubernetes client libraries
+    * Go
+      * Check 'clientLibraries/Go'
+    * Python
+      * Check 'clientLibraries/Python' TODO:
+  * Client created based on CodeGenerator
+    * TODO
 
 # Ways to handle Custom Resources
 ## via Kubernetes API Aggregation Layer
@@ -109,3 +126,10 @@
   * Check 'LabelsAndAnnotations/'
     * `kubectl apply -f crd.yaml`
     * `kubectl describe `
+
+# Custom Controllers
+* Check 'CustomControllers/'
+
+# Custom Resources vs ConfigMaps / Secrets
+* Check 'vs ConfigMaps And Secrets'
+  * TODO: Add examples
