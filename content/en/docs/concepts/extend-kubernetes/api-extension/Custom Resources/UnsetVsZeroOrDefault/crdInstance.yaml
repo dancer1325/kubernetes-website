@@ -1,0 +1,8 @@
+apiVersion: example.com/v1
+kind: unsetorzero
+metadata:
+  name: unsetorzero-instance
+spec:
+  # key1:   No specified === unset
+  key2: 42
+  # city property is not specified, by a default value is added

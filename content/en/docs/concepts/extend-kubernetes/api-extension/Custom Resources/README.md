@@ -71,5 +71,41 @@
   * `kubectl apply -f crdMultiVersioning.yaml`, ` kubectl apply -f crdMultiversionV1.yaml` and `kubectl apply -f crdMultiversionV2.yaml`
   * `kubectl describe multiversioning.example.com`
     * TODO: Why multi-instance1 has 'API Version:  example.com/v1beta1' ?
-
-
+* Custom business logic
+  * TODO: 
+* `scale` subresource
+  * Check 'tasks/extend-kubernetes/custom-resources/Extend the Kubernetes API with CustomResourceDefinitions'
+* `status` subresource
+  * Check 'tasks/extend-kubernetes/custom-resources/Extend the Kubernetes API with CustomResourceDefinitions'
+* CRUD operations supported by the new resources (=== CRD instances)
+  * kubectl
+    * Check 'use cases' section here
+  * REST calls
+    * Check 'use cases' section here
+* Watch operations support either kubectl or REST calls
+  * `kubectl get crd --watch`
+* 'json-patch' and 'merge-patch' are allowed
+  * `curl -X GET -H "Content-Type: application/json-patch+json" http://localhost:8001/apis/example.com/v1/myapps` & curl -X GET -H "Content-Type: application/merge-patch+json" http://localhost:8001/apis/example.com/v1/myapps 
+* HTTPS
+  * 'https://172.23.0.2:6443/apis/apiextensions.k8s.io/v1/myapps' -- 172.23.0.2 is the API-Server's ip -- 
+    * Problems:
+      * Problem1: Why doesn't it work?
+* Authorization / Authentication
+  * TODO:
+* Finalizers
+  * Check 'concepts/overview/ObjectsInKubernetes/Finalizers'
+  * TODO: 
+* Admission Webhooks
+  * Check 'reference/APIAccessControl/DynamicAdmissionController'
+  * TODO:
+* Unset value for a field != Zero-valued / default value for a field
+  * Check 'UnsetVsZeroOrDefault'
+    * `kubectl apply -f crd.yaml`
+    * `kubectl apply -f crdInstance.yaml`
+    * `kubectl describe unsetorzeros`
+      * Check that key1 doesn't appear because it's unset
+      * Check that City appears, displaying the default value
+* Labels and annotations
+  * Check 'LabelsAndAnnotations/'
+    * `kubectl apply -f crd.yaml`
+    * `kubectl describe `
