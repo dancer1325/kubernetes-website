@@ -1,0 +1,21 @@
+apiVersion: apps/v1   # API Group / API Version
+kind: Deployment      # Type of object
+metadata:             # Identify uniquely the Kubernetes object
+  name: nginx-deployment
+spec:               # nested object Spec
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
+
+#status:    -- Can NOT be specified by the user, since it's handled by Kubernetes itself --
