@@ -1,0 +1,13 @@
+# https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#horizontalpodautoscaler-v2-autoscaling
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp-hpa-v2
+spec:
+  scaleTargetRef:
+#    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp-deployment
+  minReplicas: 2
+  maxReplicas: 5
+  # targetCPUUtilizationPercentage: 50    # no supported in v2

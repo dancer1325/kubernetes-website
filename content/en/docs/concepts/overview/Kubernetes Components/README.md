@@ -47,6 +47,14 @@
       * Check that it's a kube-apisever in fact
         * `docker ps` and check that the 'control-plane' forwards '127.0.0.1:PortOfYourServer->6443/tcp', being 6443 the default port of kube-apisever
         * `cat .kube/config` and check that in your cluster's server == PortOfYourServer
+      * Handles the conversion between API versions transparently
+        * Select a resource in the Kubernetes API with several available version. _Example:_ https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#api-groups autoscaling
+        * Check 'sameResourceHandledByDifferentAPIVersions/'
+          * `kubectl apply -f autoscalingV1.yaml` & `kubectl apply -f autoscalingV2.yaml`
+          * Problems:
+            * Problem1: How to migrate from v1 to v2?
+              * Attempt1: [With minikube] `minikube delete` & `minikube start --kubernetes-version=v1.28`
+              * Solution: Check 'reference/APIOverview/DeprecatedAPIMigrationGuide/'
     * kube-controller-manager
       * Check that it's a kube-controller-manager really
         * `kubectl describe pods/kube-controller-manager-kind-control-plane -n kube-system` and check that it contains a container with a kube-controller-manager image
