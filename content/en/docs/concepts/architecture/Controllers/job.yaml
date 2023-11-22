@@ -1,0 +1,16 @@
+apiVersion: batch/v1    # API Group / API Version
+kind: Job         # Kind object, built-in Kubernetes as you check in the apiVersion
+metadata:
+  name: example-job
+spec:       # Pod desired to run
+  template:
+    metadata:
+      name: example-job-pod
+    spec:
+      containers:
+        - name: job-container
+          image: busybox
+          command: ["echo", "Hello from the job!"]
+      restartPolicy: OnFailure    # Required
+  backoffLimit: 4   # Number of retries before marking this job as failed
+

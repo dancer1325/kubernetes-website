@@ -1,0 +1,19 @@
+apiVersion: apps/v1     # API Group / API Version
+kind: Deployment        # Kind object, built-in Kubernetes as you check in the apiVersion
+metadata:
+  name: example-deployment
+spec:         # Pod desired to run
+  replicas: 3
+  selector:
+    matchLabels:
+      app: example
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:latest
+          ports:
+            - containerPort: 80
