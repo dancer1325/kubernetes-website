@@ -1,0 +1,13 @@
+# pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod2
+  labels:
+    app: app2
+spec:
+  containers:
+    - name: mycontainer
+      image: nginx:latest
+      ports:
+        - containerPort: 80

@@ -1,0 +1,13 @@
+# pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: declarativeobjectconfiguration-pod2
+  labels:
+    app: declarativeobjectconfiguration
+spec:
+  containers:
+    - name: mycontainer
+      image: nginx:latest
+      ports:
+        - containerPort: 80
