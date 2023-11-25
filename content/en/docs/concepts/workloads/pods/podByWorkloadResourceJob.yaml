@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job
+spec:
+  template:
+    # This is the pod template
+    spec:
+      # activeDeadlineSeconds: 2    # It can NOT be modified
+      containers:
+        - name: container-by-workloadresource-job
+        #- name: container-by-workloadresource-job-2     # It can NOT be modified
+          image: busybox:1.28
+          # image: busybox:1.27     # It can NOT be modified
+          command: ['sh', '-c', 'echo "Hello, Kubernetes!" && sleep 3600']
+          #command: ['sh', '-c', 'echo "Hello   , Kubernetes!" && sleep 3600']      # It can NOT be modified
+      restartPolicy: OnFailure
+

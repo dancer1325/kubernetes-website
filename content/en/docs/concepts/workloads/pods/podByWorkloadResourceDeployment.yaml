@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pod-by-workloadresource-deployment
+  template:
+    # This is the pod template
+    metadata:
+      labels:
+        app: pod-by-workloadresource-deployment
+    spec:
+      containers:
+        - name: container-by-workloadresource-deployment
+          image: nginx:latest
+          ports:
+            # - containerPort: 80
+            - containerPort: 90   # Modify and deploy it

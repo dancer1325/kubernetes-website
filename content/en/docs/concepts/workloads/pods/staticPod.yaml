@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-static-pod
+  namespace: kube-system
+spec:
+  # serviceAccountName: my-service-account      # Uncomment to check that no reference to other Kubernetes API objects are allowed
+  containers:
+    - name: nginx
+      image: nginx:latest
