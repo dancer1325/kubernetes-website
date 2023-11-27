@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-status-insufficientquota
+spec:
+  replicas: 3
+  progressDeadlineSeconds: 10       # Seconds waited for the Deployment Controller to mark the Deployment as stuck
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          resources:
+            requests:
+              memory: "2Gi"  # Requesting 2 Gigabytes of memory per pod
+              cpu: "2"       # Requesting 2 CPU cores per pod

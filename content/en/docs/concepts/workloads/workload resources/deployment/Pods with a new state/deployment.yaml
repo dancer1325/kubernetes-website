@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-with-newstate    # Basic pattern name for replicaset and pod
+  labels:
+    app: nginx
+spec:
+  replicas: 3     # Specify the number of replicas -> a ReplicaSet is created
+  selector:   # used by ReplicaSet to identify the pods to manage
+    matchLabels:
+      app: nginx    # it must match with template.metadata.labels     -- key:value --
+      #app: nginx2    # Immutable, it can NOT be adjusted
+      #added: add     Immutable!! to be added
+  template:   # PodTemplate
+    metadata:
+      labels:
+        app: nginx
+        # added: add    # Labels here can be added
+        #added: add2    # Modified the existing one    and afterward, you comment it
+    spec:
+      containers:
+        - name: nginx
+          #image: nginx:1.14.2
+          image: nginx:latest   # Update it to notice the changes happened
+          ports:
+            - containerPort: 80

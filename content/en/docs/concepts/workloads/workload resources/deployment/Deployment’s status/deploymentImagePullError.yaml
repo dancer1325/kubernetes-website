@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-status-imagepullerror
+spec:
+  replicas: 3
+  progressDeadlineSeconds: 10       # Seconds waited for the Deployment Controller to mark the Deployment as stuck
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:111.0
+          ports:
+            - containerPort: 80

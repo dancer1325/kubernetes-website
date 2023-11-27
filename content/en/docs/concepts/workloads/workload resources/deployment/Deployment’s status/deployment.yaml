@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-status    # Basic pattern name for replicaset and pod
+  labels:
+    app: nginx
+spec:
+  replicas: 3     # Specify the number of replicas -> a ReplicaSet is created
+  selector:   # used by ReplicaSet to identify the pods to manage
+    matchLabels:
+      app: nginx    # it must match with template.metadata.labels     -- key:value --
+  template:   # PodTemplate
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
