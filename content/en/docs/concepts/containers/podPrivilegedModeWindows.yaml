@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: windows-pod
+spec:
+  hostNetwork: true
+  containers:
+    - name: windows-container
+      # https://hub.docker.com/_/microsoft-windows-servercore
+      image: mcr.microsoft.com/windows/servercore:ltsc2022
+      securityContext:
+        windowsOptions:
+          hostProcess: true
