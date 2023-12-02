@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-pod
+spec:
+  affinity:
+    nodeAffinity:   # Specify the node in which to deploy it
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-type
+                operator: In
+                values:
+                  - worker
+  containers:
+    - name: busybox-container
+      image: busybox
+      command:
+        - "/bin/sh"
+        - "-c"
+        - "while true; do echo 'Hello from BusyBox'; sleep 10; done"

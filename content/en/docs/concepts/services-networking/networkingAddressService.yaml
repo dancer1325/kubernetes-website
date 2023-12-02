@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: networkingaddress
+spec:
+  # Since the type is not specified -> default one -- ClusterIP --
+  selector:
+    pod: networkingaddress1 # Looks for this key-value pairs by labels in the pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
