@@ -32,3 +32,9 @@
 ---
 
 # Probe
+* := diagnostic performed periodically
+  * `kubectl apply -f podWithSimpleProbes.yaml` & `kubectl logs pod/simple-probes` to check that run periodically
+  * done by kubelet
+    * `docker ps` & `docker exec -it NodeContainerId sh` & `systemctl status kubelet`
+      * Problems: No log about the probes displayed
+        * Solution: TODO:
