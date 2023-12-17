@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+  namespace: namespace-b
+  labels:
+    justforpod: "yes"
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command: ["/bin/sh", "-c", "sleep 3600"]
+#      command: [ "/bin/sh", "-c" ]
+#      args:
+#        - |
+#          wget -O /bin/curl https://curl.se/download/curl-7.79.1.tar.gz
+#          chmod +x /bin/curl
+#          sleep 3600

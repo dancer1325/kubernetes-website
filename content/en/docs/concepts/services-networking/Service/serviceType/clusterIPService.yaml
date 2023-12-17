@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simpleservice
+spec:
+  selector:   # Label selector for matching pods
+    app.kubernetes.io/name: MyApp
+  # ServiceType   not specified -> default one == ClusterIP
+  ports:
+    - protocol: TCP     # -> Service === TCP listener
+      port: 80
+      targetPort: 9376    # match with the pod.spec.containers[x].ports.containerPort
+
+
+# Another Service, specifying the spec.clusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simpleservice
+spec:
+  selector:   # Label selector for matching pods
+    app.kubernetes.io/name: MyApp
+  # ServiceType   not specified -> default one == ClusterIP
+  ports:
+    - protocol: TCP     # -> Service === TCP listener
+      port: 82
+      targetPort: 9376    # match with the pod.spec.containers[x].ports.containerPort
+  clusterIP: 10.96.0.10       # Defined, always within Kube-api-server's 'service-cluster-ip-range'

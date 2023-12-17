@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-wss-service
+spec:
+  type: NodePort
+  selector:
+    app: my-app
+  ports:
+    - name: ws
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+      appProtocol: "kubernetes.io/wss"

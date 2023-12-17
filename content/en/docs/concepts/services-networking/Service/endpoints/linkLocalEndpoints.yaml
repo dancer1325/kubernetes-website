@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: link-local-invalid-endpoints-service-ipv4-first
+subsets:
+  - addresses:
+      - ip: 169.254.0.1  # Invalid loopback address
+    ports:
+      - port: 8080
+
+---
+
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: link-local-invalid-endpoints-service-ipv4-second
+subsets:
+  - addresses:
+      - ip: 224.0.0.1  # Invalid loopback address
+    ports:
+      - port: 8080
+
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: link-local-invalid-endpoints-service-ipv6
+subsets:
+  - addresses:
+      - ip: fe80::1  # Invalid loopback address for service endpoints
+    ports:
+      - port: 8080

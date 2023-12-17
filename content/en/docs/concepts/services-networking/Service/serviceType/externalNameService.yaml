@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-name
+spec:
+  type: ExternalName
+  externalName: my.database.example.com
+
+
+# spec.externalName   as IPv4 address
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-name-passingasipv
+spec:
+  type: ExternalName
+  externalName: "192.168.1.100"
+
+
+# === No pod associated, although you add labels trying to match with some pod
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-name-with-selectors-without-assigning
+  labels:
+    app.kubernetes.io/name: MyApp
+    app: nginx
+spec:
+  type: ExternalName
+  externalName: without.selectors.without.assigning
+
+
+# === No selectors -> impossible to associate a pod
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-name-without-selectors
+spec:
+  type: ExternalName
+  externalName: without.selectors

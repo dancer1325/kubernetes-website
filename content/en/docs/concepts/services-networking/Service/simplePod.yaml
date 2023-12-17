@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simplepod
+  labels:
+    app.kubernetes.io/name: MyApp
+spec:
+  containers:
+    - name: simplecontainer
+      image: nginx:latest
+      ports:
+        - containerPort: 9376   # Pod'sIp:containerPort

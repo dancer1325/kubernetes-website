@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: load-balancer
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+  type: LoadBalancer
+
+
+# spec.loadBalancerIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: load-balancer-specifyingip
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+  type: LoadBalancer
+  loadBalancerIP: "80"
+
+# spec.allocateLoadBalancerNodePorts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: load-balancer-disable-nodeports
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+  type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
+
+
+# MixedProtocolLBService --  spec.ports > 1  --
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: load-balancer-severalports
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+      name: tcp
+    - protocol: UDP   # Another protocol for this port
+      port: 81
+      targetPort: 9375
+      name: udp
+  type: LoadBalancer
+
+
+
+# .spec.loadBalancerClass
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: load-balancer-class
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+      name: tcp
+    - protocol: UDP   # Another protocol for this port
+      port: 81
+      targetPort: 9375
+      name: udp
+  type: LoadBalancer
+  loadBalancerClass: "internal-vip"     # Depends on the used external load balancer

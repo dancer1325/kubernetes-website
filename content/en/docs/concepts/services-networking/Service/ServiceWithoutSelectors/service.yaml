@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  #selector     -- Not specified here
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376

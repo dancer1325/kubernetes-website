@@ -1,0 +1,27 @@
+# production-database-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: production-database
+spec:
+  clusterIP: None
+
+---
+# production-endpointslice.yaml
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: production-database-slice
+addressType: IPv4
+# Add real IP addresses
+endpoints:
+  - addresses:
+      #- production-db-pod-1-ip
+      - "10.4.5.3"
+  - addresses:
+      #- production-db-pod-2-ip
+      - "10.4.5.4"
+ports:
+  - name: database-port
+    protocol: TCP
+    port: 5432

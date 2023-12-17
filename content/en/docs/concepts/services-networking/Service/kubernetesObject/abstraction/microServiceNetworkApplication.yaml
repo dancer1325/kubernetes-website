@@ -1,0 +1,29 @@
+# backend-service-1-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend-service-1
+  labels:
+    other: frontend-service
+    app: backend-service-1
+spec:
+  containers:
+    - name: backend-service-1
+      image: nginx:latest
+      ports:
+        - containerPort: 8080
+
+---
+# backend-service-1-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service-1
+spec:
+  #type:      Since it's not defined -> clusterIP
+  selector:
+    app: backend-service-1
+  ports:
+    - protocol: TCP
+      port: 80              # Service's entry point
+      targetPort: 8080      # Pod's containerPort

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: udp-echo-pod
+  labels:
+    app: my-app
+spec:
+  containers:
+    - name: udp-echo-container
+      #image: quay.io/munnerz/udp-echo    # Image not found
+      #image: strm/udp-echo               # Image not found
+      image: danielyinanc/udp-server-docker
+      ports:
+        - containerPort: 1053 # This should match the targetPort of your UDP Service

@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curl-pod
+spec:
+  containers:
+    - name: curl-container
+      image: curlimages/curl:latest
+      command: ["sleep", "infinity"]  # Keep the pod running
+
+# Another pod with a specific busybox image to trigger curl requests
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-curl
+spec:
+  containers:
+    - name: busybox-container
+      #image: busybox   # no curl installed
+      image: radial/busyboxplus:curl
+      #command: ["sleep", "infinity"]  # Invalid infinity
+      command: ["sleep", "999999999"]  # Keep the pod running
+#      command:
+#        - "sleep"
+#        - "infinity"
+
+
+#Pod without matching all labels -> don't receive the traffic of the Services
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-nomatched
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx:latest
+      command: ["sleep", "infinity"]  # Keep the pod running
+      ports:
+        - containerPort: 80
+        - containerPort: 82
+
+
+#Pod to receive the traffic of the Services
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app.kubernetes.io/name: MyApp
+    app: nginx
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx:latest
+      command: ["sleep", "infinity"]  # Keep the pod running
+      ports:
+        - containerPort: 80
+        - containerPort: 82
+        - containerPort: 9376

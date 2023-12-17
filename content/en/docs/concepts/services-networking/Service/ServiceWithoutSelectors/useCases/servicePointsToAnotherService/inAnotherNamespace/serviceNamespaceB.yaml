@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service-in-namespace-b
+  namespace: namespace-b
+spec:
+  type: ExternalName      # == Service acts as an alias
+  selector:   # Just added to try to add endpoint, based on the pod running
+    justforpod: "yes"
+  externalName: my-service.namespace-a.svc.cluster.local  # -> serviceType must be ExternalName
+  ports:
+    - protocol: TCP
+      port: 80
