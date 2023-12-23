@@ -1,0 +1,4 @@
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+# TODO: Check what else required to add
+cgroupDriver: systemd
