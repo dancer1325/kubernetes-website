@@ -1,0 +1,35 @@
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  # The name the RuntimeClass will be referenced by.
+  # RuntimeClass is a non-namespaced resource.
+  name: myclass
+
+# The name of the corresponding CRI configuration
+handler: myconfiguration
+
+# .scheduling
+---
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: runtimeclass-scheduling
+handler: containerd
+scheduling:
+  nodeSelector:
+    my-custom-label: "example-value"
+
+#.overhead
+---
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: runtimeclass-overhead
+handler: example-runtime-handler
+overhead:
+  podFixed:
+    memory: "50Mi"
+    cpu: "10m"
+
+
+

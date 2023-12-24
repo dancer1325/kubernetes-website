@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  runtimeClassName: myclass   # Refer to the Runtime Class
+  containers:
+    - name: nginx
+      image: nginx/latest
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-scheduling
+spec:
+  runtimeClassName: runtimeclass-scheduling
+  nodeSelector:
+    my-custom-label: "example-value"  # Node selector matching the label on the node
+  tolerations:
+    - key: "dedicated"
+      operator: "Equal"
+      value: "worker-3"
+      effect: "NoSchedule"
+  containers:
+    - name: mycontainer
+      image: nginx/latest
+      ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-overhead
+spec:
+  runtimeClassName: runtimeclass-overhead   # Refer to the Runtime Class
+  containers:
+    - name: nginx
+      image: nginx/latest
