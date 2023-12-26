@@ -1,0 +1,213 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-containerhooks-1
+spec:
+  containers:
+    - name: containerhooks-1
+      image: nginx
+      lifecycle:
+        postStart:
+          exec:
+            command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]      # no parameters are passed
+        preStop:
+          exec:
+            command: ["/bin/sh", "-c", "date > /var/tmp/prestop-executed.txt"]           # no parameters are passed
+    - name: sidecar
+      image: busybox
+      command: [ "/bin/sh", "-c", "cp /var/tmp/prestop-executed.txt /shared-volume/"]
+      volumeMounts:
+        - name: shared-volume
+          mountPath: /shared-volume
+  volumes:
+    - name: shared-volume
+      emptyDir: { }
+
+# Pods to terminate a container
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-terminate-1
+spec:
+  containers:
+    - name: container-terminate-1
+      image: nginx
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-terminate-2
+spec:
+  containers:
+    - name: container-terminate-2
+      image: nginx
+      readinessProbe:
+        httpGet:
+          port: 90
+          path: /index.html
+          host: localhost
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-terminate-3
+spec:
+  containers:
+    - name: container-terminate-3
+      image: nginx
+      livenessProbe:
+        httpGet:
+          port: 90
+          path: /index.html
+          host: localhost
+
+# PodSpec.terminationGracePeriodSeconds
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-terminationgraceperiod
+spec:
+  terminationGracePeriodSeconds: 2
+  containers:
+    - name: container-terminationgraceperiod
+      image: nginx
+
+---
+# sync calls
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-sync
+spec:
+  containers:
+    - name: container-sync
+      image: nginx
+      lifecycle:
+        postStart:
+          exec:
+            command: ["/bin/sh", "-c", "echo 'Post Start Hook' && sleep 30"]
+            # Pod doesn't move to Running status after 30 seconds, although the container was already created
+
+
+# FailedPostStartHook
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-failedpoststarthook
+spec:
+  containers:
+    - name: container-failedpoststarthook
+      image: nginx
+      lifecycle:
+        postStart:
+          exec:
+            command: ["/bin/sh", "-c", "echo 'Running Post Start Hook' && exit 1"]
+
+
+# FailedPreStopHook
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-failedprestophook
+spec:
+  containers:
+    - name: container-failedprestophook
+      image: nginx
+      lifecycle:
+        preStop:
+          exec:
+            command: ["/bin/sh", "-c", "echo 'Running Pre Stop Hook' && exit 1"]
+
+
+# Exec
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-exec
+spec:
+  containers:
+    - name: container-exec
+      image: nginx
+      lifecycle:
+        postStart:
+          exec:
+            #command: ["echo 'Hello, Alfred'", '|', "tee output.txt"]      # |      not interpreted
+            command:      # Why doesn't the next array work? TODO:
+              - date
+              - pwd
+
+# HTTP
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-http
+spec:
+  containers:
+    - name: container-http
+      image: nginx
+      ports:
+        - containerPort: 80
+      lifecycle:
+        postStart:
+          httpGet:          # Why do I get an error? TODO:
+            port: 80
+            path: /index.html
+
+# Sleep
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-sleep
+spec:
+  terminationGracePeriodSeconds: 200
+  containers:
+    - name: container-sleep
+      image: nginx
+      ports:
+        - containerPort: 80
+      lifecycle:
+        postStart:
+          sleep:
+            seconds: 100
+
+# Waiting
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-waiting
+spec:     # How should it be done to create a container in WAITING? TODO:
+  restartPolicy: Never
+  containers:
+    - name: container-waiting
+      image: busybox
+      command: [ "/bin/sh", "-c", "echo 'Container is waiting...'; sleep 3600" ]
+      readinessProbe:
+        exec:
+          command:
+            - /bin/false
+        initialDelaySeconds: 5
+        periodSeconds: 5
+
+
+# Terminating
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-terminating
+spec:
+  restartPolicy: Never
+  containers:
+    - name: container-terminating
+      image: busybox
+      command: ["/bin/sh", "-c", "echo 'Container is waiting...'; exit 1"]
