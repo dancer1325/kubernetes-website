@@ -78,6 +78,8 @@
       * Check that it's a kube-scheduler really
         * `kubectl describe pods/kube-scheduler-kind-control-plane -n kube-system` and check that it contains a container with a kube-scheduler image
         * `kubectl logs pod/kube-scheduler-kind-control-plane -n kube-system` and check that 'PodDisruption' or 'watch' or .. are logged
+      * Run commands -- `kubectl exec -it kube-scheduler-kind-control-plane -n kube-system COMMAND`
+        * Solution: TODO:
     * Container Runtime
       * Check that there's a container runtime really
         * `docker exec -it ControlPlaneContainer sh` and check if there are some container runtime implementation
