@@ -2,12 +2,13 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 kubeadmConfigPatches:
   - |
-    apiVersion: kubeadm.k8s.io/v1beta2
+    apiVersion: kubeadm.k8s.io/v1beta3
     kind: ClusterConfiguration
     scheduler:
       extraArgs:
         v: "6"
+# apiVersion: kubeadm.k8s.io/v1beta2          This line was wrong, since kubernetesv1.27 just accepted v1beta3 https://github.com/kubernetes/kubernetes/tree/release-1.27/cmd/kubeadm/app/apis/kubeadm
 nodes:
   - role: control-plane
   - role: worker
-name: verbosity
+name: othertwo

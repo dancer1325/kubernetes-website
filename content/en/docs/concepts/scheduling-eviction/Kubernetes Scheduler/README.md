@@ -23,7 +23,7 @@
 # kube-scheduler
 * Check 'filtering' & 'scoring' processes logs
   * Attempt1: `kind create cluster --verbosity 6` -- Check [here](https://github.com/kubernetes-sigs/kind/blob/main/hack/ci/e2e-k8s.sh#L96)
-  * Attempt2: `kind create cluster --config=cluster.yaml`
-  * Solution: TODO:
+  * Solution: `kind create cluster --config=cluster.yaml` & `kubectl logs pod/kube-scheduler-othertwo-control-plane -n kube-system`
+    * Note: Check kubeAdm api versions enabled
 * Check binding notification from 'kube-scheduler' to 'api server'
-  * Solution: TODO:
+  * `kubectl logs pod/kube-scheduler-othertwo-control-plane -n kube-system | grep binding`
