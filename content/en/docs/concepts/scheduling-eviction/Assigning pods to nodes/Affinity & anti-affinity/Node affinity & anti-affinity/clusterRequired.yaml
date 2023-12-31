@@ -1,0 +1,42 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    labels:
+      not.antiaffinity/1.1: true
+      not.antiaffinity/1.2: true
+      operator.gt/1.1: 7
+  - role: worker
+    # First Attempt
+    #    kubeadmConfigPatches:
+    #      - |
+    #        kind: InitConfiguration
+    #        nodeRegistration:
+    #          name: metadataName1
+    # Second Attempt
+#    kubeadmConfigPatches:
+#      - |
+#        kind: InitConfiguration
+#        nodeRegistration:
+#          name: other-na
+    # Third attempt - Solution -
+    kubeadmConfigPatches:
+      - |
+        kind: JoinConfiguration
+        nodeRegistration:
+          name: other-na
+    labels:
+      preferred.2/1.1: true
+      not.antiaffinity/1.2: true
+      operator.gt/1.1: 14
+  - role: worker
+    labels:
+      required.1/1.1: true
+      preferred.2/1.2: true
+      both.severalmatch/1.1: true
+      both.severalmatch/2.1: true
+      not.antiaffinity/1.1: true
+      not.antiaffinity/1.2: true
+      operator.gt/1.1: 2
+      #simple.2/aa.b/cc.d: true     -- Invalid to use 2 '/' as label key
+name: cluster-1    # Valid using '-'

@@ -1,0 +1,162 @@
+# namespace             -- same topologyKey for different podAffinity rules
+apiVersion: v1
+kind: Pod
+metadata:
+  name: namespace-1
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label who existed in a node
+          namespaces:
+            - interpod-namespace-1
+            - interpod-namespace-2
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: In
+                values:
+                  - "true"
+  containers:
+    - name: namespace-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# podaffinityterm.namespaces      not specified       -> checks for in the same namespace in which it's defined the podAffinity
+apiVersion: v1
+kind: Pod
+metadata:
+  name: namespace-2
+  namespace: interpod-namespace-2       # To create in the same where 'namespace-1-1' pod lives
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label who existed in a node
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: In
+                values:
+                  - "true"
+  containers:
+    - name: namespace-2
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# podaffinityterm.namespaceSelector      specified       -> checks for in the same namespace in which it's defined the podAffinity
+apiVersion: v1
+kind: Pod
+metadata:
+  name: namespaceselector-1
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label who existed in a node
+          namespaceSelector:
+            matchExpressions:
+              - key: namespaceselectorone
+                operator: Exists
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: In
+                values:
+                  - "true"
+  containers:
+    - name: namespaceselector-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# podaffinityterm.namespaceSelector      empty       -> checks for all namespaces
+apiVersion: v1
+kind: Pod
+metadata:
+  name: namespaceselector-3
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label who existed in a node
+          namespaceSelector:      # Trying to define empty
+            matchLabels:
+              {}
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: In
+                values:
+                  - "true"
+  containers:
+    - name: namespaceselector-3
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# podaffinityterm.namespaceSelector      null       -> checks for the pod's affinity rules
+apiVersion: v1
+kind: Pod
+metadata:
+  name: namespaceselector-2
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label who existed in a node
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: In
+                values:
+                  - "true"
+  containers:
+    - name: namespaceselector-2
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# podaffinityterm.namespaceSelector + podaffinityterm.namespaces             -> all namespaces will be used to filter in
+apiVersion: v1
+kind: Pod
+metadata:
+  name: namespaceselector-4
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label who existed in a node
+          namespaces:
+            - interpod-namespaceselector-2
+          namespaceSelector:
+            matchExpressions:
+              - key: namespaceselectorone
+                operator: Exists
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: In
+                values:
+                  - "true"
+  containers:
+    - name: namespaceselector-4
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+

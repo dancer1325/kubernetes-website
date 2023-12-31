@@ -1,0 +1,16 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+    kubeadmConfigPatches:
+      - |
+        kind: JoinConfiguration
+        nodeRegistration:
+          name: other-na
+  - role: worker
+    labels:
+      interpod.1/1: "true"
+      interpod.1/2: "true"
+      #simple.2/aa.b/cc.d: true     -- Invalid to use 2 '/' as label key
+name: cluster-2    # Valid using '-'

@@ -1,0 +1,15 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker
+    labels:
+      simple: true
+      simple.2: true
+      simple.2/aa: true
+      simple.2/aa.b: true
+      #simple.2/aa.b/cc.d: true     -- Invalid to use 2 '/' as label key
+#      dancer13/na.bst/r.1: yes
+name: cluster-with-both-subtypes    # Valid using '-'
+#name: clusterwithbothsubtypes

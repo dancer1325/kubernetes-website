@@ -1,0 +1,73 @@
+# topologyKey             -- Pod to match with topologyKey-1
+apiVersion: v1
+kind: Pod
+metadata:
+  name: topologykey-1-1
+  labels:
+    interpod.1/1: "true"
+    interpod.1/2: "true"
+spec:
+  nodeSelector:       # Easiest to assign to a specific node
+    topologykey.1/1.1: "true"
+  containers:
+    - name: topologykey-1-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# topologyKey             -- Pod to match with topologyKey-2
+apiVersion: v1
+kind: Pod
+metadata:
+  name: topologykey-2-1
+  labels:
+    interpod.1/1: "true"
+    interpod.1/2: "true"
+spec:
+  nodeSelector:       # Easiest to assign to a specific node
+    topologykey.1/1.1: "true"
+  containers:
+    - name: topologykey-2-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# anti-affinity-notin             -- Pod to match with anti-affinity-notin
+apiVersion: v1
+kind: Pod
+metadata:
+  name: anti-affinity-notin-1
+  labels:
+    interpod.1/1: "yes"
+    interpod.1/2: "true"
+spec:
+  nodeSelector:       # Easiest to assign to a specific node
+    topologykey.1/1.1: "true"
+  containers:
+    - name: anti-affinity-notin-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# anti-affinity-doesnotexist             -- Pod to match with anti-affinity-doesnotexist
+apiVersion: v1
+kind: Pod
+metadata:
+  name: anti-affinity-doesnotexist-1
+  labels:
+    interpod.1/2: "true"
+spec:
+  nodeSelector:       # Easiest to assign to a specific node
+    topologykey.1/1.1: "true"
+  containers:
+    - name: anti-affinity-doesnotexist-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"

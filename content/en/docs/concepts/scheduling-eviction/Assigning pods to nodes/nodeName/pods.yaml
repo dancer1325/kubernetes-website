@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodename
+spec:
+  nodeName: "other-na"
+  containers:
+    - name: nodename
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# nodeSelector & affinity rules are NOT taking account
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodename-override-nodeselectorandaffinity
+spec:
+  nodeName: "other-na"
+  nodeSelector:
+    simple: "true"
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: required.1/1.1
+                operator: In
+                values: # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+  containers:
+    - name: nodename-override-nodeselectorandaffinity
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+---
+# nodeName does NOT match with any node name        ->      Pod will NOT run
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodename-notexist
+spec:
+  nodeName: "not-exist"
+  containers:
+    - name: nodename-notexist
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# node does NOT have resources requested by the pod        ->      Pod will NOT run
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodename-notenoughresources
+spec:
+  nodeName: "other-na"
+  containers:
+    - name: nodename-notenoughresources
+      image: busybox:latest
+      resources:
+        requests:
+          memory: "200Mi"
+          cpu: "8"
+      command:
+        - sleep
+        - "3600"

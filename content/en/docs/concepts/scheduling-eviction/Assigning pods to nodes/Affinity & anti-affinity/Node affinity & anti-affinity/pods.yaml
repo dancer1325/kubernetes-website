@@ -1,0 +1,306 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: required-1
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: required.1/1.1
+                operator: In
+                values:   # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+  containers:
+    - name: required-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# NOT fulfilled by none of the nodes
+apiVersion: v1
+kind: Pod
+metadata:
+  name: required-2
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: required.2/1.1
+                operator: In
+                values:   # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+  containers:
+    - name: required-2
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# Several terms in nodeSelectorTerms
+apiVersion: v1
+kind: Pod
+metadata:
+  name: required-3
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:    # Although there are several terms, is required to fulfill just 1
+          - matchExpressions:
+              - key: required.3/1.1
+                operator: In
+                values:   # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+          - matchFields:      # This term is the only one which is matched
+              - key: metadata.name
+                operator: In
+                values:
+                  - "other-na"
+  containers:
+    - name: required-3
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# Preferred   -- If there is no node to fulfill the rule    -> it's assigned to some node
+apiVersion: v1
+kind: Pod
+metadata:
+  name: preferred-1
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+              - key: preferred.1/1.1            # No node with this label
+                operator: In
+                values: # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+          weight: 50
+  containers:
+    - name: preferred-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# Preferred   -- If there are several preferred rules with weights ->  higher weigh more taken in account to assign to a node
+apiVersion: v1
+kind: Pod
+metadata:
+  name: preferred-2
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+              - key: preferred.2/1.1            # Node with this label
+                operator: In
+                values: # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+          weight: 20
+        - preference:
+            matchExpressions:
+              - key: preferred.2/1.2           # Node with this label
+                operator: In
+                values: # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+          weight: 80    # Higher weight that the before preference
+  containers:
+    - name: preferred-2
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# Both   -- if there are several expressions in `.matchExpressions`  → required to fulfil ALL to assign
+apiVersion: v1
+kind: Pod
+metadata:
+  name: both-severalmatchexpressions-1
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:       # If there are several -> required to fulfill ALL
+              - key: both.severalmatch/1.1
+                operator: In
+                values:   # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+              - key: both.severalmatch/1.2
+                operator: In
+                values: # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+  containers:
+    - name: both-severalmatchexpressions-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# Both   -- if there are several expressions in `.matchExpressions`  → required to fulfil ALL to assign
+apiVersion: v1
+kind: Pod
+metadata:
+  name: both-severalmatchexpressions-2
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+              - key: both.severalmatch/2.1            # Node with this label
+                operator: In
+                values: # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+              - key: both.severalmatch/2.2            # Node without this label
+                operator: In
+                values: # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+          weight: 20
+  containers:
+    - name: both-severalmatchexpressions-2
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# Node Anti-affinity   -- Via 'NotIn' --
+apiVersion: v1
+kind: Pod
+metadata:
+  name: anti-affinity-notin
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: not.antiaffinity/1.1       # All nodes, except 1 with this label
+                operator: NotIn
+                values: # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+              - key: not.antiaffinity/1.2            # All nodes with this label
+                operator: NotIn
+                values: # It's an array -> required one of the next
+                  - "true"
+                  - "yes"
+          weight: 20
+  containers:
+    - name: anti-affinity-notin
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# Node Anti-affinity   -- Via 'NotIn' --
+apiVersion: v1
+kind: Pod
+metadata:
+  name: anti-affinity-doesnotexist
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: anti-affinity-doesnotexist/1.1       # All nodes, except 1 with this label
+                operator: DoesNotExist
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+              - key: anti-affinity-doesnotexist/1.2            # All nodes with this label
+                operator: DoesNotExist
+          weight: 20
+  containers:
+    - name: anti-affinity-doesnotexist
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# Operators GT
+apiVersion: v1
+kind: Pod
+metadata:
+  name: operator-gt
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: operator.gt/1.1
+                operator: Gt
+                values:   # It's an array -> required one of the next
+                  #- "5" # Not allowed specifying several for Gt or Lt
+                   - "10"
+  containers:
+    - name: operator-gt
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# Operators LT
+apiVersion: v1
+kind: Pod
+metadata:
+  name: operator-lt
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: operator.gt/1.1
+                operator: Lt
+                values:   # It's an array -> required one of the next
+                  - "5"
+                  # - "10"    # Not allowed specifying several for Gt or Lt
+  containers:
+    - name: operator-gt
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+

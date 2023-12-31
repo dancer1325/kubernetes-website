@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: interpod-namespace-1
+
+---
+# Other namespace  -- interpod-namespace-2  --
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: interpod-namespace-2
+
+---
+# Other namespace  -- interpod-namespaceselector-1`  --
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: interpod-namespaceselector-1
+  labels:
+    namespaceselectorone: "true"
+
+---
+# Other namespace  -- interpod-namespaceselector-2`  --
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: interpod-namespaceselector-2
+  labels:
+    namespaceselectortwo: "true"

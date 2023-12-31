@@ -1,0 +1,51 @@
+---
+# podaffinityterm.matchLabelKeys    ->    specify keys for the labels
+apiVersion: v1
+kind: Pod
+metadata:
+  name: matchlabelkeys-1
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label who existed in a node
+          matchLabelKeys:
+            - matchlabelkeys.1/1
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: In
+                values:
+                  - "true"
+  containers:
+    - name: matchlabelkeys-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+#   matchLabelKeys          if there is no pod with that label -> not running
+kind: Pod
+metadata:
+  name: matchlabelkeys-2
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label who existed in a node
+          matchLabelKeys:
+            - matchlabelkeys.1/1
+            - matchlabelkeys.1/2
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: In
+                values:
+                  - "true"
+  containers:
+    - name: matchlabelkeys-2
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"

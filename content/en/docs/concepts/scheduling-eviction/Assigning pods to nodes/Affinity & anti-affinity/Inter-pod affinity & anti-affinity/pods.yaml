@@ -1,0 +1,113 @@
+# topologyKey             -- same topologyKey for different podAffinity rules
+apiVersion: v1
+kind: Pod
+metadata:
+  name: topologykey-1
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label who existed in a node
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: In
+                values:
+                  - "true"
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            topologyKey: topologykey.1/1.1    # Label existed in a node
+            labelSelector:
+              matchExpressions:
+                - key: interpod.1/2
+                  operator: In
+                  values:
+                    - "true"
+          weight: 30
+  containers:
+    - name: topologykey-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# topologyKey             -- different topologyKeys(s) for different podAffinity rules
+apiVersion: v1
+kind: Pod
+metadata:
+  name: topologykey-2
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label existed in a node
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: In
+                values:
+                  - "true"
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            topologyKey: topologykey.1/1.2    # Label existed in a node
+            labelSelector:
+              matchExpressions:
+                - key: interpod.1/2
+                  operator: In
+                  values:
+                    - "true"
+          weight: 30
+  containers:
+    - name: topologykey-2
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# Interpod anti-affinity with NotIn
+apiVersion: v1
+kind: Pod
+metadata:
+  name: anti-affinity-notin
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label existed in a node
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: NotIn
+                values:
+                  - "true"
+  containers:
+    - name: anti-affinity-notin
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
+
+---
+# Interpod anti-affinity with DoesNotExist
+apiVersion: v1
+kind: Pod
+metadata:
+  name: anti-affinity-doesnotexist
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: topologykey.1/1.1      # Label existed in a node
+          labelSelector:
+            matchExpressions:
+              - key: interpod.1/1
+                operator: DoesNotExist
+  containers:
+    - name: anti-affinity-doesnotexist
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
