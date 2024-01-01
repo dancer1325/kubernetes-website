@@ -1,0 +1,16 @@
+---
+# Cause eviction
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cause-evict
+spec:
+  containers:
+    - name: cause-evict-1
+      image: busybox:1.28
+      resources:
+        requests:
+          cpu: 2490m
+      command:
+        - sleep
+        - "3600"
