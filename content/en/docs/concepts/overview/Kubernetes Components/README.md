@@ -74,6 +74,8 @@
         * `docker exec ControlPlaneContainer ps aux | grep kubelet > kubelet.txt` and `code kubelet.txt` checking which contains '/usr/bin/kubelet'
       * Check that it's running
         * `docker exec -it ControlPlaneContainer sh` and `systemctl status kubelet` checking that it's running
+      * Check all the logs
+        * `docker exec -it ControlPlaneContainer journalctl -u kubelet`
     * kube-scheduler
       * Check that it's a kube-scheduler really
         * `kubectl describe pods/kube-scheduler-kind-control-plane -n kube-system` and check that it contains a container with a kube-scheduler image
