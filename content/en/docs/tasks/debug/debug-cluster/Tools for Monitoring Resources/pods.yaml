@@ -1,0 +1,59 @@
+---
+# dummy
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dummy-1
+spec:
+  nodeName: other-na
+  containers:
+    - name: dummy-1-1
+      image: busybox:1.28
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+      command:
+        - sleep
+        - "3600"
+
+---
+# dummy-2
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dummy-2
+spec:
+  nodeName: cluster-tools-for-monitoring-control-plane
+  containers:
+    - name: dummy-2-1
+      image: busybox:1.28
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+      command:
+        - sleep
+        - "3600"
+
+
+---
+# dummy-3
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dummy-3
+spec:
+  nodeName: other-node
+  containers:
+    - name: dummy-3-1
+      image: busybox:1.28
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+      command:
+        - sleep
+        - "3600"
+
+
