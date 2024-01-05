@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: replication-controller
+spec:
+  replicas: 3
+  selector:
+    app: my-app
+  template:       #PodTemplateSpec
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: replication-controller
+          image: dancer13/test:v2.1         # Non-existing image

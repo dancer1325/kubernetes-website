@@ -1,0 +1,97 @@
+# Pending-1               -- insufficient resources --
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pending-1
+spec:
+  containers:
+    - name: pending-1
+      image: busybox:latest
+      resources:
+        requests:
+          memory: "200Mi"
+          cpu: "8"
+      command:
+        - sleep
+        - "3600"
+
+---
+# Pending-2-1               -- binding a pod → hostPort  --
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pending-2-1
+spec:
+  containers:
+    - name: pending-2-1
+      image: busybox:latest
+      ports:
+        - containerPort: 80
+          hostPort: 8080
+      command:
+        - sleep
+        - "3600"
+---
+# Pending-2-2               -- binding a pod → hostPort  --
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pending-2-2
+spec:
+  containers:
+    - name: pending-2-2
+      image: busybox:latest
+      ports:
+        - containerPort: 80
+          hostPort: 8080      # Trying to place
+      command:
+        - sleep
+        - "3600"
+
+---
+# Pending-2-3               -- binding a pod → hostPort  --
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pending-2-3
+spec:
+  containers:
+    - name: pending-2-3
+      image: busybox:latest
+      ports:
+        - containerPort: 80
+          hostPort: 8080      # Trying to place
+      command:
+        - sleep
+        - "3600"
+
+---
+# Waiting
+apiVersion: v1
+kind: Pod
+metadata:
+  name: waiting-1
+spec:
+  containers:
+    - name: waiting-1
+      image: dancer13/test:v2.1         # Non-existing image
+
+
+---
+# Terminating
+
+---
+# Running, but not doing what I told              -- nesting and mispelling errors are NOT valid
+apiVersion: v1
+kind: Pod
+metadata:
+  name: running-not-doing-what-i-told
+spec:
+  containers:
+    - name: running-not-doing-what-i-told
+      image: busybox:latest
+#        image: busybox:latest # nesting error
+#      commnd:           # mispell
+#        - sleep
+#        - "3600"
+
