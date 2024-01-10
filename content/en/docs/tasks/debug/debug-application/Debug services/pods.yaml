@@ -1,0 +1,44 @@
+# Service's selector does NOT match with a Pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: selectors-mismatch
+  labels:
+    selectors: mistmatchHHHHHHHH      # it does NOT match with service selector
+spec:
+  containers:
+    - name: ports-mismatch
+      image: nginx:latest
+      ports:
+        - containerPort: 82
+
+---
+# Service's targetPort != containerPort
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ports-not-match
+  labels:
+    case: ports-not-match
+spec:
+  containers:
+    - name: ports-mismatch
+      image: nginx:latest
+      ports:
+        - containerPort: 83
+---
+# Service's targetPort != containerPort
+apiVersion: v1
+kind: Pod
+metadata:
+  name: targetport-by-name-missing
+  labels:
+    case: targetport-by-name-missing
+spec:
+  containers:
+    - name: targetport-by-name-missing
+      image: nginx:latest
+      ports:
+        - #containerPort: "85"    # Not allowed to pass a string
+          containerPort: 85
+          #name:      Missing

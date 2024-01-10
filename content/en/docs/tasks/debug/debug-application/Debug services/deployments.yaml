@@ -1,0 +1,62 @@
+# valid case
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: deployment-1
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+---
+# Service NOT created
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-not-created
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      case: service-not-created
+  template:
+    metadata:
+      labels:
+        case: service-not-created
+    spec:
+      containers:
+        - name: service-not-created
+          image: nginx:latest
+
+---
+# deployment-different-namespace
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-different-namespace
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      case: different-namespace
+  template:
+    metadata:
+      labels:
+        case: different-namespace
+    spec:
+      containers:
+        - name: deployment-different-namespace
+          image: nginx:latest
+
+---

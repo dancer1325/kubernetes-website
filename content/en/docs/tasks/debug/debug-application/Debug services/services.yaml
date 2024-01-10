@@ -1,0 +1,76 @@
+# valid case
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-1
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+
+---
+# Service's selector does NOT match with a Pod
+apiVersion: v1
+kind: Service
+metadata:
+  name: selectors-mismatch
+spec:
+  selector:
+    selectors: mistmatcH    # it does NOT match with service selector
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 82
+  type: ClusterIP
+
+---
+# Service's targetPort != containerPort
+apiVersion: v1
+kind: Service
+metadata:
+  name: ports-not-match
+spec:
+  selector:
+    case: ports-not-match
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 84
+  type: ClusterIP
+---
+# service-different-namespace
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-different-namespace
+  namespace: different-namespace
+spec:
+  selector:
+    case: different-namespace
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+
+---
+# targetPort as string
+apiVersion: v1
+kind: Service
+metadata:
+  name: targetport-by-name-missing
+spec:
+  selector:
+    case: targetport-by-name-missing
+  ports:
+    - protocol: TCP
+      #port: "80"       # Not allowed to pass a string
+      port: 80
+      #targetPort: 85     # int or string are accepted
+      #targetPort: "85"     # Not valid. If it's a string -> at least must contain 1 character
+      targetPort: "by-name-missing"
+  type: ClusterIP
