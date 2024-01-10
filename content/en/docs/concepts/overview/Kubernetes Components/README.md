@@ -69,6 +69,35 @@
           * If you want to extract the KubeProxyConfiguration
       * Check the logic about OS' packet filtering layer
         * TODO:
+      * modes in which to run
+        * `kubectl apply -f deployments.yaml` & `kubectl apply -f services.yaml`
+        * Iptables mode
+          * `docker exec -it ControlPlaneContainer sh` &
+          * `iptables-save` to check that
+            * / service’s port
+              * 1 rule in KUBE-SERVICES -- Which one? TODO: --
+              * 1 rule in KUBE-SVC-HASH -- Which one? TODO: --
+            * / pod’s endpoint
+              * small number rules in KUBE-SVC-HASH -- Which one? TODO: --
+              * small number rules in KUBE-SEP-HASH -- Which one? TODO: --
+        * ipvs mode
+          * `docker exec -it ControlPlaneContainer sh` &
+          * `ipvsadm -ln` to check that
+            * Problems:
+              * Problem1: 'ipvsadm' not found
+                * Solution: `apt-get update` & `apt-get install ipvsadm`
+              * Problem2: No result at all found for the different next cases
+                * Solution: TODO:
+            * virtual servers are created /
+              * service’s port -- '80' from 'kubeproxy-modes'  --
+              * NodePorts -- 'kubeproxy-modes-nodeport' --
+              * external IPs -- 'kubeproxy-modes-externalip' --
+              * load-balancer IPs -- 'kubeproxy-modes-loadbalancerip' --
+            * real servers are created /
+              * pod’s endpoint
+      * check if kube-proxy is proxying -- 'kubeproxy-modes' --
+        * `kubectl describe svc/kubeproxy-modes` to check the IP and port & `docker exec -it ControlPlaneContainer sh` &
+        * `curl serviceIP:servicePort` getting result
     * kubelet
       * Check that this agent is included into the container
         * `docker exec ControlPlaneContainer ps aux | grep kubelet > kubelet.txt` and `code kubelet.txt` checking which contains '/usr/bin/kubelet'

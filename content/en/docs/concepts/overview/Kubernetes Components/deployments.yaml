@@ -1,0 +1,84 @@
+# valid case
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeproxy-modes
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      case: kubeproxy-modes
+  template:
+    metadata:
+      labels:
+        case: kubeproxy-modes
+    spec:
+      containers:
+        - name: kubeproxy-modes
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+---
+# For NodePort service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeproxy-modes-nodeport
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      case: kubeproxy-modes-nodeport
+  template:
+    metadata:
+      labels:
+        case: kubeproxy-modes-nodeport
+    spec:
+      containers:
+        - name: kubeproxy-modes-nodeport
+          image: nginx:latest
+          ports:
+            - containerPort: 81
+---
+# For External IPs
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeproxy-modes-externalip
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      case: kubeproxy-modes-externalip
+  template:
+    metadata:
+      labels:
+        case: kubeproxy-modes-externalip
+    spec:
+      containers:
+        - name: kubeproxy-modes-externalip
+          image: nginx:latest
+          ports:
+            - containerPort: 82
+---
+# For load-balancer IPs
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeproxy-modes-loadbalancerip
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      case: kubeproxy-modes-loadbalancerip
+  template:
+    metadata:
+      labels:
+        case: kubeproxy-modes-loadbalancerip
+    spec:
+      containers:
+        - name: kubeproxy-modes-loadbalancerip
+          image: nginx:latest
+          ports:
+            - containerPort: 83

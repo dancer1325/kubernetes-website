@@ -1,0 +1,62 @@
+# valid case
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubeproxy-modes
+spec:
+  selector:
+    case: kubeproxy-modes
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+
+---
+#NodePort service
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubeproxy-modes-nodeport
+spec:
+  type: NodePort
+  selector:
+    case: kubeproxy-modes-nodeport
+  ports:
+    - port: 81
+      # By default and for convenience, the `targetPort` is set to
+      # the same value as the `port` field.
+      targetPort: 81
+
+---
+#External IPs
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubeproxy-modes-externalip
+spec:
+  selector:
+    case: kubeproxy-modes-externalip
+  ports:
+    - name: http
+      protocol: TCP
+      port: 82
+      targetPort: 82
+  externalIPs:
+    - 198.51.100.32
+
+---
+#load-balancer IPs
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubeproxy-modes-loadbalancerip
+spec:
+  selector:
+    case: kubeproxy-modes-loadbalancerip
+  ports:
+    - protocol: TCP
+      port: 83
+      targetPort: 83
+  type: LoadBalancer
+  loadBalancerIP: "90"
