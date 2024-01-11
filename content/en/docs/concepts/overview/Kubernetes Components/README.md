@@ -55,6 +55,8 @@
             * Problem1: How to migrate from v1 to v2?
               * Attempt1: [With minikube] `minikube delete` & `minikube start --kubernetes-version=v1.28`
               * Solution: Check 'reference/APIOverview/DeprecatedAPIMigrationGuide/'
+      * `docker exec -it ControlPlaneContainer cat /etc/kubernetes/manifests/kube-apiserver.yaml > apiserverPod.yaml` & `code apiserverPod.yaml`
+        * be able to check the kube-apiserver podSpec
     * kube-controller-manager
       * Check that it's a kube-controller-manager really
         * `kubectl describe pods/kube-controller-manager-kind-control-plane -n kube-system` and check that it contains a container with a kube-controller-manager image
