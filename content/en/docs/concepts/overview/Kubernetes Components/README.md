@@ -110,6 +110,8 @@
       * Check its configuration
         * `systemctl status kubelet` finding 'config' path
         * `cat cat /var/lib/kubelet/config.yaml` displaying the configuration
+      * acts as bridge between master node < - > rest of nodes -- How to check? TODO: --
+      * fetches individual container statistics from the Container Runtime — via — Container Runtime Interface -- How to check? TODO: --
     * kube-scheduler
       * Check that it's a kube-scheduler really
         * `kubectl describe pods/kube-scheduler-kind-control-plane -n kube-system` and check that it contains a container with a kube-scheduler image
