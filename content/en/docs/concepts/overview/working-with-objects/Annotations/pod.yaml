@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: annotations-1
+  labels:
+    name: label
+  annotations:
+    description: "This is a sample pod with annotations"
+    owner: "-Alfred"    # - invalid starting character for labels, but yes for annotations
+    # key and value  JUST cane be string!
+    #number: 2
+    #valid: false
+
+    # key's syntax -- optionalPrefix/name --
+    # 1. optionalPrefix
+    # 1.1 kubernetes.io/  & k8s.io/   are reserved,     although you are allowed to add them
+    kubernetes.io/example: "invalid"
+    k8s.io/example: "invalid"
+    # 2. name
+    # 2.1 mandatory
+    #prefix/: "invalid"
+    # 2.2    -   _  .     invalid characters to start or ending the name
+    #prefix/-: "invalid"
+    #prefix/_: "invalid"
+    #prefix/.: "invalid"
+
+    # typical information to add
+    # 1. typically managed by configuration layer
+    app: my-app
+    environment: production
+    version: "1.0"
+    # 2. git-related
+    buildTimestamp: "2024-02-25T10:00:00Z"
+    releaseID: "v1.2.3"
+    gitBranch: "main"
+    gitCommitHash: "abc123"
+    pullRequestNumber: "123"
+    imageHash: "sha256:123abc456def"
+    registryAddress: "docker.io/myusername"
+    # 3. pointers to logging / monitoring ...
+    analyticsEndpoint: "http://analytics.example.com/my-app"
+    auditLogEndpoint: "http://audit.example.com/my-app"
+spec:
+  containers:
+    - name: annotations-1
+      image: busybox:latest
+      command:
+        - sleep
+        - "3600"
