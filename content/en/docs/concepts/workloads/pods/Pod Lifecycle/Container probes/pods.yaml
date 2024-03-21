@@ -1,0 +1,63 @@
+# Done by kubelet
+apiVersion: v1
+kind: Pod
+metadata:
+  name: done-by-kubelet
+spec:
+  containers:
+    - name: done-by-kubelet
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+      # Add a random probe
+      readinessProbe:
+        exec:
+          command:
+            - echo 'Hello done-by-kubelet'
+        initialDelaySeconds: 5
+        periodSeconds: 10
+
+---
+# 1! unique mechanism / probe
+apiVersion: v1
+kind: Pod
+metadata:
+  name: one-uniquemechanism-per-probe
+spec:
+  containers:
+    - name: one-uniquemechanism-per-probe
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+      # Add a random probe with several mechanisms
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 80
+        exec:
+          command:
+            - cat
+            - /tmp/healthy
+        initialDelaySeconds: 5
+        periodSeconds: 10
+---
+# mechanism-exec
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mechanism-exec
+spec:
+  containers:
+    - name: mechanism-exec
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+      # Add a random probe with exec mechanisms
+      livenessProbe:
+        exec:
+          command:
+            - /bin/sh
+            - -c
+            - echo "Ready"
+        initialDelaySeconds: 5
+        periodSeconds: 10
