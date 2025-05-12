@@ -16,76 +16,89 @@ weight: 20
 
 <!-- overview -->
 
-This document describes _persistent volumes_ in Kubernetes. Familiarity with
-[volumes](/docs/concepts/storage/volumes/) is suggested.
+* requirements
+  * [volumes](/docs/concepts/storage/volumes/)
 
 <!-- body -->
 
 ## Introduction
 
-Managing storage is a distinct problem from managing compute instances.
-The PersistentVolume subsystem provides an API for users and administrators
-that abstracts details of how storage is provided from how it is consumed.
-To do this, we introduce two new API resources: PersistentVolume and PersistentVolumeClaim.
+* managing storage != managing compute instances
+* PersistentVolume 
+  * provides
+    * API 
+      * -- for -- users & administrators
+      * 👀abstracts details 👀
+        * _Examples:_
+          * how storage is provided 
+          * how it is consumed
+      * 's resources
+        * `PersistentVolume`
+        * `PersistentVolumeClaim`
 
-A _PersistentVolume_ (PV) is a piece of storage in the cluster that has been
-provisioned by an administrator or dynamically provisioned using
-[Storage Classes](/docs/concepts/storage/storage-classes/). It is a resource in
-the cluster just like a node is a cluster resource. PVs are volume plugins like
-Volumes, but have a lifecycle independent of any individual Pod that uses the PV.
-This API object captures the details of the implementation of the storage, be that
-NFS, iSCSI, or a cloud-provider-specific storage system.
+* `PersistentVolume` (PV)
+  * == piece of storage | cluster /
+    * provisioned -- by --
+      * an administrator 
+      * dynamically -- via -- [Storage Classes](/docs/concepts/storage/storage-classes/)
+    * has implementation of the storage's details
+      * _Example:_ NFS, iSCSI, or a cloud-provider-specific storage system 
+  * == cluster's resource
+  * == volume plugins
+  * vs Volumes
+    * 👀PV's lifecycle -- INDEPENDENT of -- ANY individual Pod / uses the PV 👀
 
-A _PersistentVolumeClaim_ (PVC) is a request for storage by a user. It is similar
-to a Pod. Pods consume node resources and PVCs consume PV resources. Pods can
-request specific levels of resources (CPU and Memory). Claims can request specific
-size and access modes (e.g., they can be mounted ReadWriteOnce, ReadOnlyMany or
-ReadWriteMany, see [AccessModes](#access-modes)).
+* `PersistentVolumeClaim` (PVC)
+  * == 👀request for storage -- by a -- user👀
+    * == claim checks -- to the -- resource
+  * == Pod
+    * Pods 
+      * -- consume -- node resources (CPU, Memory, ...)
+      * -- request -- specific levels of resources (CPU and Memory) 
+    * PVCs 
+      * -- consume -- PV resources
+      * -- request -- specific size and [access modes](#access-modes) (ReadWriteOnce, ReadOnlyMany or ReadWriteMany)
 
-While PersistentVolumeClaims allow a user to consume abstract storage resources,
-it is common that users need PersistentVolumes with varying properties, such as
-performance, for different problems. Cluster administrators need to be able to
-offer a variety of PersistentVolumes that differ in more ways than size and access
-modes, without exposing users to the details of how those volumes are implemented.
-For these needs, there is the _StorageClass_ resource.
+* `StorageClass`
+  * := resource / 
+    * specify MUCH storage's options
+  * uses
+    * by cluster administrators, to offer VARIETY of `PV`
+      * ⚠️WITHOUT exposing to users volume's implementation ⚠️
 
-See the [detailed walkthrough with working examples](/docs/tasks/configure-pod-container/configure-persistent-volume-storage/).
+* [working examples](/content/en/docs/tasks/configure-pod-container/configure-persistent-volume-storage.md)
 
 ## Lifecycle of a volume and claim
 
-PVs are resources in the cluster. PVCs are requests for those resources and also act
-as claim checks to the resource. The interaction between PVs and PVCs follows this lifecycle:
-
 ### Provisioning
-
-There are two ways PVs may be provisioned: statically or dynamically.
+* ways to provision a PV
 
 #### Static
 
-A cluster administrator creates a number of PVs. They carry the details of the
-real storage, which is available for use by cluster users. They exist in the
-Kubernetes API and are available for consumption.
+* cluster administrator -- creates -- PVs /
+  * specify the details
+  * exist | Kubernetes API
+  * AVAILABLE -- for -- consumption
 
 #### Dynamic
 
-When none of the static PVs the administrator created match a user's PersistentVolumeClaim,
-the cluster may try to dynamically provision a volume specially for the PVC.
-This provisioning is based on StorageClasses: the PVC must request a
-[storage class](/docs/concepts/storage/storage-classes/) and
-the administrator must have created and configured that class for dynamic
-provisioning to occur. Claims that request the class `""` effectively disable
-dynamic provisioning for themselves.
+* use cases
+  * cluster -- dynamically provision a -- volume -- for the -- PVC 
+    * Reason: 🧠NONE of the static PVs -- match a -- user's PersistentVolumeClaim🧠
+    * 👀provisioning -- based on -- StorageClasses 👀
+      * PVC request a [storage class](/docs/concepts/storage/storage-classes/)
+      * requirements
+        * administrator MUST have 
+          * created & configured that class
+          * enabled `DefaultStorageClass` [admission controller](/docs/reference/access-authn-authz/admission-controllers/#defaultstorageclass) | API server 
+            * _Example:_ pass `--enable-admission-plugins=DefaultStorageClass,....`
+            * see [kube-apiserver](/content/en/docs/reference/command-line-tools-reference/kube-apiserver.md) 
 
-To enable dynamic storage provisioning based on storage class, the cluster administrator
-needs to enable the `DefaultStorageClass`
-[admission controller](/docs/reference/access-authn-authz/admission-controllers/#defaultstorageclass)
-on the API server. This can be done, for example, by ensuring that `DefaultStorageClass` is
-among the comma-delimited, ordered list of values for the `--enable-admission-plugins` flag of
-the API server component. For more information on API server command-line flags,
-check [kube-apiserver](/docs/reference/command-line-tools-reference/kube-apiserver/) documentation.
+* if PVC request the storageClass `""` -> disable dynamic provisioning
 
 ### Binding
 
+* TODO:
 A user creates, or in the case of dynamic provisioning, has already created,
 a PersistentVolumeClaim with a specific amount of storage requested and with
 certain access modes. A control loop in the control plane watches for new PVCs, finds
