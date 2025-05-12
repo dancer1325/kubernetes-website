@@ -6,30 +6,20 @@ weight: 90
 
 <!-- overview -->
 
-This page shows you how to configure a Pod to use a
-{{< glossary_tooltip text="PersistentVolumeClaim" term_id="persistent-volume-claim" >}}
-for storage.
-Here is a summary of the process:
+* goal
+  * how to configure a Pod -- to use, for storage -- a {{< glossary_tooltip text="PersistentVolumeClaim" term_id="persistent-volume-claim" >}}
 
-1. You, as cluster administrator, create a PersistentVolume backed by physical
-   storage. You do not associate the volume with any Pod.
-
-1. You, now taking the role of a developer / cluster user, create a
-   PersistentVolumeClaim that is automatically bound to a suitable
-   PersistentVolume.
-
-1. You create a Pod that uses the above PersistentVolumeClaim for storage.
+* steps
+  1. you (as cluster administrator) create a `PersistentVolume` / -- backed by -- physical storage
+     1. NOT associate the volume -- with -- ANY Pod
+  2. you (as cluster user) create a `PersistentVolumeClaim` 
+     1. AUTOMATICALLY bound -- to a -- suitable `PersistentVolume`
+  3. create a Pod / uses the previous `PersistentVolumeClaim`
 
 ## {{% heading "prerequisites" %}}
 
-* You need to have a Kubernetes cluster that has only one Node, and the
-  {{< glossary_tooltip text="kubectl" term_id="kubectl" >}}
-  command-line tool must be configured to communicate with your cluster. If you
-  do not already have a single-node cluster, you can create one by using
-  [Minikube](https://minikube.sigs.k8s.io/docs/).
-
-* Familiarize yourself with the material in
-  [Persistent Volumes](/docs/concepts/storage/persistent-volumes/).
+* Kubernetes cluster / 1! Node
+* {{< glossary_tooltip text="kubectl" term_id="kubectl" >}} CL tool configured
 
 <!-- steps -->
 
