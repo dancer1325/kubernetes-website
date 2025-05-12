@@ -11,65 +11,57 @@ weight: 40
 
 <!-- overview -->
 
-This document describes the concept of a StorageClass in Kubernetes. Familiarity
-with [volumes](/docs/concepts/storage/volumes/) and
-[persistent volumes](/docs/concepts/storage/persistent-volumes) is suggested.
+* goal
+  * StorageClass | Kubernetes
+
+* requirements
+  * [volumes](/docs/concepts/storage/volumes/)
+  * [persistent volumes](/docs/concepts/storage/persistent-volumes)
 
 <!-- body -->
 
 ## Introduction
 
-A StorageClass provides a way for administrators to describe the "classes" of
-storage they offer. Different classes might map to quality-of-service levels,
-or to backup policies, or to arbitrary policies determined by the cluster
-administrators. Kubernetes itself is unopinionated about what classes
-represent. This concept is sometimes called "profiles" in other storage
-systems.
+* uses
+  * 👀cluster administrators -- describe the -- "classes" of storage / offer👀
+    * unopinionated by Kubernetes 
+* use cases
+  * classes / map to 
+    * quality-of-service levels
+    * backup policies
+    * arbitrary policies
+
+* | OTHER storage systems, 
+  * ALSO named "profiles" 
 
 ## The StorageClass Resource
 
-Each StorageClass contains the fields `provisioner`, `parameters`, and
-`reclaimPolicy`, which are used when a PersistentVolume belonging to the
-class needs to be dynamically provisioned.
+* StorageClass's fields 
+  * `provisioner`, `parameters`, `reclaimPolicy`
+    * uses
+      * PV / belong to the class -- needs to be -- DYNAMICALLY provisioned
+  * `metadata.name`
+    * uses
+      * by users, to request a particular class
+    * | create StorageClass objects, set by cluster administrators
 
-The name of a StorageClass object is significant, and is how users can
-request a particular class. Administrators set the name and other parameters
-of a class when first creating StorageClass objects.
-
-Administrators can specify a default StorageClass only for PVCs that don't
-request any particular class to bind to: see the
-[PersistentVolumeClaim section](/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims)
-for details.
-
-```yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: standard
-provisioner: kubernetes.io/aws-ebs
-parameters:
-  type: gp2
-reclaimPolicy: Retain
-allowVolumeExpansion: true
-mountOptions:
-  - debug
-volumeBindingMode: Immediate
-```
+* _Example:_ [here](storageClass.yaml)
 
 ### Default StorageClass
 
-When a PVC does not specify a `storageClassName`, the default StorageClass is
-used. The cluster can only have one default StorageClass. If more than one
-default StorageClass is accidentally set, the newest default is used when the
-PVC is dynamically provisioned.
+* use cases
+  * PVC does NOT specify a `storageClassName`
+    * see [here](/content/en/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims)
 
-For instructions on setting the default StorageClass, see
-[Change the default StorageClass](/docs/tasks/administer-cluster/change-default-storage-class/).
-Note that certain cloud providers may already define a default StorageClass.
+* EXIST 1! / cluster
+  * if EXIST >1 -> the newest default is used 
+  * SOME cloud providers ALREADY define it 
+
+* [how to change](/content/en/docs/tasks/administer-cluster/change-default-storage-class/)
 
 ### Provisioner
 
-Each StorageClass has a provisioner that determines what volume plugin is used
+* TODO: Each StorageClass has a provisioner that determines what volume plugin is used
 for provisioning PVs. This field must be specified.
 
 | Volume Plugin        | Internal Provisioner |            Config Example             |
