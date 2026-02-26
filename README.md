@@ -1,47 +1,39 @@
 # The Kubernetes documentation
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/be93b718-a6df-402a-b4a4-855ba186c97d/deploy-status)](https://app.netlify.com/sites/kubernetes-io-main-staging/deploys) [![GitHub release](https://img.shields.io/github/release/kubernetes/website.svg)](https://github.com/kubernetes/website/releases/latest)
+* goal
+  * 👀[Kubernetes website & documentation](https://kubernetes.io/)👀
 
-This repository contains the assets required to build the [Kubernetes website and documentation](https://kubernetes.io/). We're glad that you want to contribute!
+## how to run locally?
 
-- [Contributing to the docs](#contributing-to-the-docs)
-- [Localization READMEs](#localization-readmemds)
-
-## Using this repository
-
-You can run the website locally using [Hugo (Extended version)](https://gohugo.io/), or you can run it in a container runtime. We strongly recommend using the container runtime, as it gives deployment consistency with the live website.
-
-## Prerequisites
-
-To use this repository, you need the following installed locally:
+### prerequisites
 
 - [npm](https://www.npmjs.com/)
 - [Go](https://go.dev/)
 - [Hugo (Extended version)](https://gohugo.io/)
-- A container runtime, like [Docker](https://www.docker.com/).
+- container runtime
+  - _Example:_ [Docker](https://www.docker.com/)
 
-Before you start, install the dependencies. Clone the repository and navigate to the directory:
+TODO: 
+The Kubernetes website uses the [Docsy Hugo theme](https://github.com/google/docsy#readme)
+* Even if you plan to run the website in a container, we strongly recommend pulling in the submodule and other development dependencies by running the following:
 
-```bash
-git clone https://github.com/kubernetes/website.git
-cd website
-```
-
-The Kubernetes website uses the [Docsy Hugo theme](https://github.com/google/docsy#readme). Even if you plan to run the website in a container, we strongly recommend pulling in the submodule and other development dependencies by running the following:
-
-### Windows
+#### Windows
 ```powershell
 # fetch submodule dependencies
 git submodule update --init --recursive --depth 1
 ```
 
-### Linux / other Unix
+#### Linux / other Unix
 ```bash
 # fetch submodule dependencies
 make module-init
 ```
 
-## Running the website using a container
+### ways to run
+#### -- via -- container runtime
+* recommended one
+  * Reason: 🧠way to be deployed🧠
+
 
 To build the site in a container, run the following:
 
@@ -50,11 +42,13 @@ To build the site in a container, run the following:
 make container-serve
 ```
 
-If you see errors, it probably means that the hugo container did not have enough computing resources available. To solve it, increase the amount of allowed CPU and memory usage for Docker on your machine ([MacOS](https://docs.docker.com/desktop/settings/mac/) and [Windows](https://docs.docker.com/desktop/settings/windows/)).
+If you see errors, it probably means that the hugo container did not have enough computing resources available
+* To solve it, increase the amount of allowed CPU and memory usage for Docker on your machine ([MacOS](https://docs.docker.com/desktop/settings/mac/) and [Windows](https://docs.docker.com/desktop/settings/windows/)).
 
-Open up your browser to <http://localhost:1313> to view the website. As you make changes to the source files, Hugo updates the website and forces a browser refresh.
+Open up your browser to <http://localhost:1313> to view the website
+* As you make changes to the source files, Hugo updates the website and forces a browser refresh.
 
-## Running the website locally using Hugo
+#### -- via -- Hugo
 
 Make sure to install the Hugo extended version specified by the `HUGO_VERSION` environment variable in the [`netlify.toml`](netlify.toml#L11) file.
 
@@ -71,7 +65,9 @@ To install dependencies, deploy and test the site locally, run:
   hugo.exe server --buildFuture --environment development
   ```
 
-This will start the local Hugo server on port 1313. Open up your browser to <http://localhost:1313> to view the website. As you make changes to the source files, Hugo updates the website and forces a browser refresh.
+This will start the local Hugo server on port 1313
+* Open up your browser to <http://localhost:1313> to view the website
+* As you make changes to the source files, Hugo updates the website and forces a browser refresh.
 
 ## Building the API reference pages
 
@@ -198,11 +194,3 @@ If you need help at any point when contributing, the [New Contributor Ambassador
 | [Indonesian](README-id.md) | [Spanish](README-es.md)    |
 | [Italian](README-it.md)    | [Ukrainian](README-uk.md)  |
 | [Japanese](README-ja.md)   | [Vietnamese](README-vi.md) |
-
-## Code of conduct
-
-Participation in the Kubernetes community is governed by the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md).
-
-## Thank you
-
-Kubernetes thrives on community participation, and we appreciate your contributions to our website and our documentation!
