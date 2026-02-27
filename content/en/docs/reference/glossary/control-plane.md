@@ -9,16 +9,25 @@ aka:
 tags:
 - fundamental
 ---
- The container orchestration layer that exposes the API and interfaces to define, deploy, and manage the lifecycle of containers.
 
- <!--more--> 
- 
- This layer is composed by many different components, such as (but not restricted to):
+* control plane
+  * == container orchestration layer /
+    * exposes, about lifecycle of containers (define + deploy + manage), 
+      * API 
+      * interfaces
+  * == MULTIPLE components
+    * [etcd](etcd.md)
+    * [API Server](kube-apiserver.md)
+    * [Scheduler](kube-scheduler.md)
+    * [Controller Manager](kube-controller-manager.md)
+    * [Cloud Controller Manager](cloud-controller-manager.md)
+    * ...
+  * | production environments, 
+    * NORMALLY runs ACROSS MULTIPLE computers
 
- * {{< glossary_tooltip text="etcd" term_id="etcd" >}}
- * {{< glossary_tooltip text="API Server" term_id="kube-apiserver" >}}
- * {{< glossary_tooltip text="Scheduler" term_id="kube-scheduler" >}}
- * {{< glossary_tooltip text="Controller Manager" term_id="kube-controller-manager" >}}
- * {{< glossary_tooltip text="Cloud Controller Manager" term_id="cloud-controller-manager" >}}
+* ways / control plane's components can be run
+  * daemons OR
+  * containers
 
- These components can be run as traditional operating system services (daemons) or as containers. The hosts running these components were historically called {{< glossary_tooltip text="masters" term_id="master" >}}.
+* [master](master.md)
+  * := hosts / run control plane's components

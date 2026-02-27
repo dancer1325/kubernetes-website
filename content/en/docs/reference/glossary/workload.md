@@ -9,13 +9,16 @@ aka:
 tags:
 - fundamental
 ---
-   A workload is an application running on Kubernetes.
 
-<!--more--> 
+* workload
+  * := application / running | Kubernetes
+  * 's parts
+    * DaemonSet
+    * Deployment
+    * Job
+    * ReplicaSet
+    * StatefulSet
 
-Various core objects that represent different types or parts of a workload
-include the DaemonSet, Deployment, Job, ReplicaSet, and StatefulSet objects.
-
-For example, a workload that has a web server and a database might run the
-database in one {{< glossary_tooltip term_id="StatefulSet" >}} and the web server
-in a {{< glossary_tooltip term_id="Deployment" >}}.
+* _Example:_ workload / has a web server + database
+  * database could run | [StatefulSet](statefulset.md)
+  * web server could run | [deployment](deployment.md)

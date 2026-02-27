@@ -10,10 +10,27 @@ tags:
 - core-object
 - fundamental
 ---
- A node is a worker machine in Kubernetes.
 
-<!--more-->
+* node
+  * == worker machine | Kubernetes
+  * | Kubernetes early versions,
+    * "Minions"
 
-A worker node may be a VM or physical machine, depending on the cluster. It has local daemons or services necessary to run {{< glossary_tooltip text="Pods" term_id="pod" >}} and is managed by the control plane. The daemons on a node include {{< glossary_tooltip text="kubelet" term_id="kubelet" >}}, {{< glossary_tooltip text="kube-proxy" term_id="kube-proxy" >}}, and a container runtime implementing the {{< glossary_tooltip text="CRI" term_id="cri" >}} such as {{< glossary_tooltip term_id="docker" >}}.
+* worker node
+  * types 
+    * -- based on the -- cluster
+      * VM
+      * physical machine 
+  * run a [pod](pod.md) -- thanks to -- 
+    * local daemons OR
+    * services 
+  * managed -- by the -- control plane
 
-In early Kubernetes versions, Nodes were called "Minions".
+* daemons
+  * := OS services
+  * | node
+    * 👀include👀
+      * [kubelet](kubelet.md)
+      * [kube-proxy](kube-proxy.md)
+      * container runtime / implement the [CRI](cri.md)
+        * _Example:_ [docker](docker.md)
