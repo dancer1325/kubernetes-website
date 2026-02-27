@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: backing-stateful-component
+spec:
+  selector:
+    matchLabels:
+      app: stateful-app
+  serviceName: "stateful-service"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: stateful-app
+    spec:
+      containers:
+      - name: app
+        image: nginx:1.27
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

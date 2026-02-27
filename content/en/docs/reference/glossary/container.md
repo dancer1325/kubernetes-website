@@ -21,6 +21,8 @@ tags:
       * making easier
         * deployment | DIFFERENT cloud or OS environments
         * scaling
+  * allows
+    * bundle & run your applications
 
 * containerized applications
   * == applications / run | containers 

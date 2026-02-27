@@ -16,29 +16,77 @@ card:
 no_list: true
 ---
 
-<!-- overview -->
-This page is an overview of Kubernetes.
+## Why you need Kubernetes & what it can do {#why-you-need-kubernetes-and-what-can-it-do}
 
+* container management | production environment
+  * BEFORE Kubernetes,  
+    * PROBLEMS: ⚠️MANUALLY, guarantee NO downtime⚠️
 
-<!-- body -->
+* Kubernetes
+  * == framework /
+    * enable you, to
+      * run DISTRIBUTED systems RESILIENTLY
 
-The name Kubernetes originates from Greek, meaning helmsman or pilot. K8s as an abbreviation
-results from counting the eight letters between the "K" and the "s". Google open sourced the
-Kubernetes project in 2014. Kubernetes combines
-[over 15 years of Google's experience](/blog/2015/04/borg-predecessor-to-kubernetes/) running
-production workloads at scale with best-of-breed ideas and practices from the community.
-
-## Why you need Kubernetes and what it can do {#why-you-need-kubernetes-and-what-can-it-do}
-
-Containers are a good way to bundle and run your applications. In a production
-environment, you need to manage the containers that run the applications and
-ensure that there is no downtime. For example, if a container goes down, another
-container needs to start. Wouldn't it be easier if this behavior was handled by a system?
-
-That's how Kubernetes comes to the rescue! Kubernetes provides you with a framework
-to run distributed systems resiliently. It takes care of scaling and failover for
-your application, provides deployment patterns, and more. For example: Kubernetes
-can easily manage a canary deployment for your system.
+- Features
+  - Automated rollouts & rollbacks
+    - rolls out 
+      - == gradual changes of
+        - application
+        - configuration
+    - rollback
+      - ️if something goes wrong | rollout → AUTOMATIC rollback
+        - monitors application health
+          - == ensure NOT ALL instances are killed | same time
+  - Service discovery & load balancing
+    - own IP address / Pod
+    - single DNS / set of Pods
+    - load balance across the Pods
+    - 👀→ no need to use an unfamiliar service discovery mechanism for your application 👀
+    - [Services, Load Balancing and Networking](Kubernetes/Documentation/Concepts/Services,%20Load%20Balancing%20and%20Networking%2093f52609b9cd4c7a924b63a2c5f80cab.md)
+  - Storage orchestration
+    - [Storage](Kubernetes/Documentation/Concepts/Storage%2009dc7dd9918d4329a80650ffc25a03dc.md)
+    - ⚠️ you choose the storage system to mount ⚠️
+      - local
+      - public cloud provider
+        *Example:* AWS, GCP
+      - network
+        *Example:* NFS, Cinder, Ceph, iSCSI
+    - [Persistent Volumes](Kubernetes/Documentation/Concepts/Storage/Persistent%20Volumes%200a48441fe4c74b1fa02a87876d821de1.md)
+  - Self-healing
+    - about
+      - if containers fail → restart
+      - if nodes die → replace / reschedule containers
+      - if containers don’t respond to user-defined health-check → kill
+    - [ReplicaSet](Kubernetes/Documentation/Concepts/Workloads/Workload%20Resources/ReplicaSet%20f7ae4db36bb84a6f97aff658327bb112.md)
+  - Secret and configuration management
+    - Secrets and application configuration are updated /deployed without
+      - rebuilding the image
+      - exposing secrets
+    - [ReplicaSet](Kubernetes/Documentation/Concepts/Workloads/Workload%20Resources/ReplicaSet%20f7ae4db36bb84a6f97aff658327bb112.md)
+  - Automatic bin packing
+    - Containers are placed automatically based on
+      **Note:** without sacrificing availability
+      - resource requirements &
+      - other constraints
+    - [**Resource Management for Pods and Containers**](Kubernetes/Documentation/Concepts/Configuration/Resource%20Management%20for%20Pods%20and%20Containers%20dec00252d8ee41369f43063968c9d90d.md)
+  - Batch execution
+    - Batch and CI workloads
+      - if a container fails → it’s replaced
+    - [Jobs](Kubernetes/Documentation/Concepts/Workloads/Workload%20Resources/Jobs%20f854f3a6b1dc48ad8ee77a7623b1d785.md)
+  - Horizontal scaling
+    - Scale up or down the application based on
+      - commands
+      - UI
+      - CPU usage
+    - [Horizontal Pod Autoscaling](Kubernetes/Documentation/Tasks/Run%20Applications/Horizontal%20Pod%20Autoscaling%2009ea3f3035ba41db8d3feca844baa3f1.md)
+  - IPv4/IPv6 dual-stack
+    - allocate IPv4 & IPv6 addresses to
+      - Pods &
+      - Services
+    - [**IPv4/IPv6 dual-stack**](Kubernetes/Documentation/Concepts/Services,%20Load%20Balancing%20and%20Networking/IPv4%20IPv6%20dual-stack%20d9b71fc134c84c4bbae1a430fc1d5f77.md)
+  - Designed for extensibility
+    - ⚠️ Features can be added to your Kubernetes cluster ⚠️
+    - [Extending Kubernetes](Kubernetes/Documentation/Concepts/Extending%20Kubernetes%20465ae404131c433295cee5c74cf656d9.md)
 
 Kubernetes provides you with:
 
@@ -50,10 +98,7 @@ Kubernetes provides you with:
   Kubernetes allows you to automatically mount a storage system of your choice, such as
   local storage, public cloud providers, and more.
 * **Automated rollouts and rollbacks**
-  You can describe the desired state for your deployed containers using Kubernetes,
-  and it can change the actual state to the desired state at a controlled rate.
-  For example, you can automate Kubernetes to create new containers for your
-  deployment, remove existing containers and adopt all their resources to the new container.
+
 * **Automatic bin packing**
   You provide Kubernetes with a cluster of nodes that it can use to run containerized tasks.
   You tell Kubernetes how much CPU and memory (RAM) each container needs. Kubernetes can fit

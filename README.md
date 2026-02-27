@@ -3,6 +3,9 @@
 * goal
   * 👀[Kubernetes website & documentation](https://kubernetes.io/)👀
 
+## documentation
+* [here](content/en/_index.md)
+
 ## how to run locally?
 
 ### prerequisites
