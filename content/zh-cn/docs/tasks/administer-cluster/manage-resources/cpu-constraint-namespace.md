@@ -365,6 +365,19 @@ Pods that were created previously.
 只有当 Pod 创建或者更新时，LimitRange 为命名空间规定的 CPU 最小和最大限制才会被强制执行。
 如果你对 LimitRange 进行修改，那不会影响此前创建的 Pod。
 
+{{< note >}}
+<!--
+When using [in-place Pod resize](/docs/tasks/configure-pod-container/resize-container-resources/),
+the CPU constraints are also enforced. If a resize would cause the Pod's CPU values
+to violate the LimitRange constraints (either exceeding the maximum or falling below the minimum),
+the resize will be rejected and the Pod's resources remain at their previous values.
+-->
+使用[就地调整 Pod 大小](/zh-cn/docs/tasks/configure-pod-container/resize-container-resources/)时，
+CPU 限制也会被强制执行。如果调整大小会导致 Pod 的 CPU 值违反 LimitRange
+限制（超过最大值或低于最小值），则调整操作将被拒绝，Pod 的资源将保持在之前的值。
+{{< /note >}}
+
+
 <!--
 ## Motivation for minimum and maximum CPU constraints
 
@@ -435,6 +448,7 @@ kubectl delete namespace constraints-cpu-example
 
 * [Assign Memory Resources to Containers and Pods](/docs/tasks/configure-pod-container/assign-memory-resource/)
 * [Assign CPU Resources to Containers and Pods](/docs/tasks/configure-pod-container/assign-cpu-resource/)
+* [Assign Pod-level CPU and memory resources](/docs/tasks/configure-pod-container/assign-pod-level-resources/)
 * [Configure Quality of Service for Pods](/docs/tasks/configure-pod-container/quality-service-pod/)
 -->
 
@@ -442,4 +456,5 @@ kubectl delete namespace constraints-cpu-example
 
 * [为容器和 Pod 分配内存资源](/zh-cn/docs/tasks/configure-pod-container/assign-memory-resource/)
 * [为容器和 Pod 分配 CPU 资源](/zh-cn/docs/tasks/configure-pod-container/assign-cpu-resource/)
+* [分配 Pod 级别的 CPU 和内存资源](/zh-cn/docs/tasks/configure-pod-container/assign-pod-level-resources/)
 * [为 Pod 配置服务质量](/zh-cn/docs/tasks/configure-pod-container/quality-service-pod/)

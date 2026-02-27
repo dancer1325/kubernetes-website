@@ -12,7 +12,7 @@ body.cid-training body.cid-training .section {
 
 body.cid-training section.call-to-action {
   color: #ffffff;
-  background-color: #3371e3;
+  background-color: #326ce5;
 }
 
 body.cid-training section.call-to-action .main-section {
@@ -26,8 +26,7 @@ body.cid-training section.call-to-action .main-section > div.call-to-action {
   justify-content: center;
   align-items: center;
   margin: initial;
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  padding-block: 5rem;
 }
 
 body.cid-training section.call-to-action .main-section > div.call-to-action > div {
@@ -40,12 +39,19 @@ body.cid-training section.call-to-action .main-section .cta-text {
 }
 
 body.cid-training section.call-to-action .main-section .cta-text > * {
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline: auto;
   text-align: center;
   /* if max() and min() are available, use them */
   min-width: min(20em, 50vw);
   max-width: min(1000px, 50vw);
+}
+
+/*Image Container for further position of image in smaller devices*/
+body.cid-training .cta-img-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 40px;
 }
 
 body.cid-training section.call-to-action .main-section .cta-image {
@@ -63,15 +69,6 @@ body.cid-training #logo-cks {
 }
 
 
-
-body.cid-training .col {
-  display: flex;
-  flex-direction: row;
-  float: left;
-  margin: 1% 0 1% 1.6%;
-}
-
-body.cid-training .col:first-child { margin-left: 0; }
 
 body.cid-training .col-container {
   display: flex; /* Make the container element behave like a table */
@@ -114,7 +111,7 @@ body.cid-training #get-certified .col-nav a.button {
 }
 
 
-@media only screen and (max-width: 840px) {
+@media only screen and (max-width: 945px) {
   body.cid-training   section.call-to-action .main-section .cta-image > img {
     margin: 0;
   }
@@ -143,6 +140,47 @@ body.cid-training #get-certified .col-nav a.button {
     margin: auto;
     padding-top: 20px;
   }
+
+  body.cid-training .cta-img-container{
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 120px);
+    gap: 0;
+  }
+
+  body.cid-training  #logo-kcnf{
+    grid-column: 1 / span 2;
+    margin: 0 auto;
+  }
+
+  body.cid-training  #logo-kcnf > img{
+    position: absolute;
+    top: 0;
+  }
+
+  .cta-image:nth-child(-n+2) {
+    grid-row: 1; 
+  }
+
+
+  /*Change the display to Grid to prevent stretching of tiles*/
+  body.cid-training .col-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    
+  }
+  
+  body.cid-training .col-nav {
+    width: 100%;
+    height: 100%;
+  }
+
+  body.cid-training .col-container .col-nav:last-child{
+    justify-self: center;
+    width: 50%;
+    grid-column-start: span 2;
+    
+  }
 }
 
 
@@ -150,9 +188,11 @@ body.cid-training #get-certified .col-nav a.button {
 /*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
 
 @media only screen and (max-width: 480px) {
-  body.cid-training .col { margin: 1% 0 1% 0%;}
-  body.cid-training .col-container { flex-direction: column; }
+  body.cid-training .col-container { display: flex; flex-direction: column; }
+  body.cid-training .cta-img-container{display: flex;flex-direction: column;}
+  body.cid-training .col-container .col-nav:last-child{width: 100%;}
   body.cid-training #logo-cks { order: initial; }
+  body.cid-training  #logo-kcnf > img{position: relative; }
 }
 
 @media only screen and (max-width: 650px) {
@@ -160,7 +200,8 @@ body.cid-training #get-certified .col-nav a.button {
     display: block;
     width: 100%;
   }
-  body.cid-training .col-container { flex-direction: column; }
+  body.cid-training .col-container {display: flex; flex-direction: column; }
+  body.cid-training .col-container .col-nav:last-child{width: 100%;}
 }
 
 body.cid-training .button {
@@ -173,7 +214,7 @@ body.cid-training .button {
   line-height: 40px;
   color: #ffffff;
   font-size: 16px;
-  background-color: #3371e3;
+  background-color: #326ce5;
   text-decoration: none;
   text-align: center;
 }
@@ -201,7 +242,7 @@ body.cid-training .padded {
 }
 
 body.cid-training .blue-bg {
-  background-color: #3371e3;
+  background-color: #326ce5;
 }
 
 body.cid-training .lighter-gray-bg {

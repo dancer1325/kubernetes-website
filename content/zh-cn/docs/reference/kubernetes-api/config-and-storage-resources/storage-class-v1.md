@@ -6,7 +6,7 @@ api_metadata:
 content_type: "api_reference"
 description: "StorageClass 为可以动态制备 PersistentVolume 的存储类描述参数。"
 title: "StorageClass"
-weight: 6
+weight: 8
 ---
 <!--
 api_metadata:
@@ -16,7 +16,8 @@ api_metadata:
 content_type: "api_reference"
 description: "StorageClass describes the parameters for a class of storage for which PersistentVolumes can be dynamically provisioned."
 title: "StorageClass"
-weight: 6
+weight: 8
+auto_generated: true
 -->
 
 `apiVersion: storage.k8s.io/v1`
@@ -24,6 +25,7 @@ weight: 6
 `import "k8s.io/api/storage/v1"`
 
 ## StorageClass {#StorageClass}
+
 <!--
 StorageClass describes the parameters for a class of storage for which PersistentVolumes can be dynamically provisioned.
 
@@ -41,13 +43,16 @@ StorageClass 是不受名字空间作用域限制的；按照 etcd 设定的存�
 
 <!--
 - **metadata** (<a href="{{< ref "../common-definitions/object-meta#ObjectMeta" >}}">ObjectMeta</a>)
+
   Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 
 - **provisioner** (string), required
+
   provisioner indicates the type of the provisioner.
 
 - **allowVolumeExpansion** (boolean)
-  allowVolumeExpansion shows whether the storage class allow volume expand
+
+  allowVolumeExpansion shows whether the storage class allow volume expand.
 -->
 - **metadata** (<a href="{{< ref "../common-definitions/object-meta#ObjectMeta" >}}">ObjectMeta</a>)
 
@@ -56,14 +61,15 @@ StorageClass 是不受名字空间作用域限制的；按照 etcd 设定的存�
 
 - **provisioner** (string)，必需
 
-  provisioner 表示制备器的类别。
+  `provisioner` 表示制备器的类别。
 
 - **allowVolumeExpansion** (boolean)
 
-  allowVolumeExpansion 显示存储类是否允许卷扩充。
+  `allowVolumeExpansion` 显示存储类是否允许卷扩充。
 
 <!--
 - **allowedTopologies** ([]TopologySelectorTerm)
+
   *Atomic: will be replaced during a merge*
   
   allowedTopologies restrict the node topologies where volumes can be dynamically provisioned. Each volume plugin defines its own supported topology specifications. An empty TopologySelectorTerm list means there is no topology restriction. This field is only honored by servers that enable the VolumeScheduling feature.
@@ -75,78 +81,120 @@ StorageClass 是不受名字空间作用域限制的；按照 etcd 设定的存�
 
   **原子性：将在合并期间被替换**
   
-  allowedTopologies 限制可以动态制备卷的节点拓扑。每个卷插件定义其自己支持的拓扑规约。
+  `allowedTopologies` 限制可以动态制备卷的节点拓扑。每个卷插件定义其自己支持的拓扑规约。
   空的 TopologySelectorTerm 列表意味着没有拓扑限制。
   只有启用 VolumeScheduling 功能特性的服务器才能使用此字段。
   
-  <a name="TopologySelectorTerm"></a> 
+  <a name="TopologySelectorTerm"></a>
   **拓扑选择器条件表示标签查询的结果。
-  一个 null 或空的拓扑选择器条件不会匹配任何对象。各个条件的要求按逻辑与的关系来计算。
-  此选择器作为 NodeSelectorTerm 所提供功能的子集。此功能为 Alpha 特性，将来可能会变更。**
+  一个 `null` 或空的拓扑选择器条件不会匹配任何对象。各个条件的要求按逻辑与的关系来计算。
+  此选择器作为 `NodeSelectorTerm` 所提供功能的子集。这是一个 Alpha 特性，将来可能会变更。**
 
-<!--
+  <!--
   - **allowedTopologies.matchLabelExpressions** ([]TopologySelectorLabelRequirement)
+
+    *Atomic: will be replaced during a merge*
+
     A list of topology selector requirements by labels.
+
     <a name="TopologySelectorLabelRequirement"></a>
     *A topology selector requirement is a selector that matches given label. This is an alpha feature and may change in the future.*
+  -->
 
-    - **allowedTopologies.matchLabelExpressions.key** (string), required
-      The label key that the selector applies to.
-    - **allowedTopologies.matchLabelExpressions.values** ([]string), required
-      An array of string values. One value must match the label to be selected. Each entry in Values is ORed.
--->  
   - **allowedTopologies.matchLabelExpressions** ([]TopologySelectorLabelRequirement)
 
+    **原子性：将在合并期间被替换**
+
     按标签设置的拓扑选择器要求的列表。
-    
-    <a name="TopologySelectorLabelRequirement"></a> 
-    **拓扑选择器要求是与给定标签匹配的一个选择器。此功能为 Alpha 特性，将来可能会变更。**
-    
+
+    <a name="TopologySelectorLabelRequirement"></a>
+    **拓扑选择器要求是与给定标签匹配的一个选择器。这是一个 Alpha 特性，将来可能会变更。**
+
+    <!--
+    - **allowedTopologies.matchLabelExpressions.key** (string), required
+
+      The label key that the selector applies to.
+
+    - **allowedTopologies.matchLabelExpressions.values** ([]string), required
+
+      *Atomic: will be replaced during a merge*
+      
+      An array of string values. One value must match the label to be selected. Each entry in Values is ORed.
+    -->
+
     - **allowedTopologies.matchLabelExpressions.key** (string)，必需
 
       选择器所针对的标签键。
-    
+
     - **allowedTopologies.matchLabelExpressions.values** ([]string)，必需
 
-      字符串数组。一个值必须与要选择的标签匹配。values 中的每个条目按逻辑或的关系来计算。
+      **原子性：将在合并期间被替换**
+
+      字符串值的数组。一个值必须与要选择的标签匹配。values 中的每个条目按逻辑或的关系来计算。
 
 <!--
 - **mountOptions** ([]string)
+
+  *Atomic: will be replaced during a merge*
 
   mountOptions controls the mountOptions for dynamically provisioned PersistentVolumes of this storage class. e.g. ["ro", "soft"]. Not validated - mount of the PVs will simply fail if one is invalid.
 
 - **parameters** (map[string]string)
+
   parameters holds the parameters for the provisioner that should create volumes of this storage class.
 -->
 - **mountOptions** ([]string)
 
-  mountOptions 控制此存储类动态制备的 PersistentVolume 的挂载配置。
-  （例如 ["ro", "soft"]）。
-  系统对选项作检查——如果有一个选项无效，则这些 PV 的挂载将失败。
+  **原子性：将在合并期间被替换**
+
+  mountOptions 控制此存储类动态制备的 PersistentVolume 的挂载配置，例如 ["ro", "soft"]。
+  针对此字段无合法性检查 —— 如果有一个选项无效，则这些 PV 的挂载将失败。
 
 - **parameters** (map[string]string)
 
-  parameters 包含应创建此存储类卷的制备器的参数。
+  `parameters` 包含应创建此存储类卷的制备器的参数。
 
 <!--
 - **reclaimPolicy** (string)
 
   reclaimPolicy controls the reclaimPolicy for dynamically provisioned PersistentVolumes of this storage class. Defaults to Delete.
 
-- **volumeBindingMode** (string)
-  volumeBindingMode indicates how PersistentVolumeClaims should be provisioned and bound.  When unset, VolumeBindingImmediate is used. This field is only honored by servers that enable the VolumeScheduling feature.
+  Possible enum values:
+   - `"Delete"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.
+   - `"Recycle"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.
+   - `"Retain"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.
 -->
 - **reclaimPolicy** (string)
 
-  reclaimPolicy 控制此存储类动态制备的 PersistentVolume 的 reclaimPolicy。默认为 Delete。
+  `reclaimPolicy` 控制此存储类动态制备的 PersistentVolume 的 `reclaimPolicy`。默认为 Delete。
 
+  可能的枚举值：
+  - `"Delete"` 表示当卷被从其申领中释放时，将被从 Kubernetes 中删除。卷插件必须支持删除。
+  - `"Recycle"` 表示当卷被从其申领中释放时，将被回收回到未绑定的持久卷池中。卷插件必须支持回收。
+  - `"Retain"` 表示卷将在其当前阶段（已释放）中保留，以供管理员手动回收。默认策略是 `"Retain"`。
+  
+<!--
 - **volumeBindingMode** (string)
 
-  volumeBindingMode 指示应该如何制备和绑定 PersistentVolumeClaim。
+  volumeBindingMode indicates how PersistentVolumeClaims should be provisioned and bound.  When unset, VolumeBindingImmediate is used. This field is only honored by servers that enable the VolumeScheduling feature.
+
+  Possible enum values:
+   - `"Immediate"` indicates that PersistentVolumeClaims should be immediately provisioned and bound. This is the default mode.
+   - `"WaitForFirstConsumer"` indicates that PersistentVolumeClaims should not be provisioned and bound until the first Pod is created that references the PeristentVolumeClaim. The volume provisioning and binding will occur during Pod scheduing.
+-->
+- **volumeBindingMode** (string)
+
+  `volumeBindingMode` 指示应该如何制备和绑定 PersistentVolumeClaim。
   未设置时，将使用 VolumeBindingImmediate。
   只有启用 VolumeScheduling 功能特性的服务器才能使用此字段。
 
+  可能的枚举值：
+  - `"Immediate"` 表示应立即制备并绑定持久卷申领。这是默认模式。
+  - `"WaitForFirstConsumer"` 表示直到引用了持久卷申领的第一个 Pod 被创建之前，
+    不应制备或绑定持久卷申领。卷的制备和绑定将在 Pod 调度期间发生。
+
 ## StorageClassList {#StorageClassList}
+
 <!--
 StorageClassList is a collection of storage classes.
 -->
@@ -160,9 +208,11 @@ StorageClassList 是存储类的集合。
 
 <!--
 - **metadata** (<a href="{{< ref "../common-definitions/list-meta#ListMeta" >}}">ListMeta</a>)
+
   Standard list metadata More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
 
 - **items** ([]<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>), required
+
   items is the list of StorageClasses
 -->
 - **metadata** (<a href="{{< ref "../common-definitions/list-meta#ListMeta" >}}">ListMeta</a>)
@@ -172,7 +222,7 @@ StorageClassList 是存储类的集合。
 
 - **items** ([]<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>)，必需
 
-  items 是 StorageClass 的列表。
+  `items` 是 StorageClass 的列表。
 
 <!--
 ## Operations {#Operations}
@@ -184,7 +234,9 @@ StorageClassList 是存储类的集合。
 <hr>
 
 ### `get` 读取指定的 StorageClass
+
 #### HTTP 请求
+
 GET /apis/storage.k8s.io/v1/storageclasses/{name}
 
 <!--
@@ -194,9 +246,10 @@ GET /apis/storage.k8s.io/v1/storageclasses/{name}
 - **pretty** (*in query*): string
 -->
 #### 参数
+
 - **name** (**路径参数**): string，必需
 
-  StorageClass 的名称
+  StorageClass 的名称。
 
 - **pretty** (**查询参数**): string
 
@@ -206,6 +259,7 @@ GET /apis/storage.k8s.io/v1/storageclasses/{name}
 #### Response
 -->
 #### 响应
+
 200 (<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>): OK
 
 401: Unauthorized
@@ -214,8 +268,10 @@ GET /apis/storage.k8s.io/v1/storageclasses/{name}
 ### `list` list or watch objects of kind StorageClass
 #### HTTP Request
 -->
-### `list` 列出或观测类别为 StorageClass 的对象
+### `list` 列举或观测类别为 StorageClass 的对象
+
 #### HTTP 请求
+
 GET /apis/storage.k8s.io/v1/storageclasses
 
 <!--
@@ -232,6 +288,7 @@ GET /apis/storage.k8s.io/v1/storageclasses
 - **watch** (*in query*): boolean
 -->
 #### 参数
+
 - **allowWatchBookmarks** (**查询参数**): boolean
 
   <a href="{{< ref "../common-parameters/common-parameters#allowWatchBookmarks" >}}">allowWatchBookmarks</a>
@@ -280,6 +337,7 @@ GET /apis/storage.k8s.io/v1/storageclasses
 #### Response
 -->
 #### 响应
+
 200 (<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClassList" >}}">StorageClassList</a>): OK
 
 401: Unauthorized
@@ -289,7 +347,9 @@ GET /apis/storage.k8s.io/v1/storageclasses
 #### HTTP Request
 -->
 ### `create` 创建 StorageClass
+
 #### HTTP 请求
+
 POST /apis/storage.k8s.io/v1/storageclasses
 
 <!--
@@ -301,6 +361,7 @@ POST /apis/storage.k8s.io/v1/storageclasses
 - **pretty** (*in query*): string
 -->
 #### 参数
+
 - **body**: <a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>，必需
 
 - **dryRun** (**查询参数**): string
@@ -323,6 +384,7 @@ POST /apis/storage.k8s.io/v1/storageclasses
 #### Response
 -->
 #### 响应
+
 200 (<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>): OK
 
 201 (<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>): Created
@@ -336,7 +398,9 @@ POST /apis/storage.k8s.io/v1/storageclasses
 #### HTTP Request
 -->
 ### `update` 替换指定的 StorageClass
+
 #### HTTP 请求
+
 PUT /apis/storage.k8s.io/v1/storageclasses/{name}
 
 <!--
@@ -350,9 +414,10 @@ PUT /apis/storage.k8s.io/v1/storageclasses/{name}
 - **pretty** (*in query*): string
 -->
 #### 参数
+
 - **name** (**路径参数**): string，必需
 
-  StorageClass 的名称
+  StorageClass 的名称。
 
 - **body**: <a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>，必需
 
@@ -376,6 +441,7 @@ PUT /apis/storage.k8s.io/v1/storageclasses/{name}
 #### Response
 -->
 #### 响应
+
 200 (<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>): OK
 
 201 (<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>): Created
@@ -387,7 +453,9 @@ PUT /apis/storage.k8s.io/v1/storageclasses/{name}
 #### HTTP Request
 -->
 ### `patch` 部分更新指定的 StorageClass
+
 #### HTTP 请求
+
 PATCH /apis/storage.k8s.io/v1/storageclasses/{name}
 
 <!--
@@ -402,9 +470,10 @@ PATCH /apis/storage.k8s.io/v1/storageclasses/{name}
 - **pretty** (*in query*): string
 -->
 #### 参数
+
 - **name** (**路径参数**): string，必需
 
-  StorageClass 的名称
+  StorageClass 的名称。
 
 - **body**: <a href="{{< ref "../common-definitions/patch#Patch" >}}">Patch</a>，必需
 
@@ -432,6 +501,7 @@ PATCH /apis/storage.k8s.io/v1/storageclasses/{name}
 #### Response
 -->
 #### 响应
+
 200 (<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>): OK
 
 201 (<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>): Created
@@ -443,7 +513,9 @@ PATCH /apis/storage.k8s.io/v1/storageclasses/{name}
 #### HTTP Request
 -->
 ### `delete` 删除 StorageClass
+
 #### HTTP 请求
+
 DELETE /apis/storage.k8s.io/v1/storageclasses/{name}
 
 <!--
@@ -453,13 +525,15 @@ DELETE /apis/storage.k8s.io/v1/storageclasses/{name}
 - **body**: <a href="{{< ref "../common-definitions/delete-options#DeleteOptions" >}}">DeleteOptions</a>
 - **dryRun** (*in query*): string
 - **gracePeriodSeconds** (*in query*): integer
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
 - **pretty** (*in query*): string
 - **propagationPolicy** (*in query*): string
 -->
 #### 参数
+
 - **name** (**路径参数**): string，必需
 
-  StorageClass 的名称
+  StorageClass 的名称。
 
 - **body**: <a href="{{< ref "../common-definitions/delete-options#DeleteOptions" >}}">DeleteOptions</a>
 
@@ -470,6 +544,10 @@ DELETE /apis/storage.k8s.io/v1/storageclasses/{name}
 - **gracePeriodSeconds** (**查询参数**): integer
 
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
+
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (**查询参数**): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
 
 - **pretty** (**查询参数**): string
 
@@ -483,6 +561,7 @@ DELETE /apis/storage.k8s.io/v1/storageclasses/{name}
 #### Response
 -->
 #### 响应
+
 200 (<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>): OK
 
 202 (<a href="{{< ref "../config-and-storage-resources/storage-class-v1#StorageClass" >}}">StorageClass</a>): Accepted
@@ -494,7 +573,9 @@ DELETE /apis/storage.k8s.io/v1/storageclasses/{name}
 #### HTTP Request
 -->
 ### `deletecollection` 删除 StorageClass 的集合
+
 #### HTTP 请求
+
 DELETE /apis/storage.k8s.io/v1/storageclasses
 
 <!--
@@ -504,6 +585,7 @@ DELETE /apis/storage.k8s.io/v1/storageclasses
 - **dryRun** (*in query*): string
 - **fieldSelector** (*in query*): string
 - **gracePeriodSeconds** (*in query*): integer
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
 - **labelSelector** (*in query*): string
 - **limit** (*in query*): integer
 - **pretty** (*in query*): string
@@ -513,6 +595,7 @@ DELETE /apis/storage.k8s.io/v1/storageclasses
 - **timeoutSeconds** (*in query*): integer
 -->
 #### 参数
+
 - **body**: <a href="{{< ref "../common-definitions/delete-options#DeleteOptions" >}}">DeleteOptions</a>
 
 - **continue** (**查询参数**): string
@@ -530,6 +613,10 @@ DELETE /apis/storage.k8s.io/v1/storageclasses
 - **gracePeriodSeconds** (**查询参数**): integer
 
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
+
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (**查询参数**): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
 
 - **labelSelector** (**查询参数**): string
 
@@ -567,6 +654,7 @@ DELETE /apis/storage.k8s.io/v1/storageclasses
 #### Response
 -->
 #### 响应
+
 200 (<a href="{{< ref "../common-definitions/status#Status" >}}">Status</a>): OK
 
 401: Unauthorized

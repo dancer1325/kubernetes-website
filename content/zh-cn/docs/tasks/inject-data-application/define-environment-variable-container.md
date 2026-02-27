@@ -80,7 +80,7 @@ Pod:
 本示例中，将创建一个只包含单个容器的 Pod。此 Pod 的配置文件中设置环境变量的名称为 `DEMO_GREETING`，
 其值为 `"Hello from the environment"`。下面是此 Pod 的配置清单：
 
-{{< codenew file="pods/inject/envars.yaml" >}}
+{{% code_sample file="pods/inject/envars.yaml" %}}
 
 <!--
 1. Create a Pod based on that manifest:
@@ -173,6 +173,13 @@ as a CLI argument passed to the `env-print-demo` container.
 环境变量 `MESSAGE` 将所有这些环境变量的集合组合起来，
 然后再传递给容器 `env-print-demo` 的 CLI 参数中使用。
 
+<!--
+Environment variable names may consist of any [printable ASCII characters](https://www.ascii-code.com/characters/printable-characters) except '='.
+-->
+环境变量名称可以由除了 '='
+外的任何[可打印的 ASCII](https://www.ascii-code.com/characters/printable-characters)
+字符组成。
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -208,4 +215,3 @@ Upon creation, the command `echo Warm greetings to The Most Honorable Kubernetes
 * 进一步了解[环境变量](/zh-cn/docs/tasks/inject-data-application/environment-variable-expose-pod-information/)
 * 进一步了解[通过环境变量来使用 Secret](/zh-cn/docs/concepts/configuration/secret/#using-secrets-as-environment-variables)
 * 关于 [EnvVarSource](/docs/reference/generated/kubernetes-api/{{< param "version" >}}/#envvarsource-v1-core) 资源的信息。
-

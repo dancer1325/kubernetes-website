@@ -195,12 +195,12 @@ The following methods exist for installing kubectl on macOS:
    ```
 
 <!--
-1. After installing the plugin, clean up the installation files:
+1. After installing and validating kubectl, delete the checksum file:
 -->
-1. 安装插件后，清理安装文件：
+1. 安装并验证 kubectl 后，删除校验和文件：
 
    ```bash
-   rm kubectl kubectl.sha256
+   rm kubectl.sha256
    ```
 <!-- 
 ### Install with Homebrew on macOS
@@ -302,6 +302,15 @@ kubectl 为 Bash、Zsh、Fish 和 PowerShell 提供自动补全功能，可以�
 {{< /tabs >}}
 
 <!--
+### Configure kuberc
+
+See [kuberc](/docs/reference/kubectl/kuberc) for more information.
+-->
+### 配置 kuberc  {#configure-kuberc}
+
+更多信息请参见 [kuberc](/zh-cn/docs/reference/kubectl/kuberc)。
+
+<!--
 ### Install `kubectl convert` plugin
 -->
 ### 安装 `kubectl convert` 插件   {#install-kubectl-convert-plugin}
@@ -398,7 +407,7 @@ kubectl 为 Bash、Zsh、Fish 和 PowerShell 提供自动补全功能，可以�
    <!--
    Make sure `/usr/local/bin` is in your PATH environment variable.
    -->
-   确保你的 PATH 环境变量中存在 `/usr/local/bin`
+   确保你的 PATH 环境变量中存在 `/usr/local/bin`。
    {{< /note >}}
 
 <!--
@@ -443,7 +452,7 @@ Depending on how you installed `kubectl`, use one of the following methods.
 1. 找到你系统上的 `kubectl` 可执行文件：
 
    ```bash
-   where kubectl
+   which kubectl
    ```
 
 <!--

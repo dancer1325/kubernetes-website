@@ -1,5 +1,6 @@
 {{ range .Params.cards }}
 <div class="launch-card">
+    <div class="card-content">
     <h2 id="{{ replace .title " " "-" | lower }}">{{ .title }}</h2>
     <p>{{ .description }}</p>
     <ul>
@@ -19,11 +20,9 @@
         {{ end }}
     {{ end }}
     </ul>
-    {{ if .button }}
-      <br>
-      <button id="btn-concepts" class="button" onClick="location.href='{{ .button_path | relLangURL }}';" aria-label="{{ .title }}">{{ .button }}</button>
-      <br>
-      <br>
-    {{ end }}
+    {{- if .button -}}
+    <button class="portal-button" id="btn-{{ replace .title " " "-" | lower }}" onClick="location.href='{{ .button_path | relLangURL }}';" aria-label="{{ .title }}">{{ .button }}</button>
+    {{- end -}}
+    </div>
 </div>
 {{ end }}

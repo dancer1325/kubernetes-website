@@ -106,8 +106,11 @@ for more details.
 ### Workflow when using `kubeadm init`
 
 When you call `kubeadm init`, the kubelet configuration is marshalled to disk
-at `/var/lib/kubelet/config.yaml`, and also uploaded to a `kubelet-config` ConfigMap in the `kube-system`
-namespace of the cluster. A kubelet configuration file is also written to `/etc/kubernetes/kubelet.conf`
+at `/var/lib/kubelet/config.yaml`, and also uploaded to a `kubelet-config` 
+ConfigMap in the `kube-system` namespace of the cluster. 
+Additionally, the kubeadm tool detects the CRI socket on the node and writes its details
+(including the socket path) into a local configuration, `/var/lib/kubelet/instance-config.yaml`.
+A kubelet configuration file is also written to `/etc/kubernetes/kubelet.conf`
 with the baseline cluster-wide configuration for all kubelets in the cluster. This configuration file
 points to the client certificates that allow the kubelet to communicate with the API server. This
 addresses the need to
@@ -123,8 +126,7 @@ KUBELET_KUBEADM_ARGS="--flag1=value1 --flag2=value2 ..."
 ```
 
 In addition to the flags used when starting the kubelet, the file also contains dynamic
-parameters such as the cgroup driver and whether to use a different container runtime socket
-(`--cri-socket`).
+parameters such as the cgroup driver.
 
 After marshalling these two files to disk, kubeadm attempts to run the following two
 commands, if you are using systemd:
@@ -139,8 +141,10 @@ If the reload and restart are successful, the normal `kubeadm init` workflow con
 
 When you run `kubeadm join`, kubeadm uses the Bootstrap Token credential to perform
 a TLS bootstrap, which fetches the credential needed to download the
-`kubelet-config` ConfigMap and writes it to `/var/lib/kubelet/config.yaml`. The dynamic
-environment file is generated in exactly the same way as `kubeadm init`.
+`kubelet-config` ConfigMap and writes it to `/var/lib/kubelet/config.yaml`.
+Additionally, the kubeadm tool detects the CRI socket on the node and writes its details
+(including the socket path) into a local configuration, `/var/lib/kubelet/instance-config.yaml`.
+The dynamic environment file is generated in exactly the same way as `kubeadm init`.
 
 Next, `kubeadm` runs the following two commands to load the new configuration into the kubelet:
 
@@ -162,12 +166,17 @@ Kubeadm deletes the `/etc/kubernetes/bootstrap-kubelet.conf` file after completi
 Note that the kubeadm CLI command never touches this drop-in file.
 
 This configuration file installed by the `kubeadm`
-[DEB](https://github.com/kubernetes/release/blob/master/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf) or
-[RPM package](https://github.com/kubernetes/release/blob/master/cmd/kubepkg/templates/latest/rpm/kubeadm/10-kubeadm.conf) is written to
-`/etc/systemd/system/kubelet.service.d/10-kubeadm.conf` and is used by systemd.
+[package](https://github.com/kubernetes/release/blob/cd53840/cmd/krel/templates/latest/kubeadm/10-kubeadm.conf) is written to
+`/usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf` and is used by systemd.
 It augments the basic
-[`kubelet.service` for RPM](https://github.com/kubernetes/release/blob/master/cmd/kubepkg/templates/latest/rpm/kubelet/kubelet.service) or
-[`kubelet.service` for DEB](https://github.com/kubernetes/release/blob/master/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service):
+[`kubelet.service`](https://github.com/kubernetes/release/blob/cd53840/cmd/krel/templates/latest/kubelet/kubelet.service).
+
+If you want to override that further, you can make a directory `/etc/systemd/system/kubelet.service.d/`
+(not `/usr/lib/systemd/system/kubelet.service.d/`) and put your own customizations into a file there.
+For example, you might add a new local file `/etc/systemd/system/kubelet.service.d/local-overrides.conf`
+to override the unit settings configured by `kubeadm`.
+
+Here is what you are likely to find in `/usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf`:
 
 {{< note >}}
 The contents below are just an example. If you don't want to use a package manager

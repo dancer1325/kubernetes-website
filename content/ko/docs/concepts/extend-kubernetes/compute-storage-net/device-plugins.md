@@ -195,7 +195,7 @@ kubelet 인스턴스에 자신을 다시 등록할 것으로 기대된다. 새 k
 노드에서 사용 중인 장치 셋을 검색하고 메트릭과 연관될 컨테이너를 설명하는
 메타데이터를 얻을 수 있어야 한다. 장치 모니터링 에이전트에 의해 노출된
 [프로메테우스](https://prometheus.io/) 지표는
-[쿠버네티스 Instrumentation 가이드라인](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/instrumentation.md)을 따라
+[쿠버네티스 Instrumentation 가이드라인](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/metric-instrumentation.md)을 따라
 `pod`, `namespace` 및 `container` 프로메테우스 레이블을 사용하여 컨테이너를 식별해야 한다.
 
 kubelet은 gRPC 서비스를 제공하여 사용 중인 장치를 검색하고, 이러한 장치에 대한 메타데이터를
@@ -283,7 +283,7 @@ kubelet이 APIServer로 내보내는 것보다 더 많은 정보를 제공한다
 사용해야 한다. 만약 목적이 free/unallocated 리소스를 확인하기 위한 것이라면
 List() 엔드포인트와 함께 사용되어야 한다. `GetAllocableResources`로 얻은 결과는 kubelet에
 노출된 기본 리소스가 변경되지 않는 한 동일하게 유지된다. 이러한 변경은 드물지만, 발생하게 된다면
-(예를 들면: hotplug/hotunplug, 장치 상태 변경) 클라이언트가 `GetAlloctableResources` 엔드포인트를
+(예를 들면: hotplug/hotunplug, 장치 상태 변경) 클라이언트가 `GetAllocatableResources` 엔드포인트를
 호출할 것으로 가정한다.
 
 그러나 CPU 및/또는 메모리가 갱신된 경우 `GetAllocateableResources` 엔드포인트를 호출하는 것만으로는
@@ -365,7 +365,7 @@ pluginapi.Device{ID: "25102017", Health: pluginapi.Healthy, Topology:&pluginapi.
 
 다음은 장치 플러그인 구현의 예이다.
 
-* [AMD GPU 장치 플러그인](https://github.com/RadeonOpenCompute/k8s-device-plugin)
+* [AMD GPU 장치 플러그인](https://github.com/ROCm/k8s-device-plugin)
 * 인텔 GPU, FPGA, QAT, VPU, SGX, DSA, DLB 및 IAA 장치용 [인텔 장치 플러그인](https://github.com/intel/intel-device-plugins-for-kubernetes)
 * 하드웨어 지원 가상화를 위한 [KubeVirt 장치 플러그인](https://github.com/kubevirt/kubernetes-device-plugins)
 * [컨테이너에 최적화된 OS를 위한 NVIDIA GPU 장치 플러그인](https://github.com/GoogleCloudPlatform/container-engine-accelerators/tree/master/cmd/nvidia_gpu)

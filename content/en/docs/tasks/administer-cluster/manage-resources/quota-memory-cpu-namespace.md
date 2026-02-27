@@ -152,6 +152,12 @@ Instead of managing total resource use within a namespace, you might want to res
 individual Pods, or the containers in those Pods. To achieve that kind of limiting, use a
 [LimitRange](/docs/concepts/policy/limit-range/).
 
+{{< note >}}
+When using [in-place Pod resize](/docs/tasks/configure-pod-container/resize-container-resources/),
+ResourceQuota enforcement applies to the resized values. If a resize would cause the namespace
+to exceed its quota limits, the resize is rejected and the Pod's resources remain unchanged.
+{{< /note >}}
+
 ## Clean up
 
 Delete your namespace:
@@ -184,6 +190,8 @@ kubectl delete namespace quota-mem-cpu-example
 * [Assign Memory Resources to Containers and Pods](/docs/tasks/configure-pod-container/assign-memory-resource/)
 
 * [Assign CPU Resources to Containers and Pods](/docs/tasks/configure-pod-container/assign-cpu-resource/)
+
+* [Assign Pod-level CPU and memory resources](/docs/tasks/configure-pod-container/assign-pod-level-resources/)
 
 * [Configure Quality of Service for Pods](/docs/tasks/configure-pod-container/quality-service-pod/)
 

@@ -46,16 +46,32 @@ A node selector requirement is a selector that contains values, a key, and an op
 - **operator** (string)，必需
 
   代表主键与值集之间的关系。合法的 operator 值包括 `In`、`NotIn`、`Exists`、`DoesNotExist`、`Gt` 和 `Lt`。
- 
+
+  <!--
+  Possible enum values:
+  -->
+  
+  可能的枚举值：
+
+   - `"DoesNotExist"`
+   - `"Exists"`
+   - `"Gt"`
+   - `"In"`
+   - `"Lt"`
+   - `"NotIn"`
+   
 <!--
 - **values** ([]string)
+
+  *Atomic: will be replaced during a merge*
 
   An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. If the operator is Gt or Lt, the values array must have a single element, which will be interpreted as an integer. This array is replaced during a strategic merge patch.
 -->
 - **values** ([]string)
 
+  **原子性：将在合并期间被替换**
+
   一个由字符串值组成的数组。如果 operator 是 `In` 或 `NotIn`，则 values 数组不能为空。
   如果 operator 为 `Exists` 或 `DoesNotExist`，则 values 数组只能为空。
   如果 operator 为 `Gt` 或 `Lt`，则 values 数组只能包含一个元素，并且该元素会被解释为整数。
   在执行策略性合并补丁操作时，此数组会被整体替换。
-

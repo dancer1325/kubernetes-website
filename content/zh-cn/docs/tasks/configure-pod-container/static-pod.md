@@ -91,14 +91,13 @@ Instructions for other distributions or Kubernetes installations may vary.
 <!--
 ## Create a static pod {#static-pod-creation}
 
-You can configure a static Pod with either a
-[file system hosted configuration file](/docs/tasks/configure-pod-container/static-pod/#configuration-files)
-or a [web hosted configuration file](/docs/tasks/configure-pod-container/static-pod/#pods-created-via-http).
+You can configure a static Pod with either a [file system hosted configuration file](#configuration-files)
+or a [web hosted configuration file](#pods-created-via-http).
 -->
 ## 创建静态 Pod {#static-pod-creation}
 
-可以通过[文件系统上的配置文件](/zh-cn/docs/tasks/configure-pod-container/static-pod/#configuration-files)或者
-[Web 网络上的配置文件](/zh-cn/docs/tasks/configure-pod-container/static-pod/#pods-created-via-http)来配置静态 Pod。
+可以通过[文件系统上的配置文件](#configuration-files)或者
+[Web 网络上的配置文件](#pods-created-via-http)来配置静态 Pod。
 
 <!--
 ### Filesystem-hosted static Pod manifest {#configuration-files}
@@ -133,13 +132,12 @@ For example, this is how to start a simple web server as a static Pod:
 <!--
 1. Choose a directory, say `/etc/kubernetes/manifests` and place a web server
    Pod definition there, for example `/etc/kubernetes/manifests/static-web.yaml`:
+
+   # Run this command on the node where kubelet is running
 -->
 2. 选择一个目录，比如在 `/etc/kubernetes/manifests` 目录来保存 Web 服务 Pod 的定义文件，例如
    `/etc/kubernetes/manifests/static-web.yaml`：
 
-   <!--
-   # Run this command on the node where kubelet is running
-   -->
    ```shell
    # 在 kubelet 运行的节点上执行以下命令
    mkdir -p /etc/kubernetes/manifests/
@@ -162,24 +160,21 @@ For example, this is how to start a simple web server as a static Pod:
    ```
 
 <!--
-1. Configure your kubelet on the node to use this directory by running it with
+1. Configure the kubelet on that node to set a `staticPodPath` value in the
+   [kubelet configuration file](/docs/reference/config-api/kubelet-config.v1beta1/).  
+   See [Set Kubelet Parameters Via A Configuration File](/docs/tasks/administer-cluster/kubelet-config-file/)
+   for more information.
+
+   An alternative and deprecated method is to configure the kubelet on that node
+   to look for static Pod manifests locally, using a command line argument.
+   To use the deprecated approach, start the kubelet with the
    `--pod-manifest-path=/etc/kubernetes/manifests/` argument.
-   On Fedora, edit `/etc/kubernetes/kubelet` to include this line:
 -->
-3. 配置这个节点上的 kubelet，使用这个参数执行 `--pod-manifest-path=/etc/kubelet.d/`。
-   在 Fedora 上编辑 `/etc/kubernetes/kubelet` 以包含下面这行：
+3. 在该节点上配置 kubelet，在 [kubelet 配置文件](/zh-cn/docs/reference/config-api/kubelet-config.v1beta1/)中设定 `staticPodPath` 值。
+   欲了解更多信息，请参考[通过配置文件设定 kubelet 参数](/zh-cn/docs/tasks/administer-cluster/kubelet-config-file/)。
 
-   ```
-   KUBELET_ARGS="--cluster-dns=10.254.0.10 --cluster-domain=kube.local --pod-manifest-path=/etc/kubernetes/manifests/"
-   ```
-
-   <!--
-   or add the `staticPodPath: <the directory>` field in the
-   [kubelet configuration file](/docs/reference/config-api/kubelet-config.v1beta1/).
-   -->
-   或者在 [Kubelet 配置文件](/zh-cn/docs/reference/config-api/kubelet-config.v1beta1/)中添加
-   `staticPodPath: <目录>`字段。
-
+   另一个已弃用的方法是，在该节点上通过命令行参数配置 kubelet，以便从本地查找静态 Pod 清单。
+   若使用这种弃用的方法，请启动 kubelet 时加上 `--pod-manifest-path=/etc/kubernetes/manifests/` 参数。
 <!--
 1. Restart the kubelet. On Fedora, you would run:
 
@@ -317,7 +312,7 @@ You can see the mirror Pod on the API server:
 kubectl get pods
 ```
 
-```
+```console
 NAME                  READY   STATUS    RESTARTS        AGE
 static-web-my-node1   1/1     Running   0               2m
 ```
@@ -348,7 +343,7 @@ the kubelet _doesn't_ remove the static Pod:
 kubectl delete pod static-web-my-node1
 ```
 
-```
+```console
 pod "static-web-my-node1" deleted
 ```
 
@@ -361,7 +356,7 @@ You can see that the Pod is still running:
 kubectl get pods
 ```
 
-```
+```console
 NAME                  READY   STATUS    RESTARTS   AGE
 static-web-my-node1   1/1     Running   0          4s
 ```
@@ -471,13 +466,11 @@ f427638871c35   docker.io/library/nginx@sha256:...    19 seconds ago    Running 
 * [Generate static Pod manifests for control plane components](/docs/reference/setup-tools/kubeadm/implementation-details/#generate-static-pod-manifests-for-control-plane-components)
 * [Generate static Pod manifest for local etcd](/docs/reference/setup-tools/kubeadm/implementation-details/#generate-static-pod-manifest-for-local-etcd)
 * [Debugging Kubernetes nodes with `crictl`](/docs/tasks/debug/debug-cluster/crictl/)
-* [Learn more about `crictl`](https://github.com/kubernetes-sigs/cri-tools).
-* [Map `docker` CLI commands to `crictl`](/docs/reference/tools/map-crictl-dockercli/).
+* [Learn more about `crictl`](https://github.com/kubernetes-sigs/cri-tools)
 * [Set up etcd instances as static pods managed by a kubelet](/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
 -->
 * [为控制面组件生成静态 Pod 清单](/zh-cn/docs/reference/setup-tools/kubeadm/implementation-details/#generate-static-pod-manifests-for-control-plane-components)
 * [为本地 etcd 生成静态 Pod 清单](/zh-cn/docs/reference/setup-tools/kubeadm/implementation-details/#generate-static-pod-manifest-for-local-etcd)
-* [使用 `crictl` 对 Kubernetes 节点进行调试](/docs/tasks/debug/debug-cluster/crictl/)
+* [使用 `crictl` 对 Kubernetes 节点进行调试](/zh-cn/docs/tasks/debug/debug-cluster/crictl/)
 * 更多细节请参阅 [`crictl`](https://github.com/kubernetes-sigs/cri-tools)
-* [从 `docker` CLI 命令映射到 `crictl`](/zh-cn/docs/reference/tools/map-crictl-dockercli/)
 * [将 etcd 实例设置为由 kubelet 管理的静态 Pod](/zh-cn/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)

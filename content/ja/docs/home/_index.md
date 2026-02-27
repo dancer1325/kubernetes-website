@@ -1,27 +1,23 @@
 ---
-approvers:
 title: Kubernetesドキュメント
 noedit: true
-cid: docsHome
 layout: docsportal_home
-class: gridPage gridPageHome
-linkTitle: "ホーム"
+body_class: docs-portal
+linkTitle: "ドキュメント"
 main_menu: true
 weight: 10
 hide_feedback: true
 menu:
   main:
     title: "ドキュメント"
-    weight: 20
-    post: >
-      <p>チュートリアル、サンプルやドキュメントのリファレンスを使って Kubernetes の利用方法を学んでください。あなたは<a href="/editdocs/" data-auto-burger-exclude>ドキュメントへコントリビュートをする</a>こともできます!</p>
+    weight: 10
 description: >
   Kubernetesは、コンテナ化されたアプリケーションの展開、スケーリング、また管理を自動化するためのオープンソースコンテナプラットフォームです。このオープンソースプロジェクトは、Cloud Native Computing Foundationによってホストされています。
 overview: >
   Kubernetesは、コンテナ化されたアプリケーションの展開、スケーリング、また管理を自動化するためのオープンソースコンテナプラットフォームです。このオープンソースプロジェクトは、Cloud Native Computing Foundation(<a href="https://www.cncf.io/about">CNCF</a>)によってホストされています。
 cards:
 - name: concepts
-  title: "基本を理解する"
+  title: "Kubernetesを理解する"
   description: "Kubernetesとその基本的なコンセプトを学びます。"
   button: "コンセプトを学ぶ"
   button_path: "/docs/concepts"
@@ -40,11 +36,6 @@ cards:
   description: "一般的なタスク、そのタスクを短い手順でどのように実行するかを見てみます。"
   button: "タスクを見る"
   button_path: "/docs/tasks"
-- name: training
-  title: "トレーニング"
-  description: "Kubernetesの資格を取得して、クラウドネイティブプロジェクトを成功させます！"
-  button: "トレーニングを見る"
-  button_path: "/training"
 - name: reference
   title: "リファレンス情報を調べる"
   description: "用語、コマンドラインの構文、APIリソースタイプ、そして構築ツールのドキュメントを見て回ります。"
@@ -52,15 +43,22 @@ cards:
   button_path: /docs/reference
 - name: contribute
   title: "ドキュメントにコントリビュートする"
-  description: "プロジェクトに不慣れでも、長い間関わっていたとしても、誰でもコントリビュートすることができます。"
-  button: "ドキュメントにコントリビュートする"
-  button_path: /docs/contribute
-- name: release-notes
-  title: "K8sリリースノート"
+  description: "Kubernetesをより良いものにするために、どのような貢献ができるかを見てみます。"
+  button: "貢献する方法を見る"
+  button_path: "/docs/contribute"
+- name: training
+  title: "トレーニング"
+  description: "Kubernetesの資格を取得して、クラウドネイティブプロジェクトを成功させます！"
+  button: "トレーニングを見る"
+  button_path: "/training"
+- name: Download
+  title: "Kubernetesをダウンロードする"
   description: "もしKubernetesをインストールする、また最新バージョンにアップグレードする場合、最新のリリースノートを参照してください。"
   button: "Kubernetesをダウンロードする"
   button_path: "/releases/download"
 - name: about
   title: ドキュメントについて
   description: このWebサイトには、Kubernetesの最新バージョンと過去4世代のドキュメントが含まれています。
+  button: "利用可能なバージョンを見る"
+  button_path: "/docs/home/supported-doc-versions"
 ---

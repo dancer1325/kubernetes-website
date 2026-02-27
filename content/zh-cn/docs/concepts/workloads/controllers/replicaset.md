@@ -1,12 +1,8 @@
 ---
 title: ReplicaSet
-feature:
-  title: 自我修复
-  anchor: ReplicationController 如何工作
-  description: >
-    重新启动失败的容器，在节点死亡时替换并重新调度容器，
-    杀死不响应用户定义的健康检查的容器，
-    并且在它们准备好服务之前不会将它们公布给客户端。
+api_metadata:
+- apiVersion: "apps/v1"
+  kind: "ReplicaSet"
 content_type: concept
 description: >-
   ReplicaSet 的作用是维持在任何给定时间运行的一组稳定的副本 Pod。
@@ -15,18 +11,20 @@ weight: 20
 hide_summary: true # 在章节索引中单独列出
 ---
 <!--
+# NOTE TO LOCALIZATION TEAMS
+#
+# If updating front matter for your localization because there is still
+# a "feature" key in this page, then you also need to update
+# content/??/docs/concepts/architecture/self-healing.md (which is where
+# it moved to)
 reviewers:
 - Kashomon
 - bprashanth
 - madhusudancs
 title: ReplicaSet
-feature:
-  title: Self-healing
-  anchor: How a ReplicaSet works
-  description: >
-    Restarts containers that fail, replaces and reschedules containers when nodes die,
-    kills containers that don't respond to your user-defined health check,
-    and doesn't advertise them to clients until they are ready to serve.
+api_metadata:
+- apiVersion: "apps/v1"
+  kind: "ReplicaSet"
 content_type: concept
 description: >-
   A ReplicaSet's purpose is to maintain a stable set of replica Pods running at any given time.
@@ -41,7 +39,6 @@ hide_summary: true # Listed separately in section index
 A ReplicaSet's purpose is to maintain a stable set of replica Pods running at any given time. As such, it is often
 used to guarantee the availability of a specified number of identical Pods.
 -->
-
 ReplicaSet 的目的是维护一组在任何时候都处于运行状态的 Pod 副本的稳定集合。
 因此，它通常用来保证给定数量的、完全相同的 Pod 的可用性。
 
@@ -165,15 +162,14 @@ Namespace:    default
 Selector:     tier=frontend
 Labels:       app=guestbook
               tier=frontend
-Annotations:  kubectl.kubernetes.io/last-applied-configuration:
-                {"apiVersion":"apps/v1","kind":"ReplicaSet","metadata":{"annotations":{},"labels":{"app":"guestbook","tier":"frontend"},"name":"frontend",...
+Annotations:  <none>
 Replicas:     3 current / 3 desired
 Pods Status:  3 Running / 0 Waiting / 0 Succeeded / 0 Failed
 Pod Template:
   Labels:  tier=frontend
   Containers:
    php-redis:
-    Image:        gcr.io/google_samples/gb-frontend:v3
+    Image:        us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5
     Port:         <none>
     Host Port:    <none>
     Environment:  <none>
@@ -182,9 +178,9 @@ Pod Template:
 Events:
   Type    Reason            Age   From                   Message
   ----    ------            ----  ----                   -------
-  Normal  SuccessfulCreate  117s  replicaset-controller  Created pod: frontend-wtsmm
-  Normal  SuccessfulCreate  116s  replicaset-controller  Created pod: frontend-b2zdv
-  Normal  SuccessfulCreate  116s  replicaset-controller  Created pod: frontend-vcmts
+  Normal  SuccessfulCreate  13s   replicaset-controller  Created pod: frontend-gbgfx
+  Normal  SuccessfulCreate  13s   replicaset-controller  Created pod: frontend-rwz57
+  Normal  SuccessfulCreate  13s   replicaset-controller  Created pod: frontend-wkl7w
 ```
 
 <!--
@@ -203,9 +199,9 @@ You should see Pod information similar to:
 
 ```
 NAME             READY   STATUS    RESTARTS   AGE
-frontend-b2zdv   1/1     Running   0          6m36s
-frontend-vcmts   1/1     Running   0          6m36s
-frontend-wtsmm   1/1     Running   0          6m36s
+frontend-gbgfx   1/1     Running   0          10m
+frontend-rwz57   1/1     Running   0          10m
+frontend-wkl7w   1/1     Running   0          10m
 ```
 
 <!--
@@ -213,10 +209,10 @@ You can also verify that the owner reference of these pods is set to the fronten
 To do this, get the yaml of one of the Pods running:
 -->
 你也可以查看 Pod 的属主引用被设置为前端的 ReplicaSet。
-要实现这点，可取回运行中的某个 Pod 的 YAML：
+要实现这点，可获取运行中的某个 Pod 的 YAML：
 
 ```shell
-kubectl get pods frontend-b2zdv -o yaml
+kubectl get pods frontend-gbgfx -o yaml
 ```
 
 <!--
@@ -229,11 +225,11 @@ The output will look similar to this, with the frontend ReplicaSet's info set in
 apiVersion: v1
 kind: Pod
 metadata:
-  creationTimestamp: "2020-02-12T07:06:16Z"
+  creationTimestamp: "2024-02-28T22:30:44Z"
   generateName: frontend-
   labels:
     tier: frontend
-  name: frontend-b2zdv
+  name: frontend-gbgfx
   namespace: default
   ownerReferences:
   - apiVersion: apps/v1
@@ -241,7 +237,7 @@ metadata:
     controller: true
     kind: ReplicaSet
     name: frontend
-    uid: f391f6db-bb9b-4c09-ae74-6a1f77f3d5cf
+    uid: e129deca-f864-481b-bb16-b27abfd92292
 ...
 ```
 
@@ -291,7 +287,7 @@ Fetching the Pods:
 新的 Pod 会被该 ReplicaSet 获取，并立即被 ReplicaSet 终止，
 因为它们的存在会使得 ReplicaSet 中 Pod 个数超出其期望值。
 
-取回 Pod：
+获取 Pod：
 
 
 ```shell
@@ -336,7 +332,7 @@ number of its new Pods and the original matches its desired count. As fetching t
 -->
 你会看到 ReplicaSet 已经获得了该 Pod，并仅根据其规约创建新的 Pod，
 直到新的 Pod 和原来的 Pod 的总数达到其预期个数。
-这时取回 Pod 列表：
+这时获取 Pod 列表：
 
 ```shell
 kubectl get pods
@@ -355,7 +351,7 @@ pod2             1/1     Running   0          36s
 ```
 
 <!--
-In this manner, a ReplicaSet can own a non-homogenous set of Pods
+In this manner, a ReplicaSet can own a non-homogeneous set of Pods
 -->
 采用这种方式，一个 ReplicaSet 中可以包含异质的 Pod 集合。
 
@@ -386,8 +382,7 @@ A ReplicaSet also needs a [`.spec` section](https://git.k8s.io/community/contrib
 [DNS 标签](/zh-cn/docs/concepts/overview/working-with-objects/names#dns-label-names)规则。
 
 ReplicaSet 也需要
-[`.spec`](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status)
-部分。
+[`.spec` 部分](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status)。
 
 <!--
 ### Pod Template
@@ -536,6 +531,33 @@ ReplicaSets do not support a rolling update directly.
 资源，因为 ReplicaSet 并不直接支持滚动更新。
 
 <!--
+### Terminating Pods
+
+{{< feature-state feature_gate_name="DeploymentReplicaSetTerminatingReplicas" >}}
+
+You can enable this feature by setting the `DeploymentReplicaSetTerminatingReplicas`
+[feature gate](/docs/reference/command-line-tools-reference/feature-gates/)
+on the [API server](/docs/reference/command-line-tools-reference/kube-apiserver/)
+and on the [kube-controller-manager](/docs/reference/command-line-tools-reference/kube-controller-manager/)
+
+Pods that become terminating due to deletion or scale down may take a long time to terminate, and may consume
+additional resources during that period. As a result, the total number of all pods can temporarily exceed
+`.spec.replicas`. Terminating pods can be tracked using the `.status.terminatingReplicas` field of the ReplicaSet.
+-->
+### 终止中的 Pod  {#terminating-pods}
+
+{{< feature-state feature_gate_name="DeploymentReplicaSetTerminatingReplicas" >}}
+
+你可以通过在 [API 服务器](/zh-cn/docs/reference/command-line-tools-reference/kube-apiserver/)
+和 [kube-controller-manager](/zh-cn/docs/reference/command-line-tools-reference/kube-controller-manager/)
+上启用 `DeploymentReplicaSetTerminatingReplicas`
+[特性门控](/zh-cn/docs/reference/command-line-tools-reference/feature-gates/)来开启此功能。
+
+由于删除或缩减副本导致的终止中的 Pod 可能需要较长时间才能完成终止，且在此期间可能会消耗额外资源。
+因此，所有 Pod 的总数可能会暂时超过 `.spec.replicas` 指定的数量。
+可以通过 ReplicaSet 的 `.status.terminatingReplicas` 字段来跟踪终止中的 Pod。
+
+<!--
 ### Isolating Pods from a ReplicaSet
 
 You can remove Pods from a ReplicaSet by changing their labels. This technique may be used to remove Pods
@@ -572,15 +594,12 @@ prioritize scaling down pods based on the following general algorithm:
    the pod with the lower value will come first.
 1. Pods on nodes with more replicas come before pods on nodes with fewer replicas.
 1. If the pods' creation times differ, the pod that was created more recently
-   comes before the older pod (the creation times are bucketed on an integer log scale
-   when the `LogarithmicScaleDown` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/) is enabled)
+   comes before the older pod (the creation times are bucketed on an integer log scale).
 -->
 1. 首先选择剔除悬决（Pending，且不可调度）的各个 Pod
 2. 如果设置了 `controller.kubernetes.io/pod-deletion-cost` 注解，则注解值较小的优先被裁减掉
 3. 所处节点上副本个数较多的 Pod 优先于所处节点上副本较少者
-4. 如果 Pod 的创建时间不同，最近创建的 Pod 优先于早前创建的 Pod 被裁减。
-   （当 `LogarithmicScaleDown` 这一[特性门控](/zh-cn/docs/reference/command-line-tools-reference/feature-gates/)
-   被启用时，创建时间是按整数幂级来分组的）。
+4. 如果 Pod 的创建时间不同，最近创建的 Pod 优先于早前创建的 Pod 被裁减（创建时间是按整数幂级来分组的）。
 
 <!--
 If all of the above match, then selection is random.
@@ -689,7 +708,7 @@ Alternatively, you can use the `kubectl autoscale` command to accomplish the sam
 或者，可以使用 `kubectl autoscale` 命令完成相同的操作（而且它更简单！）
 
 ```shell
-kubectl autoscale rs frontend --max=10 --min=3 --cpu-percent=50
+kubectl autoscale rs frontend --max=10 --min=3 --cpu=50%
 ```
 
 <!--

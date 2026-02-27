@@ -230,7 +230,7 @@ consider these steps:
   也可以运行在不同的机器上以获得更好的安全性和可用性。
   因为 etcd 存储着集群的配置数据，应该经常性地对 etcd 数据库进行备份，
   以确保在需要的时候你可以修复该数据库。与配置和使用 etcd 相关的细节可参阅
-  [etcd FAQ](/https://etcd.io/docs/v3.5/faq/)。
+  [etcd FAQ](https://etcd.io/docs/v3.5/faq/)。
   更多的细节可参阅[为 Kubernetes 运维 etcd 集群](/zh-cn/docs/tasks/administer-cluster/configure-upgrade-etcd/)
   和[使用 kubeadm 配置高可用的 etcd 集群](/zh-cn/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)。
 <!--
@@ -323,10 +323,10 @@ simply as *nodes*).
 - *Configure nodes*: Nodes can be physical or virtual machines. If you want to
   create and manage your own nodes, you can install a supported operating system,
   then add and run the appropriate
-  [Node services](/docs/concepts/overview/components/#node-components). Consider:
+  [Node services](/docs/concepts/architecture/#node-components). Consider:
 -->
 - **配置节点**：节点可以是物理机或者虚拟机。如果你希望自行创建和管理节点，
-  你可以安装一个受支持的操作系统，之后添加并运行合适的[节点服务](/zh-cn/docs/concepts/overview/components/#node-components)。考虑：
+  你可以安装一个受支持的操作系统，之后添加并运行合适的[节点服务](/zh-cn/docs/concepts/architecture/#node-components)。考虑：
   <!--
   - The demands of your workloads when you set up nodes by having appropriate memory, CPU, and disk speed and storage capacity available.
   - Whether generic computer systems will do or you have workloads that need GPU processors, Windows nodes, or VM isolation.
@@ -361,24 +361,12 @@ simply as *nodes*).
   这一规模是基于你要运行的 Pod 和容器个数来确定的。
   如果你自行管理集群节点，这可能意味着要购买和安装你自己的物理设备。
 <!--
-- *Autoscale nodes*: Most cloud providers support
-  [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler#readme)
-  to replace unhealthy nodes or grow and shrink the number of nodes as demand requires. See the
-  [Frequently Asked Questions](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md)
-  for how the autoscaler works and
-  [Deployment](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler#deployment)
-  for how it is implemented by different cloud providers. For on-premises, there
-  are some virtualization platforms that can be scripted to spin up new nodes
-  based on demand.
+- *Autoscale nodes*: Read [Node Autoscaling](/docs/concepts/cluster-administration/cluster-autoscaling) to learn about the
+  tools available to automatically manage your nodes and the capacity they
+  provide.
 -->
-- **节点自动扩缩容**：大多数云供应商支持
-  [集群自动扩缩器（Cluster Autoscaler）](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler#readme)
-  以便替换不健康的节点、根据需求来增加或缩减节点个数。
-  参阅[常见问题](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md)
-  了解自动扩缩器的工作方式，并参阅
-  [Deployment](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler#deployment)
-  了解不同云供应商是如何实现集群自动扩缩器的。
-  对于本地集群，有一些虚拟化平台可以通过脚本来控制按需启动新节点。
+- **节点自动扩缩容**：查阅[节点自动扩缩容](/zh-cn/docs/concepts/cluster-administration/cluster-autoscaling)，
+  了解可以自动管理节点的工具及其提供的能力。
 <!--
 - *Set up node health checks*: For important workloads, you want to make sure
   that the nodes and pods running on those nodes are healthy. Using the
@@ -474,12 +462,12 @@ As someone setting up authentication and authorization on your production Kubern
 <!--
 - *Set the authorization mode*: When the Kubernetes API server
   ([kube-apiserver](/docs/reference/command-line-tools-reference/kube-apiserver/))
-  starts, the supported authentication modes must be set using the *--authorization-mode*
+  starts, supported authorization modes must be set using an *--authorization-config* file or the *--authorization-mode*
   flag. For example, that flag in the *kube-adminserver.yaml* file (in */etc/kubernetes/manifests*)
   could be set to Node,RBAC. This would allow Node and RBAC authorization for authenticated requests.
 -->
 - **设置鉴权模式**：当 Kubernetes API 服务器（[kube-apiserver](/docs/reference/command-line-tools-reference/kube-apiserver/)）启动时，
-  所支持的鉴权模式必须使用 `--authorization-mode` 标志配置。
+  所支持的鉴权模式必须使用 `*--authorization-config` 文件或 `--authorization-mode` 标志配置。
   例如，`kube-apiserver.yaml`（位于 `/etc/kubernetes/manifests` 下）中对应的标志可以设置为 `Node,RBAC`。
   这样就会针对已完成身份认证的请求执行 Node 和 RBAC 鉴权。
 <!--
@@ -531,13 +519,10 @@ needs of your cluster's workloads:
 <!--
 - *Set namespace limits*: Set per-namespace quotas on things like memory and CPU. See
   [Manage Memory, CPU, and API Resources](/docs/tasks/administer-cluster/manage-resources/)
-  for details. You can also set
-  [Hierarchical Namespaces](/blog/2020/08/14/introducing-hierarchical-namespaces/)
-  for inheriting limits.
+  for details.
 -->
 - **设置名字空间限制**：为每个名字空间的内存和 CPU 设置配额。
   参阅[管理内存、CPU 和 API 资源](/zh-cn/docs/tasks/administer-cluster/manage-resources/)以了解细节。
-  你也可以设置[层次化名字空间](/blog/2020/08/14/introducing-hierarchical-namespaces/)来继承这类约束。
 <!--
 - *Prepare for DNS demand*: If you expect workloads to massively scale up,
   your DNS service must be ready to scale up as well. See
@@ -589,13 +574,12 @@ needs of your cluster's workloads:
   [API 服务器](/zh-cn/docs/setup/production-environment/tools/kubeadm/ha-topology/)这些功能组件配置高可用能力。
 <!--
 - Choose from [kubeadm](/docs/setup/production-environment/tools/kubeadm/),
-  [kops](/docs/setup/production-environment/tools/kops/) or
-  [Kubespray](/docs/setup/production-environment/tools/kubespray/)
-  deployment methods.
+  [kops](https://kops.sigs.k8s.io/) or
+  [Kubespray](https://kubespray.io/) deployment methods.
 -->
 - 选择使用 [kubeadm](/zh-cn/docs/setup/production-environment/tools/kubeadm/)、
-  [kops](/zh-cn/docs/setup/production-environment/tools/kops/) 或
-  [Kubespray](/zh-cn/docs/setup/production-environment/tools/kubespray/) 作为部署方法。
+  [kops](https://kops.sigs.k8s.io/) 或
+  [Kubespray](https://kubespray.io/) 作为部署方法。
 <!--
 - Configure user management by determining your
   [Authentication](/docs/reference/access-authn-authz/authentication/) and

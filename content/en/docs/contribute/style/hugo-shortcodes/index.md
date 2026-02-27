@@ -49,6 +49,39 @@ Renders to:
 
 {{< feature-state for_k8s_version="v1.10" state="beta" >}}
 
+### Feature state retrieval from description file
+
+To dynamically determine the state of the feature, make use of the `feature_gate_name`
+shortcode parameter. The feature state details will be extracted from the corresponding feature gate 
+description file located in `content/en/docs/reference/command-line-tools-reference/feature-gates/`.
+For example:
+
+```
+{{</* feature-state feature_gate_name="NodeSwap" */>}}
+```
+
+Renders to:
+
+{{< feature-state feature_gate_name="NodeSwap" >}}
+
+## Feature gate description
+
+In a Markdown page (`.md` file) on this site, you can add a shortcode to
+display the description for a shortcode.
+
+### Feature gate description demo
+
+Below is a demo of the feature state snippet, which displays the feature as
+stable in the latest Kubernetes version.
+
+```
+{{</* feature-gate-description name="DryRun" */>}}
+```
+
+Renders to:
+
+{{< feature-gate-description name="DryRun" >}}
+
 ## Glossary
 
 There are two glossary shortcodes: `glossary_tooltip` and `glossary_definition`.
@@ -337,6 +370,34 @@ Add the shortcode:
 
 before the item, or just below the heading for the specific item.
 
+## Details
+
+You can render a `<details>` HTML element using a shortcode:
+
+```markdown
+{{</* details summary="More about widgets" */>}}
+The frobnicator extension API implements _widgets_ using example running text.
+
+Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,
+adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
+dolore magnam aliquam quaerat voluptatem.
+{{</* /details */>}}
+```
+
+This renders as:
+{{< details summary="More about widgets" >}}
+The frobnicator extension API implements _widgets_ using example running text.
+
+Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,
+adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
+dolore magnam aliquam quaerat voluptatem.
+{{< /details >}}
+
+{{< note >}}
+Use this shortcode sparingly; it is usually best to have all of the text directly shown
+to readers.
+{{< /note >}}
+
 ## Version strings
 
 To generate a version string for inclusion in the documentation, you can choose from
@@ -400,6 +461,7 @@ the release note CHANGELOG page with the modified version string.
 Renders to:
 
 {{< latest-release-notes >}}
+
 
 ## {{% heading "whatsnext" %}}
 

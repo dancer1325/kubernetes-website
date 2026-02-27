@@ -47,6 +47,8 @@ Status is a return value for calls that don't return other objects.
 
   - **details.causes** ([]StatusCause)
 
+    *Atomic: will be replaced during a merge*
+    
     The Causes array includes more details associated with the StatusReason failure. Not all StatusReasons may provide detailed causes.
 
     <a name="StatusCause"></a>

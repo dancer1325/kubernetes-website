@@ -526,7 +526,7 @@ Before proceeding, clean up some of the ConfigMaps you made:
 ```bash
 kubectl delete configmap special-config
 kubectl delete configmap env-config
-kubectl delete configmap -l 'game-config in (config-4,config-5)’
+kubectl delete configmap -l 'game-config in (config-4,config-5)'
 ```
 
 Now that you have learned to define ConfigMaps, you can move on to the next
@@ -582,9 +582,11 @@ Here is the manifest you will use:
 
   Now, the Pod's output includes environment variables `SPECIAL_LEVEL_KEY=very` and `LOG_LEVEL=INFO`.
 
-  Once you're happy to move on, delete that Pod:
+  Once you're happy to move on, delete that Pod and ConfigMap:
   ```shell
   kubectl delete pod dapi-test-pod --now
+  kubectl delete configmap special-config
+  kubectl delete configmap env-config
   ```
 
 ## Configure all key-value pairs in a ConfigMap as container environment variables
@@ -728,10 +730,8 @@ kubectl delete pod dapi-test-pod --now
 
 ### Project keys to specific paths and file permissions
 
-You can project keys to specific paths and specific permissions on a per-file
-basis. The
-[Secrets](/docs/concepts/configuration/secret/#using-secrets-as-files-from-a-pod)
-guide explains the syntax.
+You can project keys to specific paths. Refer to the corresponding section in the [Secrets](/docs/tasks/inject-data-application/distribute-credentials-secure/#project-secret-keys-to-specific-file-paths) guide for the syntax.  
+You can set POSIX permissions for keys. Refer to the corresponding section in the [Secrets](/docs/tasks/inject-data-application/distribute-credentials-secure/#set-posix-permissions-for-secret-keys) guide for the syntax.
 
 ### Optional references
 
@@ -910,13 +910,24 @@ kubectl delete pod dapi-test-pod --now
 
 # You might already have removed the next set
 kubectl delete configmaps/special-config configmaps/env-config
-kubectl delete configmap -l 'game-config in (config-4,config-5)’
+kubectl delete configmap -l 'game-config in (config-4,config-5)'
+```
+
+Remove the `kustomization.yaml` file that you used to generate the ConfigMap:
+
+```bash
+rm kustomization.yaml
 ```
 
 If you created a directory `configure-pod-container` and no longer need it, you should remove that too,
 or move it into the trash can / deleted files location.
 
+```bash
+rm -r configure-pod-container
+```
+
 ## {{% heading "whatsnext" %}}
 
 * Follow a real world example of
   [Configuring Redis using a ConfigMap](/docs/tutorials/configuration/configure-redis-using-configmap/).
+* Follow an example of [Updating configuration via a ConfigMap](/docs/tutorials/configuration/updating-configuration-via-a-configmap/).

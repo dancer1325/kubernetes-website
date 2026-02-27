@@ -244,11 +244,11 @@ excluding `frontend` using the comma operator: `environment=production,tier!=fro
 
 <!--
 One usage scenario for equality-based label requirement is for Pods to specify
-node selection criteria. For example, the sample Pod below selects nodes with
-the label "`accelerator=nvidia-tesla-p100`".
+node selection criteria. For example, the sample Pod below selects nodes where
+the  `accelerator` label exists and is set to `nvidia-tesla-p100`.
 -->
 基于等值的标签要求的一种使用场景是 Pod 要指定节点选择标准。
-例如，下面的示例 Pod 选择带有标签 "`accelerator=nvidia-tesla-p100`"。
+例如，下面的示例 Pod 选择存在 `accelerator` 标签且值为 `nvidia-tesla-p100` 的节点。
 
 ```yaml
 apiVersion: v1
@@ -327,13 +327,18 @@ For example: `partition in (customerA, customerB),environment!=qa`.
 <!--
 ### LIST and WATCH filtering
 
-LIST and WATCH operations may specify label selectors to filter the sets of objects
-returned using a query parameter. Both requirements are permitted
+For **list** and **watch** operations, you can specify label selectors to filter the sets of objects
+returned; you specify the filter using a query parameter.
+(To learn in detail about watches in Kubernetes, read
+[efficient detection of changes](/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)).
+Both requirements are permitted
 (presented here as they would appear in a URL query string):
 -->
 ### LIST 和 WATCH 过滤
 
-LIST 和 WATCH 操作可以使用查询参数指定标签选择算符过滤一组对象。
+对于 **list** 和 **watch** 操作，你可以指定标签选择算符过滤返回的对象集；你可以使用查询参数来指定过滤条件。
+（了解 Kubernetes 中的 watch 操作细节，请参阅
+[高效检测变更](/zh-cn/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)）。
 两种需求都是允许的。（这里显示的是它们出现在 URL 查询字符串中）
 
 <!--
@@ -508,11 +513,11 @@ scenarios where multiple labels should be used to distinguish sets from one anot
 
 <!--
 For instance, different applications would use different values for the `app` label, but a
-multi-tier application, such as the [guestbook example](https://github.com/kubernetes/examples/tree/master/guestbook/),
+multi-tier application, such as the [guestbook example](https://github.com/kubernetes/examples/tree/master/web/guestbook/),
 would additionally need to distinguish each tier. The frontend could carry the following labels:
 -->
 例如，不同的应用可能会为 `app` 标签设置不同的值。
-但是，类似 [guestbook 示例](https://github.com/kubernetes/examples/tree/master/guestbook/)
+但是，类似 [guestbook 示例](https://github.com/kubernetes/examples/tree/master/web/guestbook/)
 这样的多层应用，还需要区分每一层。前端可能会带有以下标签：
 
 ```yaml

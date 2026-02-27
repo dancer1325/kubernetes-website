@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
   - name: redis
-    image: redis:5.0.4
+    image: redis:8.0.2
     # Next commands are to start redis server with a configuration file -- https://raw.githubusercontent.com/redis/redis/7.2/redis.conf
     # redis-server /path/to/redis.conf
     # That, here are split in 2 entries in command

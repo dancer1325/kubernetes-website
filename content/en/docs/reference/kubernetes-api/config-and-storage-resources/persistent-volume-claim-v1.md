@@ -6,7 +6,7 @@ api_metadata:
 content_type: "api_reference"
 description: "PersistentVolumeClaim is a user's request for and claim to a persistent volume."
 title: "PersistentVolumeClaim"
-weight: 4
+weight: 6
 auto_generated: true
 ---
 
@@ -62,35 +62,20 @@ PersistentVolumeClaimSpec describes the common attributes of storage devices and
 
 - **accessModes** ([]string)
 
+  *Atomic: will be replaced during a merge*
+  
   accessModes contains the desired access modes the volume should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
 
 - **selector** (<a href="{{< ref "../common-definitions/label-selector#LabelSelector" >}}">LabelSelector</a>)
 
   selector is a label query over volumes to consider for binding.
 
-- **resources** (ResourceRequirements)
+- **resources** (VolumeResourceRequirements)
 
-  resources represents the minimum resources the volume should have. If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+  resources represents the minimum resources the volume should have. Users are allowed to specify resource requirements that are lower than previous value but must still be higher than capacity recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
 
-  <a name="ResourceRequirements"></a>
-  *ResourceRequirements describes the compute resource requirements.*
-
-  - **resources.claims** ([]ResourceClaim)
-
-    *Map: unique values on key name will be kept during a merge*
-    
-    Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container.
-    
-    This is an alpha field and requires enabling the DynamicResourceAllocation feature gate.
-    
-    This field is immutable. It can only be set for containers.
-
-    <a name="ResourceClaim"></a>
-    *ResourceClaim references one entry in PodSpec.ResourceClaims.*
-
-    - **resources.claims.name** (string), required
-
-      Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+  <a name="VolumeResourceRequirements"></a>
+  *VolumeResourceRequirements describes the storage resource requirements for a volume.*
 
   - **resources.limits** (map[string]<a href="{{< ref "../common-definitions/quantity#Quantity" >}}">Quantity</a>)
 
@@ -111,6 +96,10 @@ PersistentVolumeClaimSpec describes the common attributes of storage devices and
 - **volumeMode** (string)
 
   volumeMode defines what type of volume is required by the claim. Value of Filesystem is implied when not included in claim spec.
+  
+  Possible enum values:
+   - `"Block"` means the volume will not be formatted with a filesystem and will remain a raw block device.
+   - `"Filesystem"` means the volume will be or is formatted with a filesystem.
 
 
 
@@ -133,7 +122,7 @@ PersistentVolumeClaimSpec describes the common attributes of storage devices and
   (Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled. (Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
 
   <a name="TypedObjectReference"></a>
-  **
+  *TypedObjectReference contains enough information to let you locate the typed referenced object*
 
   - **dataSourceRef.kind** (string), required
 
@@ -151,6 +140,10 @@ PersistentVolumeClaimSpec describes the common attributes of storage devices and
 
     Namespace is the namespace of resource being referenced Note that when a namespace is specified, a gateway.networking.k8s.io/ReferenceGrant object is required in the referent namespace to allow that namespace's owner to accept the reference. See the ReferenceGrant documentation for details. (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
 
+- **volumeAttributesClassName** (string)
+
+  volumeAttributesClassName may be used to set the VolumeAttributesClass used by this claim. If specified, the CSI driver will create or update the volume with the attributes defined in the corresponding VolumeAttributesClass. This has a different purpose than storageClassName, it can be changed after the claim is created. An empty string or nil value indicates that no VolumeAttributesClass will be applied to the claim. If the claim enters an Infeasible error state, this field can be reset to its previous value (including nil) to cancel the modification. If the resource referred to by volumeAttributesClass does not exist, this PersistentVolumeClaim will be set to a Pending state, as reflected by the modifyVolumeStatus field, until such as a resource exists. More info: https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/
+
 
 
 ## PersistentVolumeClaimStatus {#PersistentVolumeClaimStatus}
@@ -161,6 +154,8 @@ PersistentVolumeClaimStatus is the current status of a persistent volume claim.
 
 - **accessModes** ([]string)
 
+  *Atomic: will be replaced during a merge*
+  
   accessModes contains the actual access modes the volume backing the PVC has. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
 
 - **allocatedResourceStatuses** (map[string]string)
@@ -193,8 +188,6 @@ PersistentVolumeClaimStatus is the current status of a persistent volume claim.
   When this field is not set, it means that no resize operation is in progress for the given PVC.
   
   A controller that receives PVC update with previously unknown resourceName or ClaimResourceStatus should ignore the update for the purpose it was designed. For example - a controller that only is responsible for resizing capacity of the volume, should ignore PVC updates that change other valid resources associated with PVC.
-  
-  This is an alpha field and requires enabling RecoverVolumeExpansionFailure feature.
 
 - **allocatedResources** (map[string]<a href="{{< ref "../common-definitions/quantity#Quantity" >}}">Quantity</a>)
 
@@ -207,8 +200,6 @@ PersistentVolumeClaimStatus is the current status of a persistent volume claim.
   Capacity reported here may be larger than the actual capacity when a volume expansion operation is requested. For storage quota, the larger value from allocatedResources and PVC.spec.resources is used. If allocatedResources is not set, PVC.spec.resources alone is used for quota calculation. If a volume expansion capacity request is lowered, allocatedResources is only lowered if there are no expansion operations in progress and if the actual volume capacity is equal or lower than the requested capacity.
   
   A controller that receives PVC update with previously unknown resourceName should ignore the update for the purpose it was designed. For example - a controller that only is responsible for resizing capacity of the volume, should ignore PVC updates that change other valid resources associated with PVC.
-  
-  This is an alpha field and requires enabling RecoverVolumeExpansionFailure feature.
 
 - **capacity** (map[string]<a href="{{< ref "../common-definitions/quantity#Quantity" >}}">Quantity</a>)
 
@@ -218,16 +209,20 @@ PersistentVolumeClaimStatus is the current status of a persistent volume claim.
 
   *Patch strategy: merge on key `type`*
   
-  conditions is the current Condition of persistent volume claim. If underlying persistent volume is being resized then the Condition will be set to 'ResizeStarted'.
+  *Map: unique values on key type will be kept during a merge*
+  
+  conditions is the current Condition of persistent volume claim. If underlying persistent volume is being resized then the Condition will be set to 'Resizing'.
 
   <a name="PersistentVolumeClaimCondition"></a>
   *PersistentVolumeClaimCondition contains details about state of pvc*
 
   - **conditions.status** (string), required
 
+    Status is the status of the condition. Can be True, False, Unknown. More info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=state%20of%20pvc-,conditions.status,-(string)%2C%20required
 
   - **conditions.type** (string), required
 
+    Type is the type of the condition. More info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=set%20to%20%27ResizeStarted%27.-,PersistentVolumeClaimCondition,-contains%20details%20about
 
   - **conditions.lastProbeTime** (Time)
 
@@ -249,11 +244,49 @@ PersistentVolumeClaimStatus is the current status of a persistent volume claim.
 
   - **conditions.reason** (string)
 
-    reason is a unique, this should be a short, machine understandable string that gives the reason for condition's last transition. If it reports "ResizeStarted" that means the underlying persistent volume is being resized.
+    reason is a unique, this should be a short, machine understandable string that gives the reason for condition's last transition. If it reports "Resizing" that means the underlying persistent volume is being resized.
+
+- **currentVolumeAttributesClassName** (string)
+
+  currentVolumeAttributesClassName is the current name of the VolumeAttributesClass the PVC is using. When unset, there is no VolumeAttributeClass applied to this PersistentVolumeClaim
+
+- **modifyVolumeStatus** (ModifyVolumeStatus)
+
+  ModifyVolumeStatus represents the status object of ControllerModifyVolume operation. When this is unset, there is no ModifyVolume operation being attempted.
+
+  <a name="ModifyVolumeStatus"></a>
+  *ModifyVolumeStatus represents the status object of ControllerModifyVolume operation*
+
+  - **modifyVolumeStatus.status** (string), required
+
+    status is the status of the ControllerModifyVolume operation. It can be in any of following states:
+     - Pending
+       Pending indicates that the PersistentVolumeClaim cannot be modified due to unmet requirements, such as
+       the specified VolumeAttributesClass not existing.
+     - InProgress
+       InProgress indicates that the volume is being modified.
+     - Infeasible
+      Infeasible indicates that the request has been rejected as invalid by the CSI driver. To
+    	  resolve the error, a valid VolumeAttributesClass needs to be specified.
+    Note: New statuses can be added in the future. Consumers should check for unknown statuses and fail appropriately.
+    
+    Possible enum values:
+     - `"InProgress"` InProgress indicates that the volume is being modified
+     - `"Infeasible"` Infeasible indicates that the request has been rejected as invalid by the CSI driver. To resolve the error, a valid VolumeAttributesClass needs to be specified
+     - `"Pending"` Pending indicates that the PersistentVolumeClaim cannot be modified due to unmet requirements, such as the specified VolumeAttributesClass not existing
+
+  - **modifyVolumeStatus.targetVolumeAttributesClassName** (string)
+
+    targetVolumeAttributesClassName is the name of the VolumeAttributesClass the PVC currently being reconciled
 
 - **phase** (string)
 
   phase represents the current phase of PersistentVolumeClaim.
+  
+  Possible enum values:
+   - `"Bound"` used for PersistentVolumeClaims that are bound
+   - `"Lost"` used for PersistentVolumeClaims that lost their underlying PersistentVolume. The claim was bound to a PersistentVolume and this volume does not exist any longer and all data on it was lost.
+   - `"Pending"` used for PersistentVolumeClaims that are not yet bound
 
 
 
@@ -827,6 +860,11 @@ DELETE /api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
 
 
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
+
+
 - **pretty** (*in query*): string
 
   <a href="{{< ref "../common-parameters/common-parameters#pretty" >}}">pretty</a>
@@ -885,6 +923,11 @@ DELETE /api/v1/namespaces/{namespace}/persistentvolumeclaims
 - **gracePeriodSeconds** (*in query*): integer
 
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
+
+
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
 
 
 - **labelSelector** (*in query*): string

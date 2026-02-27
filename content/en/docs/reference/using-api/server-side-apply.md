@@ -11,7 +11,7 @@ weight: 25
 
 <!-- overview -->
 
-{{< feature-state for_k8s_version="v1.22" state="stable" >}}
+{{< feature-state feature_gate_name="ServerSideApply" >}}
 
 Kubernetes supports multiple appliers collaborating to manage the fields
 of a single [object](/docs/concepts/overview/working-with-objects/).
@@ -48,12 +48,6 @@ conflicted field will be overridden, and the ownership will be transferred.
 
 Whenever a field's value does change, ownership moves from its current manager to the
 manager making the change.
-
-Apply checks if there are any other field managers that also own the
-field.  If the field is not owned by any other field managers, that field is
-set to its default value (if there is one), or otherwise is deleted from the
-object.
-The same rule applies to fields that are lists, associative lists, or maps.
 
 For a user to manage a field, in the Server-Side Apply sense, means that the
 user relies on and expects the value of the field not to change. The user who
@@ -96,6 +90,11 @@ becomes available.
 
 A simple example of an object created using Server-Side Apply could look like this:
 
+{{< note >}}
+`kubectl get` omits managed fields by default.
+Add `--show-managed-fields` to show `managedFields` when the output format is either `json` or `yaml`.
+{{< /note >}}
+
 ```yaml
 ---
 apiVersion: v1
@@ -135,7 +134,7 @@ request fails.
 It is however possible to change `.metadata.managedFields` through an
 **update**, or through a **patch** operation that does not use Server-Side Apply.
 Doing so is highly discouraged, but might be a reasonable option to try if,
-for example, the `.metatadata.managedFields` get into an inconsistent state
+for example, the `.metadata.managedFields` get into an inconsistent state
 (which should not happen in normal operations).
 
 The format of `managedFields` is [described](/docs/reference/kubernetes-api/common-definitions/object-meta/#System)
@@ -180,7 +179,7 @@ Managers identify distinct workflows that are modifying the object (especially
 useful on conflicts!), and can be specified through the
 [`fieldManager`](/docs/reference/kubernetes-api/common-parameters/common-parameters/#fieldManager)
 query parameter as part of a modifying request. When you Apply to a resource,
-the `fieldManager` parameter is required
+the `fieldManager` parameter is required.
 For other updates, the API server infers a field manager identity from the
  "User-Agent:" HTTP header (if present).
 
@@ -196,7 +195,9 @@ as [YAML](https://yaml.org/), with the media type `application/apply-patch+yaml`
 Whether you are submitting JSON data or YAML data, use
 `application/apply-patch+yaml` as the `Content-Type` header value.
 
-All JSON documents are valid YAML.
+All JSON documents are valid YAML. However, Kubernetes has a bug where it uses a YAML
+parser that does not fully implement the YAML specification. Some JSON escapes may
+not be recognized.
 {{< /note >}}
 
 The serialization is the same as for Kubernetes objects, with the exception that
@@ -214,17 +215,6 @@ Here's an example of a Server-Side Apply message body (fully specified intent):
 of a **patch** request to a valid `v1/configmaps` resource, and with the
 appropriate request `Content-Type`).
 
-## Server-Side Apply for custom resources {#custom-resources}
-
-By default, Server-Side Apply treats
-{{< glossary_tooltip term_id="CustomResourceDefinition" text="custom resources" >}}
-as unstructured data. All keys are treated the same as if they were struct fields for
-a built-in API, and all lists are considered atomic.
-
-If the CustomResourceDefinition defines a
-[schema](/docs/reference/kubernetes-api/extend-resources/custom-resource-definition-v1/#JSONSchemaProps)
-that contains annotations as defined in [Merge strategy](#merge-strategy),
-then these annotations will be used when merging objects of this type.
 
 ## Operations in scope for field management {#apply-and-update}
 
@@ -258,8 +248,10 @@ metadata:
   managedFields:
   - manager: kubectl
     operation: Apply
+    time: '2019-03-30T15:00:00.000Z'
     apiVersion: v1
-    fields:
+    fieldsType: FieldsV1
+    fieldsV1:
       f:metadata:
         f:labels:
           f:test-label: {}
@@ -267,7 +259,8 @@ metadata:
     operation: Update
     apiVersion: v1
     time: '2019-03-30T16:00:00.000Z'
-    fields:
+    fieldsType: FieldsV1
+    fieldsV1:
       f:data:
         f:key: {}
 data:
@@ -303,12 +296,12 @@ for fields within Kubernetes objects.
 For a {{< glossary_tooltip term_id="CustomResourceDefinition" text="CustomResourceDefinition" >}},
 you can set these markers when you define the custom resource.
 
-| Golang marker | OpenAPI extension | Possible values | Description |
-|---|---|---|---|---|
-| `//+listType` | `x-kubernetes-list-type` | `atomic`/`set`/`map` | Applicable to lists. `set` applies to lists that include only scalar elements. These elements must be unique. `map` applies to lists of nested types only. The key values (see `listMapKey`) must be unique in the list. `atomic` can apply to any list. If configured as `atomic`, the entire list is replaced during merge. At any point in time, a single manager owns the list. If `set` or `map`, different managers can manage entries separately. |
-| `//+listMapKey` | `x-kubernetes-list-map-keys` | List of field names, e.g. `["port", "protocol"]` | Only applicable when `+listType=map`. A list of field names whose values uniquely identify entries in the list. While there can be multiple keys, `listMapKey` is singular because keys need to be specified individually in the Go type. The key fields must be scalars. |
-| `//+mapType` | `x-kubernetes-map-type` | `atomic`/`granular` | Applicable to maps. `atomic` means that the map can only be entirely replaced by a single manager. `granular` means that the map supports separate managers updating individual fields. |
-| `//+structType` | `x-kubernetes-map-type` | `atomic`/`granular` | Applicable to structs; otherwise same usage and OpenAPI annotation as `//+mapType`.|
+| Golang marker   | OpenAPI extension            | Possible values                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| --------------- | ---------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `//+listType`   | `x-kubernetes-list-type`     | `atomic`/`set`/`map`                             | Applicable to lists. `set` applies to lists that include only scalar elements. These elements must be unique. `map` applies to lists of nested types only. The key values (see `listMapKey`) must be unique in the list. `atomic` can apply to any list. If configured as `atomic`, the entire list is replaced during merge. At any point in time, a single manager owns the list. If `set` or `map`, different managers can manage entries separately. |
+| `//+listMapKey` | `x-kubernetes-list-map-keys` | List of field names, e.g. `["port", "protocol"]` | Only applicable when `+listType=map`. A list of field names whose values uniquely identify entries in the list. While there can be multiple keys, `listMapKey` is singular because keys need to be specified individually in the Go type. The key fields must be scalars.                                                                                                                                                                                |
+| `//+mapType`    | `x-kubernetes-map-type`      | `atomic`/`granular`                              | Applicable to maps. `atomic` means that the map can only be entirely replaced by a single manager. `granular` means that the map supports separate managers updating individual fields.                                                                                                                                                                                                                                                                  |
+| `//+structType` | `x-kubernetes-map-type`      | `atomic`/`granular`                              | Applicable to structs; otherwise same usage and OpenAPI annotation as `//+mapType`.                                                                                                                                                                                                                                                                                                                                                                      |
 
 If `listType` is missing, the API server interprets a
 `patchStrategy=merge` marker as a `listType=map` and the
@@ -364,7 +357,8 @@ metadata:
   - manager: "manager-one"
     operation: Apply
     apiVersion: example.com/v1
-    fields:
+    fieldsType: FieldsV1
+    fieldsV1:
       f:spec:
         f:data: {}
 spec:
@@ -394,7 +388,7 @@ read-modify-write and/or patch are the following:
   to be specified.
 
 It is strongly recommended for controllers to always force conflicts on objects that
-the own and manage, since they might not be able to resolve or act on these conflicts.
+they own and manage, since they might not be able to resolve or act on these conflicts.
 
 ## Transferring ownership
 
@@ -572,14 +566,14 @@ kubectl apply --server-side --field-manager=my-manager [--dry-run=server]
 
 ## API implementation
 
-The `PATCH` verb for a resource that supports Server-Side Apply can accepts the
+The `PATCH` verb (for an object that supports Server-Side Apply) accepts the
 unofficial `application/apply-patch+yaml` content type. Users of Server-Side
 Apply can send partially specified objects as YAML as the body of a `PATCH` request
 to the URI of a resource.  When applying a configuration, you should always include all the
 fields that are important to the outcome (such as a desired state) that you want to define.
 
-All JSON messages are valid YAML. Some clients specify Server-Side Apply requests using YAML
-request bodies that are also valid JSON.
+All JSON messages are valid YAML. Therefore, in addition to using YAML request bodies for Server-Side Apply requests, you can also use JSON request bodies, as they are also valid YAML.
+In either case, use the media type `application/apply-patch+yaml` for the HTTP request.
 
 ### Access control and permissions {#rbac-and-permissions}
 

@@ -1,13 +1,13 @@
 ---
 title: ノード
 id: node
-date: 2018-04-12
 full_link: /ja/docs/concepts/architecture/nodes/
 short_description: >
   ノードはKubernetesのワーカーマシンです。
 
 aka: 
 tags:
+- core-object
 - fundamental
 ---
  ノードはKubernetesのワーカーマシンです。

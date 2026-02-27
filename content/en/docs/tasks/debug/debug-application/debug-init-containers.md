@@ -26,7 +26,7 @@ Init Containers. The example command lines below refer to the Pod as
 
 * You should be familiar with the basics of
   [Init Containers](/docs/concepts/workloads/pods/init-containers/).
-* You should have [Configured an Init Container](/docs/tasks/configure-pod-container/configure-pod-initialization/#creating-a-pod-that-has-an-init-container/).
+* You should have [Configured an Init Container](/docs/tasks/configure-pod-container/configure-pod-initialization/#create-a-pod-that-has-an-init-container).
 
 <!-- steps -->
 
@@ -92,11 +92,11 @@ You can also access the Init Container statuses programmatically by reading the
 
 
 ```shell
-kubectl get pod nginx --template '{{.status.initContainerStatuses}}'
+kubectl get pod <pod-name> --template '{{.status.initContainerStatuses}}'
 ```
 
 
-This command will return the same information as above in raw JSON.
+This command will return the same information as above, formatted using a [Go template](https://pkg.go.dev/text/template).
 
 ## Accessing logs from Init Containers
 

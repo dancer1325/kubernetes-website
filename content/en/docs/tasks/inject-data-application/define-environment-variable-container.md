@@ -102,6 +102,8 @@ Honorable`, and `Kubernetes`, respectively. The environment variable
 `MESSAGE` combines the set of all these environment variables and then uses it 
 as a CLI argument passed to the `env-print-demo` container.
 
+Environment variable names may consist of any [printable ASCII characters](https://www.ascii-code.com/characters/printable-characters) except '='.
+
 ```yaml
 apiVersion: v1
 kind: Pod

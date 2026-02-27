@@ -164,7 +164,7 @@ announcements:
   message: |
     4 days of incredible opportunities to collaborate, learn + share with the entire community!<br />
     April 18 - April 21, 2023.
-    
+
 - name: Redirecting k8s.gcr.io - After
   startTime: 2023-03-27T00:00:00 # This should run after the redirect begins
   endTime: 2023-05-31T00:00:00
@@ -194,3 +194,132 @@ announcements:
     The legacy Linux package repositories (`apt.kubernetes.io` and `yum.kubernetes.io`)<br/>
     have been frozen starting from September 13, 2023.<br/>
     Please read our [announcement](/blog/2023/08/31/legacy-package-repository-deprecation/) for more details.
+
+- name: Kubecon 2023 NA
+  startTime: 2023-10-20T00:00:00  #Added in https://github.com/kubernetes/website/pull/43565
+  endTime: 2023-11-09T18:00:00
+  style: >-
+    background: linear-gradient(90deg, rgba(55,38,93,1) 0%, rgba(85,53,125,1) 65%, rgba(33,70,139,1) 100%);
+    color: #fffff;
+  title: |
+    <img src ="/images/announcements/kccnc-na-2023-white.svg" style="float: right; height: 80px;" />
+    <a href= "https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/">KubeCon + CloudNativeCon NA 2023</a> <em> Chicago, Illinois + Virtual</em>.
+  message: |
+    4 days of incredible opportunities to collaborate, learn + share with the entire community!<br />
+    November 6 - November 9, 2023.
+
+- name: Legacy package repositories shutdown
+  startTime: 2023-11-27T00:00:00
+  endTime: 2024-02-01T00:00:00
+  style: "background: #d95e00"
+  title: Changes to the location of Linux packages for Kubernetes
+  message: |
+    The legacy Linux package repositories (`apt.kubernetes.io` and `yum.kubernetes.io` AKA `packages.cloud.google.com`)<br/>
+    have been frozen starting from September 13, 2023 **and are going away in January 2024**, users *must* migrate.<br/>
+    Please read our [announcement](/blog/2023/08/31/legacy-package-repository-deprecation/) for more details.
+
+- name: KubeCon 2024 EU
+  startTime: 2024-02-16T00:00:00  #Added in https://github.com/kubernetes/website/pull/44828
+  endTime: 2024-03-22T18:00:00
+  style: >-
+    background: linear-gradient(90deg, rgba(67,53,105,1) 0%, rgba(89,187,234,1) 100%);
+    color: #fffff;
+  title: |
+    <img src ="/images/announcements/kccnc-eu-2024-white.svg" style="float: right; height: 80px;" />
+    <a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/">KubeCon + CloudNativeCon Europe 2024</a>
+  message: |
+    Join us for four days of incredible opportunities to collaborate, learn and share with the cloud native community.<br/> 
+    <a href= "https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/register/?utm_source=kubernetes&utm_medium=all&utm_campaign=kubeconeu24&utm_content=slim-banner">
+    Buy your ticket now! 19 - 22 March | Paris, France
+    </a> 
+
+- name: KubeCon 2024 China
+  startTime: 2024-07-26T00:00:00  #Added in https://github.com/kubernetes/website/pull/46431 
+  endTime: 2024-08-23T18:00:00
+  style: >-
+    background: linear-gradient(90deg, rgba(229,64,216,1) 60%, rgba(0,212,255,1) 100%);
+    color: #fffff;
+  title: |
+    <img src ="/images/announcements/kubecon-china-2024-white.svg" style="float: right; height: 100px;" />
+    <a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-open-source-summit-ai-dev-china/">KubeCon + CloudNativeCon + Open Source Summit China 2024</a>
+  message: |
+    Join us for three days of incredible opportunities to collaborate, learn and share with the cloud native community.<br/> 
+    <a href= "https://events.linuxfoundation.org/kubecon-cloudnativecon-open-source-summit-ai-dev-china/register/?utm_source=kubernetes&utm_medium=all&utm_campaign=kubeconcn24&utm_content=slim-banner">
+    Buy your ticket now! 21 - 23 August | Hong Kong
+    </a> 
+
+- name: KubeCon 2024 NA
+  startTime: 2024-09-30T00:00:00  #Added in https://github.com/kubernetes/website/pull/48086
+  endTime: 2024-11-15T18:00:00
+  style: >-
+    background: linear-gradient(90deg, rgba(64,66,169,1) 60%, rgba(0,81,181,1) 100%);
+    color: #fffff;
+  title: |
+    <img src ="/images/announcements/kccnc-na-2024-white.svg" style="float: right; height: 100px;" />
+    <a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/">KubeCon + CloudNativeCon 2024</a>
+  message: |
+    Join us for three days of incredible opportunities to collaborate, learn and share with the cloud native community.<br/> 
+    <a href= "https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/register/?utm_source=kubernetes&utm_medium=homepage&utm_campaign=KubeCon-NA-2024&utm_content=top-banner">
+    Buy your ticket now! 12 - 15 November | Salt Lake City
+    </a> 
+
+- name: KubeCon 2024 India
+  startTime: 2024-11-26T00:00:00  #Added in https://github.com/kubernetes/website/pull/48862
+  endTime: 2024-12-12T18:00:00
+  style: >-
+    background: linear-gradient(90deg, rgba(217,54,73,1) 35%, rgba(81,0,116,1) 100%);
+    color: #fffff;
+  title: |
+    <img src ="/images/announcements/kccnc-india-2024-white.svg" style="float: right; height: 100px;" />
+    <a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-india/">KubeCon + CloudNativeCon 2024</a>
+  message: |
+    Join us for two days of incredible opportunities to collaborate, learn and share with the cloud native community.<br/> 
+    <a href= "https://events.linuxfoundation.org/kubecon-cloudnativecon-india/register/?utm_source=kubernetes&utm_medium=homepage&utm_campaign=KubeCon-India-2024&utm_content=top-banner">
+    Buy your ticket now! 11 - 12 December | Delhi, India
+    </a> 
+    
+- name: KubeCon 2025 EU
+  startTime: 2025-02-04T00:00:00  #Added in https://github.com/kubernetes/website/pull/49577
+  endTime: 2025-04-04T18:00:00
+  style: >-
+    background: linear-gradient(90deg, rgb(177, 71, 154) 0%, rgb(106, 44, 136) 100%);
+    color: #fffff;
+  title: |
+    <img src ="/images/announcements/kccnc-eu-2025-white.svg" style="float: right; height: 100px;" />
+    <a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/?utm_source=kubernetes&utm_medium=all&utm_campaign=KubeCon-EU-2025&utm_content=slim-banner">KubeCon + CloudNativeCon Europe 2025</a>
+  message: |
+    Join us for four days of incredible opportunities to collaborate, learn and share with the cloud native community.<br/> 
+    <a href= "https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/register/?utm_source=kubernetes&utm_medium=all&utm_campaign=KubeCon-EU-2025&utm_content=slim-banner">
+    Buy your ticket now! 1 - 4 April | London, England
+    </a>     
+
+- name: KubeCon 2025 NA
+  startTime: 2025-09-29T00:00:00 #Added in https://github.com/kubernetes/website/pull/52126
+  endTime: 2025-11-13T18:00:00
+  style: >-
+    background: #912666;
+    color: #fffff;
+    a, a:visited { color: #ffffff; }
+  title: |
+    <img src ="/images/announcements/kccnc-na-2025-white.svg" style="float: right; height: 100px;" />
+    <a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/register/?utm_source=kubernetes&utm_medium=banner&utm_campaign=10608228-KubeCon-NA-2025&utm_content=hero">KubeCon + CloudNativeCon 2025</a>
+  message: |
+    Join us for four days of incredible opportunities to collaborate, learn and share with the cloud native community.<br/> 
+    <a href= "https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/register/?utm_source=kubernetes&utm_medium=banner&utm_campaign=10608228-KubeCon-NA-2025&utm_content=hero">
+    Buy your ticket now! 10 - 13 November | Atlanta, Georgia
+    </a>
+    
+- name: KubeCon 2026 EU
+  startTime: 2026-01-26T00:00:00 #Added in https://github.com/kubernetes/website/pull/54154
+  endTime: 2026-03-26T18:00:00
+  style: >-
+    background: #b0ddff;
+    color: #000000;
+  title: |
+    <img src ="/images/announcements/kccnc-eu-2026-black.svg" style="float: right; height: 100px;" />
+    <a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/?utm_source=kubernetes&utm_medium=homepage&utm_campaign=18269725-KubeCon-EU-2026&utm_content=slim-banner">KubeCon + CloudNativeCon Europe 2026</a>
+  message: |
+    Join us for four days of incredible opportunities to collaborate, learn and share with the cloud native community.<br/>
+    <a href= "https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/register/?utm_source=kubernetes&utm_medium=homepage&utm_campaign=18269725-KubeCon-EU-2026&utm_content=slim-banner">
+    Buy your ticket now! 23 - 26 March | Amsterdam, The Netherlands
+    </a>

@@ -80,44 +80,34 @@ check the documentation for that version.
 
 <!-- 
 ## Install and configure prerequisites
-
-The following steps apply common settings for Kubernetes nodes on Linux. 
-
-You can skip a particular setting if you're certain you don't need it.
-
-For more information, see [Network Plugin Requirements](/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#network-plugin-requirements) or the documentation for your specific container runtime.
 -->
 ## 安装和配置先决条件  {#install-and-configure-prerequisites}
 
-以下步骤将通用设置应用于 Linux 上的 Kubernetes 节点。
-
-如果你确定不需要某个特定设置，则可以跳过它。
-
-有关更多信息，请参阅[网络插件要求](/zh-cn/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#network-plugin-requirements)或特定容器运行时的文档。
+<!--
+By default, the Linux kernel does not allow IPv4 packets to be routed
+between interfaces. Most Kubernetes cluster networking implementations
+will change this setting (if needed), but some might expect the
+administrator to do it for them. (Some might also expect other sysctl
+parameters to be set, kernel modules to be loaded, etc; consult the
+documentation for your specific network implementation.)
+-->
+默认情况下，Linux 内核不允许 IPv4 数据包在接口之间路由。
+大多数 Kubernetes 集群网络实现都会更改此设置（如果需要），但有些人可能希望管理员为他们执行此操作。
+（有些人可能还期望设置其他 sysctl 参数、加载内核模块等；请参阅你的特定网络实施的文档。）
 
 <!-- 
-### Forwarding IPv4 and letting iptables see bridged traffic
+### Enable IPv4 packet forwarding {#prerequisite-ipv4-forwarding-optional}
 
-Execute the below mentioned instructions:
+To manually enable IPv4 packet forwarding:
 -->
-### 转发 IPv4 并让 iptables 看到桥接流量
+### 启用 IPv4 数据包转发   {#prerequisite-ipv4-forwarding-optional}
 
-执行下述指令：
+手动启用 IPv4 数据包转发：
 
 ```bash
-cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
-overlay
-br_netfilter
-EOF
-
-sudo modprobe overlay
-sudo modprobe br_netfilter
-
 # 设置所需的 sysctl 参数，参数在重新启动后保持不变
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-iptables  = 1
-net.bridge.bridge-nf-call-ip6tables = 1
-net.ipv4.ip_forward                 = 1
+net.ipv4.ip_forward = 1
 EOF
 
 # 应用 sysctl 参数而不重新启动
@@ -125,23 +115,12 @@ sudo sysctl --system
 ```
 
 <!--
-Verify that the `br_netfilter`, `overlay` modules are loaded by running below instructions:
+Verify that `net.ipv4.ip_forward` is set to 1 with:
 -->
-通过运行以下指令确认 `br_netfilter` 和 `overlay` 模块被加载：
+使用以下命令验证 `net.ipv4.ip_forward` 是否设置为 1：
 
 ```bash
-lsmod | grep br_netfilter
-lsmod | grep overlay
-```
-
-<!--
-Verify that the `net.bridge.bridge-nf-call-iptables`, `net.bridge.bridge-nf-call-ip6tables`, `net.ipv4.ip_forward` system variables are set to 1 in your `sysctl` config by running below instruction:
--->
-通过运行以下指令确认 `net.bridge.bridge-nf-call-iptables`、`net.bridge.bridge-nf-call-ip6tables`
-和 `net.ipv4.ip_forward` 系统变量在你的 `sysctl` 配置中被设置为 1：
-
-```bash
-sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables net.ipv4.ip_forward
+sysctl net.ipv4.ip_forward
 ```
 
 <!--
@@ -262,18 +241,6 @@ the `cgroupDriver` field under `KubeletConfiguration`, kubeadm defaults it to `s
 {{< /note >}}
 
 <!--
-In Kubernetes v1.28, with the `KubeletCgroupDriverFromCRI`
-[feature gate](/docs/reference/command-line-tools-reference/feature-gates/)
-enabled and a container runtime that supports the `RuntimeConfig` CRI RPC,
-the kubelet automatically detects the appropriate cgroup driver from the runtime,
-and ignores the `cgroupDriver` setting within the kubelet configuration.
--->
-在 Kubernetes v1.28 中，启用 `KubeletCgroupDriverFromCRI`
-[特性门控](/zh-cn/docs/reference/command-line-tools-reference/feature-gates/)结合支持
-`RuntimeConfig` CRI RPC 的容器运行时，kubelet 会自动从运行时检测适当的 Cgroup
-驱动程序，并忽略 kubelet 配置中的 `cgroupDriver` 设置。
-
-<!--
 If you configure `systemd` as the cgroup driver for the kubelet, you must also
 configure `systemd` as the cgroup driver for the container runtime. Refer to
 the documentation for your container runtime for instructions. For example:
@@ -283,6 +250,34 @@ the documentation for your container runtime for instructions. For example:
 
 *  [containerd](#containerd-systemd)
 *  [CRI-O](#cri-o)
+
+<!--
+In Kubernetes {{< skew currentVersion >}}, with the `KubeletCgroupDriverFromCRI`
+[feature gate](/docs/reference/command-line-tools-reference/feature-gates/)
+enabled and a container runtime that supports the `RuntimeConfig` CRI RPC,
+the kubelet automatically detects the appropriate cgroup driver from the runtime,
+and ignores the `cgroupDriver` setting within the kubelet configuration.
+-->
+在 Kubernetes {{< skew currentVersion >}} 中，启用 `KubeletCgroupDriverFromCRI`
+[特性门控](/zh-cn/docs/reference/command-line-tools-reference/feature-gates/)结合支持
+`RuntimeConfig` CRI RPC 的容器运行时，kubelet 会自动从运行时检测适当的 Cgroup
+驱动程序，并忽略 kubelet 配置中的 `cgroupDriver` 设置。
+
+<!--
+However, older versions of container runtimes (specifically,
+containerd 1.y and below) do not support the `RuntimeConfig` CRI RPC, and
+may not respond correctly to this query, and thus the Kubelet falls back to using the
+value in its own `--cgroup-driver` flag.
+
+In Kubernetes 1.36, this fallback behavior will be dropped, and older versions
+of containerd will fail with newer kubelets.
+-->
+然而，较旧版本的容器运行时（特别是 containerd 1.y 及以下版本）
+不支持 `RuntimeConfig` CRI RPC，可能无法正确响应此查询。
+因此，kubelet 会回退到使用其自身的 `--cgroup-driver` 标志中的值。
+
+在 Kubernetes 1.36 中，这种回退行为将被移除，旧版本的 containerd
+将无法与新版本的 kubelet 一起工作。
 
 {{< caution >}}
 <!--
@@ -359,7 +354,7 @@ Return to this step once you've created a valid `config.toml` configuration file
 要在系统上安装 containerd，请按照[开始使用 containerd](https://github.com/containerd/containerd/blob/main/docs/getting-started.md)
 的说明进行操作。创建有效的 `config.toml` 配置文件后返回此步骤。
 
-{{< tabs name="找到 config.toml 文件" >}}
+{{< tabs name="finding-your-config-toml-file" >}}
 {{% tab name="Linux" %}}
 <!--
 You can find this file under the path `/etc/containerd/config.toml`.
@@ -384,11 +379,17 @@ On Windows the default CRI endpoint is `npipe://./pipe/containerd-containerd`.
 <!--
 #### Configuring the `systemd` cgroup driver {#containerd-systemd}
 
-To use the `systemd` cgroup driver in `/etc/containerd/config.toml` with `runc`, set
+To use the `systemd` cgroup driver in `/etc/containerd/config.toml` with `runc`,
+set the following config based on your Containerd version
+
+Containerd versions 1.x:
 -->
 #### 配置 `systemd` cgroup 驱动 {#containerd-systemd}
 
-结合 `runc` 使用 `systemd` cgroup 驱动，在 `/etc/containerd/config.toml` 中设置：
+要在 `/etc/containerd/config.toml` 中将 `runc` 配置为使用 `systemd` cgroup 驱动，
+请根据你使用的 Containerd 版本设置以下配置：
+
+Containerd 1.x 版本：
 
 ```
 [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
@@ -396,6 +397,19 @@ To use the `systemd` cgroup driver in `/etc/containerd/config.toml` with `runc`,
   [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
     SystemdCgroup = true
 ```
+
+<!--
+Containerd versions 2.x:
+-->
+Containerd versions 2.x 版本：
+
+```
+[plugins.'io.containerd.cri.v1.runtime'.containerd.runtimes.runc]
+  ...
+  [plugins.'io.containerd.cri.v1.runtime'.containerd.runtimes.runc.options]
+    SystemdCgroup = true
+```
+
 
 <!--
 The `systemd` cgroup driver is recommended if you use [cgroup v2](/docs/concepts/architecture/cgroups).
@@ -470,7 +484,7 @@ sandbox image by setting the following config:
 
 ```toml
 [plugins."io.containerd.grpc.v1.cri"]
-  sandbox_image = "registry.k8s.io/pause:3.2"
+  sandbox_image = "registry.k8s.io/pause:3.10"
 ```
 
 <!--
@@ -478,27 +492,16 @@ You might need to restart `containerd` as well once you've updated the config fi
 -->
 一旦你更新了这个配置文件，可能就同样需要重启 `containerd`：`systemctl restart containerd`。
 
-<!--
-Please note, that it is a best practice for kubelet to declare the matching `pod-infra-container-image`.
-If not configured, kubelet may attempt to garbage collect the `pause` image.
-There is ongoing work in [containerd to pin the pause image](https://github.com/containerd/containerd/issues/6352)
-and not require this setting on kubelet any longer.
--->
-请注意，声明匹配的 `pod-infra-container-image` 是 kubelet 的最佳实践。
-如果未配置，kubelet 可能会尝试对 `pause` 镜像进行垃圾回收。
-[containerd 固定 pause 镜像](https://github.com/containerd/containerd/issues/6352)的工作正在进行中，
-将不再需要在 kubelet 上进行此设置。
-
 ### CRI-O
 
 <!--
 This section contains the necessary steps to install CRI-O as a container runtime.
 
-To install CRI-O, follow [CRI-O Install Instructions](https://github.com/cri-o/cri-o/blob/main/install.md#readme).
+To install CRI-O, follow [CRI-O Install Instructions](https://github.com/cri-o/packaging/blob/main/README.md#usage).
 -->
 本节包含安装 CRI-O 作为容器运行时的必要步骤。
 
-要安装 CRI-O，请按照 [CRI-O 安装说明](https://github.com/cri-o/cri-o/blob/main/install.md#readme)执行操作。
+要安装 CRI-O，请按照 [CRI-O 安装说明](https://github.com/cri-o/packaging/blob/main/README.md#usage)执行操作。
 
 <!--
 #### cgroup driver
@@ -555,7 +558,7 @@ config value:
 
 ```toml
 [crio.image]
-pause_image="registry.k8s.io/pause:3.6"
+pause_image="registry.k8s.io/pause:3.10"
 ```
 
 <!--
@@ -570,10 +573,10 @@ This config option supports live configuration reload to apply this change: `sys
 {{< note >}}
 <!-- 
 These instructions assume that you are using the
-[`cri-dockerd`](https://github.com/Mirantis/cri-dockerd) adapter to integrate
+[`cri-dockerd`](https://mirantis.github.io/cri-dockerd/) adapter to integrate
 Docker Engine with Kubernetes.
 -->
-以下操作假设你使用 [`cri-dockerd`](https://github.com/Mirantis/cri-dockerd) 适配器来将
+以下操作假设你使用 [`cri-dockerd`](https://mirantis.github.io/cri-dockerd/) 适配器来将
 Docker Engine 与 Kubernetes 集成。
 {{< /note >}}
 
@@ -585,10 +588,9 @@ Docker Engine 与 Kubernetes 集成。
    指南为你的 Linux 发行版安装 Docker。
 
 <!-- 
-2. Install [`cri-dockerd`](https://github.com/Mirantis/cri-dockerd), following
-   the instructions in that source code repository.
+2. Install [`cri-dockerd`](https://mirantis.github.io/cri-dockerd/usage/install), following the directions in the install section of the documentation.
 -->
-2. 按照源代码仓库中的说明安装 [`cri-dockerd`](https://github.com/Mirantis/cri-dockerd)。
+2. 请按照文档中的安装部分指示来安装 [`cri-dockerd`](https://mirantis.github.io/cri-dockerd/usage/install)。
 
 <!--
 For `cri-dockerd`, the CRI socket is `/run/cri-dockerd.sock` by default.
@@ -598,7 +600,7 @@ For `cri-dockerd`, the CRI socket is `/run/cri-dockerd.sock` by default.
 <!-- 
 ### Mirantis Container Runtime {#mcr}
 
-[Mirantis Container Runtime](https://docs.mirantis.com/mcr/20.10/overview.html) (MCR) is a commercially
+[Mirantis Container Runtime](https://docs.mirantis.com/mcr/25.0/overview.html) (MCR) is a commercially
 available container runtime that was formerly known as Docker Enterprise Edition.
 
 You can use Mirantis Container Runtime with Kubernetes using the open source
@@ -606,17 +608,17 @@ You can use Mirantis Container Runtime with Kubernetes using the open source
 -->
 ### Mirantis 容器运行时 {#mcr}
 
-[Mirantis Container Runtime](https://docs.mirantis.com/mcr/20.10/overview.html) (MCR)
+[Mirantis Container Runtime](https://docs.mirantis.com/mcr/25.0/overview.html) (MCR)
 是一种商用容器运行时，以前称为 Docker 企业版。
-你可以使用 MCR 中包含的开源 [`cri-dockerd`](https://github.com/Mirantis/cri-dockerd)
+你可以使用 MCR 中包含的开源 [`cri-dockerd`](https://mirantis.github.io/cri-dockerd/)
 组件将 Mirantis Container Runtime 与 Kubernetes 一起使用。
 
 <!--
 To learn more about how to install Mirantis Container Runtime,
-visit [MCR Deployment Guide](https://docs.mirantis.com/mcr/20.10/install.html). 
+visit [MCR Deployment Guide](https://docs.mirantis.com/mcr/25.0/install.html). 
 -->
 要了解有关如何安装 Mirantis Container Runtime 的更多信息，
-请访问 [MCR 部署指南](https://docs.mirantis.com/mcr/20.10/install.html)。
+请访问 [MCR 部署指南](https://docs.mirantis.com/mcr/25.0/install.html)。
 
 <!-- 
 Check the systemd unit named `cri-docker.socket` to find out the path to the CRI
@@ -640,6 +642,6 @@ The command line argument to use is `--pod-infra-container-image`.
 
 <!-- 
 As well as a container runtime, your cluster will need a working
-[network plugin](/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model).
+[network plugin](/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-network-model).
 -->
-除了容器运行时，你的集群还需要有效的[网络插件](/zh-cn/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model)。
+除了容器运行时，你的集群还需要有效的[网络插件](/zh-cn/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-network-model)。

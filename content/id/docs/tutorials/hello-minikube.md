@@ -2,12 +2,6 @@
 title: Halo Minikube
 content_type: tutorial
 weight: 5
-menu:
-  main:
-    title: "Mulai"
-    weight: 10
-    post: >
-      <p>Siap untuk mengotori tanganmu? Yuk kita buat klaster Kubernetes sederhana yang menjalankan Node.js aplikasi "Halo Dunia".</p>
 card:
   name: tutorials
   weight: 10
@@ -38,9 +32,9 @@ Kamupun bisa mengikuti tutorial ini kalau sudah instalasi minikube di lokal. Sil
 
 Tutorial ini menyediakan image Kontainer yang dibuat melalui barisan kode berikut:
 
-{{< codenew language="js" file="minikube/server.js" >}}
+{{% codenew language="js" file="minikube/server.js" %}}
 
-{{< codenew language="conf" file="minikube/Dockerfile" >}}
+{{% codenew language="conf" file="minikube/Dockerfile" %}}
 
 Untuk info lebih lanjut tentang perintah `docker build`, baca [dokumentasi Docker](https://docs.docker.com/engine/reference/commandline/build/).
 
@@ -77,7 +71,7 @@ Pod kamu dan melakukan <i>restart</i> saat Kontainer di dalam Pod tersebut mati.
 Pod menjalankan Kontainer sesuai dengan image Docker yang telah diberikan.
 
     ```shell
-    kubectl create deployment hello-node --image=registry.k8s.io/echoserver:1.4
+    kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.53 -- /agnhost netexec --http-port=8080
     ```
 
 2. Lihat Deployment:

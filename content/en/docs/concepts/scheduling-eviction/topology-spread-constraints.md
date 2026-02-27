@@ -60,7 +60,7 @@ spec:
   # Configure a topology spread constraint
   topologySpreadConstraints:
     - maxSkew: <integer>
-      minDomains: <integer> # optional; beta since v1.25
+      minDomains: <integer> # optional
       topologyKey: <string>
       whenUnsatisfiable: <string>
       labelSelector: <object>
@@ -70,8 +70,12 @@ spec:
   ### other Pod fields go here
 ```
 
+{{< note >}}
+There can only be one `topologySpreadConstraint` for a given `topologyKey` and `whenUnsatisfiable` value. For example, if you have defined a `topologySpreadConstraint` that uses the `topologyKey` "kubernetes.io/hostname" and `whenUnsatisfiable` value "DoNotSchedule", you can only add another `topologySpreadConstraint` for the `topologyKey` "kubernetes.io/hostname" if you use a different `whenUnsatisfiable` value.
+{{< /note >}}
+
 You can read more about this field by running `kubectl explain Pod.spec.topologySpreadConstraints` or
-refer to [scheduling](/docs/reference/kubernetes-api/workload-resources/pod-v1/#scheduling) section of the API reference for Pod.
+refer to the [scheduling](/docs/reference/kubernetes-api/workload-resources/pod-v1/#scheduling) section of the API reference for Pod.
 
 ### Spread constraint definition
 
@@ -96,9 +100,12 @@ your cluster. Those fields are:
   A domain is a particular instance of a topology. An eligible domain is a domain whose
   nodes match the node selector.
 
+  <!-- OK to remove this note once v1.29 Kubernetes is out of support -->
   {{< note >}}
-  The `minDomains` field is a beta field and disabled by default in 1.25. You can enable it by enabling the
-  `MinDomainsInPodTopologySpread` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/).
+  Before Kubernetes v1.30, the `minDomains` field was only available if the
+  `MinDomainsInPodTopologySpread` [feature gate](/docs/reference/command-line-tools-reference/feature-gates-removed/)
+  was enabled (default since v1.28). In older Kubernetes clusters it might be explicitly
+  disabled or the field might not be available.
   {{< /note >}}
 
   - The value of `minDomains` must be greater than 0, when specified.
@@ -128,18 +135,25 @@ your cluster. Those fields are:
   See [Label Selectors](/docs/concepts/overview/working-with-objects/labels/#label-selectors)
   for more details.
 
-- **matchLabelKeys** is a list of pod label keys to select the pods over which
-  spreading will be calculated. The keys are used to lookup values from the pod labels,
-  those key-value labels are ANDed with `labelSelector` to select the group of existing
-  pods over which spreading will be calculated for the incoming pod. The same key is
-  forbidden to exist in both `matchLabelKeys` and `labelSelector`. `matchLabelKeys` cannot
-  be set when `labelSelector` isn't set. Keys that don't exist in the pod labels will be
-  ignored. A null or empty list means only match against the `labelSelector`.
+- **matchLabelKeys** is a list of pod label keys to select the group of pods over which 
+  the spreading skew will be calculated. At a pod creation, 
+  the kube-apiserver uses those keys to lookup values from the incoming pod labels,
+  and those key-value labels will be merged with any existing `labelSelector`.
+  The same key is forbidden to exist in both `matchLabelKeys` and `labelSelector`. 
+  `matchLabelKeys` cannot be set when `labelSelector` isn't set. 
+  Keys that don't exist in the pod labels will be ignored. 
+  A null or empty list means only match against the `labelSelector`.
+
+  {{< caution >}}
+  It's not recommended to use `matchLabelKeys` with labels that might be updated directly on pods.
+  Even if you edit the pod's label that is specified at `matchLabelKeys` **directly**,
+  (that is, you edit the Pod and not a Deployment),
+  kube-apiserver doesn't reflect the label update onto the merged `labelSelector`.
+  {{< /caution >}}
 
   With `matchLabelKeys`, you don't need to update the `pod.spec` between different revisions.
   The controller/operator just needs to set different values to the same label key for different
-  revisions. The scheduler will assume the values automatically based on `matchLabelKeys`. For
-  example, if you are configuring a Deployment, you can use the label keyed with
+  revisions. For example, if you are configuring a Deployment, you can use the label keyed with
   [pod-template-hash](/docs/concepts/workloads/controllers/deployment/#pod-template-hash-label), which
   is added automatically by the Deployment controller, to distinguish between different revisions
   in a single Deployment.
@@ -159,6 +173,11 @@ your cluster. Those fields are:
   {{< note >}}
   The `matchLabelKeys` field is a beta-level field and enabled by default in 1.27. You can disable it by disabling the
   `MatchLabelKeysInPodTopologySpread` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/).
+
+  Before v1.34, `matchLabelKeys` was handled implicitly.
+  Since v1.34, key-value labels corresponding to `matchLabelKeys` are explicitly merged into `labelSelector`.
+  You can disable it and revert to the previous behavior by disabling the `MatchLabelKeysInPodTopologySpreadSelectorMerge` 
+  [feature gate](/docs/reference/command-line-tools-reference/feature-gates/) of kube-apiserver.  
   {{< /note >}}
 
 - **nodeAffinityPolicy** indicates how we will treat Pod's nodeAffinity/nodeSelector
@@ -169,7 +188,8 @@ your cluster. Those fields are:
   If this value is null, the behavior is equivalent to the Honor policy.
 
   {{< note >}}
-  The `nodeAffinityPolicy` is a beta-level field and enabled by default in 1.26. You can disable it by disabling the
+  The `nodeAffinityPolicy` became beta in 1.26 and graduated to GA in 1.33.
+  It's enabled by default in beta, you can disable it by disabling the
   `NodeInclusionPolicyInPodTopologySpread` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/).
   {{< /note >}}
 
@@ -182,7 +202,8 @@ your cluster. Those fields are:
   If this value is null, the behavior is equivalent to the Ignore policy.
 
   {{< note >}}
-  The `nodeTaintsPolicy` is a beta-level field and enabled by default in 1.26. You can disable it by disabling the
+  The `nodeTaintsPolicy` became beta in 1.26 and graduated to GA in 1.33.
+  It's enabled by default in beta, you can disable it by disabling the
   `NodeInclusionPolicyInPodTopologySpread` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/).
   {{< /note >}}
 
@@ -251,7 +272,7 @@ follows the API definition of the field; however, the behavior is more likely to
 confusing and troubleshooting is less straightforward.
 
 You need a mechanism to ensure that all the nodes in a topology domain (such as a
-cloud provider region) are labelled consistently.
+cloud provider region) are labeled consistently.
 To avoid you needing to manually label nodes, most clusters automatically
 populate well-known labels such as `kubernetes.io/hostname`. Check whether
 your cluster supports this.
@@ -260,7 +281,7 @@ your cluster supports this.
 
 ### Example: one topology spread constraint {#example-one-topologyspreadconstraint}
 
-Suppose you have a 4-node cluster where 3 Pods labelled `foo: bar` are located in
+Suppose you have a 4-node cluster where 3 Pods labeled `foo: bar` are located in
 node1, node2 and node3 respectively:
 
 {{<mermaid>}}
@@ -287,7 +308,7 @@ can use a manifest similar to:
 {{% code_sample file="pods/topology-spread-constraints/one-constraint.yaml" %}}
 
 From that manifest, `topologyKey: zone` implies the even distribution will only be applied
-to nodes that are labelled `zone: <any value>` (nodes that don't have a `zone` label
+to nodes that are labeled `zone: <any value>` (nodes that don't have a `zone` label
 are skipped). The field `whenUnsatisfiable: DoNotSchedule` tells the scheduler to let the
 incoming Pod stay pending if the scheduler can't find a way to satisfy the constraint.
 
@@ -474,11 +495,12 @@ There are some implicit conventions worth noting here:
 
 - Only the Pods holding the same namespace as the incoming Pod can be matching candidates.
 
-- The scheduler bypasses any nodes that don't have any `topologySpreadConstraints[*].topologyKey`
-  present. This implies that:
+- The scheduler only considers nodes that have all `topologySpreadConstraints[*].topologyKey` present at the same time.
+  Nodes missing any of these `topologyKeys` are bypassed. This implies that:
 
   1. any Pods located on those bypassed nodes do not impact `maxSkew` calculation - in the
-     above example, suppose the node `node1` does not have a label "zone", then the 2 Pods will
+     above [example](#example-conflicting-topologyspreadconstraints), suppose the node `node1`
+     does not have a label "zone", then the 2 Pods will
      be disregarded, hence the incoming Pod will be scheduled into zone `A`.
   2. the incoming Pod has no chances to be scheduled onto this kind of nodes -
      in the above example, suppose a node `node5` has the **mistyped** label `zone-typo: zoneC`
@@ -490,7 +512,7 @@ There are some implicit conventions worth noting here:
   above example, if you remove the incoming Pod's labels, it can still be placed onto
   nodes in zone `B`, since the constraints are still satisfied. However, after that
   placement, the degree of imbalance of the cluster remains unchanged - it's still zone `A`
-  having 2 Pods labelled as `foo: bar`, and zone `B` having 1 Pod labelled as
+  having 2 Pods labeled as `foo: bar`, and zone `B` having 1 Pod labeled as
   `foo: bar`. If this is not what you expect, update the workload's
   `topologySpreadConstraints[*].labelSelector` to match the labels in the pod template.
 
@@ -511,7 +533,7 @@ ReplicaSets, StatefulSets or ReplicationControllers that the Pod belongs to.
 An example configuration might look like follows:
 
 ```yaml
-apiVersion: kubescheduler.config.k8s.io/v1beta3
+apiVersion: kubescheduler.config.k8s.io/v1
 kind: KubeSchedulerConfiguration
 
 profiles:
@@ -525,13 +547,6 @@ profiles:
               whenUnsatisfiable: ScheduleAnyway
           defaultingType: List
 ```
-
-{{< note >}}
-The [`SelectorSpread` plugin](/docs/reference/scheduling/config/#scheduling-plugins)
-is disabled by default. The Kubernetes project recommends using `PodTopologySpread`
-to achieve similar behavior.
-{{< /note >}}
-
 ### Built-in default constraints {#internal-default-constraints}
 
 {{< feature-state for_k8s_version="v1.24" state="stable" >}}
@@ -568,7 +583,7 @@ you can disable those defaults by setting `defaultingType` to `List` and leaving
 empty `defaultConstraints` in the `PodTopologySpread` plugin configuration:
 
 ```yaml
-apiVersion: kubescheduler.config.k8s.io/v1beta3
+apiVersion: kubescheduler.config.k8s.io/v1
 kind: KubeSchedulerConfiguration
 
 profiles:
@@ -621,9 +636,17 @@ section of the enhancement proposal about Pod topology spread constraints.
   because, in this case, those topology domains won't be considered until there is
   at least one node in them.
 
-  You can work around this by using an cluster autoscaling tool that is aware of
+  You can work around this by using a Node autoscaler that is aware of
   Pod topology spread constraints and is also aware of the overall set of topology
   domains.
+- Pods that don't match their own labelSelector create "ghost pods". If a pod's
+  labels don't match the `labelSelector` in its topology spread constraint, the pod
+  won't count itself in spread calculations. This means:
+  - Multiple such pods can just accumulate on the same topology (until matching pods are newly created/deleted) because those pod's schedule don't change a spreading calculation result.
+  - The spreading constraint works in an unintended way, most likely not matching your expectations
+
+  Ensure your pod's labels match the `labelSelector` in your spread constraints.
+  Typically, a pod should match its own topology spread constraint selector.
 
 ## {{% heading "whatsnext" %}}
 

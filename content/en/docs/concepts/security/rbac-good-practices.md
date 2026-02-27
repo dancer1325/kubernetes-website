@@ -56,7 +56,7 @@ In cases where a workload requires powerful permissions, consider the following 
   [Taints and Toleration](/docs/concepts/scheduling-eviction/taint-and-toleration/),
   [NodeAffinity](/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity), or
   [PodAntiAffinity](/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity)
-  to ensure pods don't run alongside untrusted or less-trusted Pods. Pay especial attention to
+  to ensure pods don't run alongside untrusted or less-trusted Pods. Pay special attention to
   situations where less-trustworthy Pods are not meeting the **Restricted** Pod Security Standard.
 
 ### Hardening
@@ -130,8 +130,8 @@ reading data from other containers, and abusing the credentials of system servic
 
 You should only allow access to create PersistentVolume objects for:
 
-- users (cluster operators) that need this access for their work, and who you trust,
-- the Kubernetes control plane components which creates PersistentVolumes based on PersistentVolumeClaims
+- Users (cluster operators) that need this access for their work, and who you trust.
+- The Kubernetes control plane components which creates PersistentVolumes based on PersistentVolumeClaims
   that are configured for automatic provisioning.
   This is usually setup by the Kubernetes provider or by the operator when installing a CSI driver.
 
@@ -140,10 +140,15 @@ PersistentVolumes, and constrained users should use PersistentVolumeClaims to ac
 
 ### Access to `proxy` subresource of Nodes
 
-Users with access to the proxy sub-resource of node objects have rights to the Kubelet API,
+Users with access to the `nodes/proxy` sub-resource have rights to the Kubelet API,
 which allows for command execution on every pod on the node(s) to which they have rights.
 This access bypasses audit logging and admission control, so care should be taken before
-granting rights to this resource.
+granting any rights to this resource.
+These APIs can be exercised via websocket HTTP `GET` requests, which only requires authorization of the **get** verb.
+This means that **get** permission on `nodes/proxy` is not a read-only permission.
+
+See [Kubelet authentication/authorization](/docs/reference/access-authn-authz/kubelet-authn-authz/#get-nodes-proxy-warning)
+for more information.
 
 ### Escalate verb
 
@@ -180,6 +185,14 @@ tokens for existing service accounts.
 Users with control over `validatingwebhookconfigurations` or `mutatingwebhookconfigurations`
 can control webhooks that can read any object admitted to the cluster, and in the case of
 mutating webhooks, also mutate admitted objects.
+
+### Namespace modification
+
+Users who can perform **patch** operations on Namespace objects (through a namespaced RoleBinding to a Role with that access) can modify
+labels on that namespace. In clusters where Pod Security Admission is used, this may allow a user to configure the namespace
+for a more permissive policy than intended by the administrators.
+For clusters where NetworkPolicy is used, users may be set labels that indirectly allow
+access to services that an administrator did not intend to allow.
 
 ## Kubernetes RBAC - denial of service risks {#denial-of-service-risks}
 

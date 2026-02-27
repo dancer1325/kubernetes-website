@@ -31,9 +31,11 @@ This page describes Kubernetes security and disclosure information.
 ## 安全公告 {#security-announcements}
 
 <!--
-Join the [kubernetes-security-announce](https://groups.google.com/forum/#!forum/kubernetes-security-announce) group for emails about security and major API announcements.
+Join the [kubernetes-security-announce](https://groups.google.com/forum/#!forum/kubernetes-security-announce)
+group for emails about security and major API announcements.
 -->
-加入 [kubernetes-security-announce](https://groups.google.com/forum/#!forum/kubernetes-security-announce) 组，以获取关于安全性和主要 API 公告的电子邮件。
+加入 [kubernetes-security-announce](https://groups.google.com/forum/#!forum/kubernetes-security-announce)
+组，以获取关于安全性和主要 API 公告的电子邮件。
 
 <!--
 ## Report a Vulnerability
@@ -41,19 +43,23 @@ Join the [kubernetes-security-announce](https://groups.google.com/forum/#!forum/
 ## 报告一个漏洞 {#report-a-vulnerability}
 
 <!--
-We're extremely grateful for security researchers and users that report vulnerabilities to the Kubernetes Open Source Community. All reports are thoroughly investigated by a set of community volunteers.
+We're extremely grateful for security researchers and users that report vulnerabilities to
+the Kubernetes Open Source Community. All reports are thoroughly investigated by a set of community volunteers.
 -->
 我们非常感谢向 Kubernetes 开源社区报告漏洞的安全研究人员和用户。
 所有的报告都由社区志愿者进行彻底调查。
 
 <!--
-To make a report, submit your vulnerability to the [Kubernetes bug bounty program](https://hackerone.com/kubernetes). This allows triage and handling of the vulnerability with standardized response times.
+To make a report, submit your vulnerability to the [Kubernetes bug bounty program](https://hackerone.com/kubernetes).
+This allows triage and handling of the vulnerability with standardized response times.
 -->
 如需报告，请将你的漏洞提交给 [Kubernetes 漏洞赏金计划](https://hackerone.com/kubernetes)。
 这样做可以使得社区能够在标准化的响应时间内对漏洞进行分类和处理。
 
 <!--
-You can also email the private [security@kubernetes.io](mailto:security@kubernetes.io) list with the security details and the details expected for [all Kubernetes bug reports](https://github.com/kubernetes/kubernetes/blob/master/.github/ISSUE_TEMPLATE/bug-report.yaml).
+You can also email the private [security@kubernetes.io](mailto:security@kubernetes.io)
+list with the security details and the details expected for
+[all Kubernetes bug reports](https://github.com/kubernetes/kubernetes/blob/master/.github/ISSUE_TEMPLATE/bug-report.yaml).
 -->
 你还可以通过电子邮件向私有 [security@kubernetes.io](mailto:security@kubernetes.io)
 列表发送电子邮件，邮件中应该包含
@@ -61,7 +67,9 @@ You can also email the private [security@kubernetes.io](mailto:security@kubernet
 所需的详细信息。
 
 <!--
-You may encrypt your email to this list using the GPG keys of the [Security Response Committee members](https://git.k8s.io/security/README.md#product-security-committee-psc). Encryption using GPG is NOT required to make a disclosure.
+You may encrypt your email to this list using the GPG keys of the
+[Security Response Committee members](https://git.k8s.io/security/README.md#product-security-committee-psc).
+Encryption using GPG is NOT required to make a disclosure.
 -->
 你可以使用[安全响应委员会成员](https://git.k8s.io/security/README.md#product-security-committee-psc)的
 GPG 密钥加密你的发往邮件列表的邮件。揭示问题时不需要使用 GPG 来加密。
@@ -102,12 +110,15 @@ GPG 密钥加密你的发往邮件列表的邮件。揭示问题时不需要使�
 ## 安全漏洞响应 {#security-vulnerability-response}
 
 <!--
-Each report is acknowledged and analyzed by Security Response Committee members within 3 working days. This will set off the [Security Release Process](https://git.k8s.io/security/security-release-process.md#disclosures).
+Each report is acknowledged and analyzed by Security Response Committee members within 3 working days.
+This will set off the [Security Release Process](https://git.k8s.io/security/security-release-process.md#disclosures).
 -->
-每个报告在 3 个工作日内由安全响应委员会成员确认和分析，这将启动[安全发布过程](https://git.k8s.io/sig-release/security-release-process-documentation/security-release-process.md#disclosures)。
+每个报告在 3 个工作日内由安全响应委员会成员确认和分析，
+这将启动[安全发布过程](https://git.k8s.io/security/security-release-process.md#disclosures)。
 
 <!--
-Any vulnerability information shared with Security Response Committee stays within Kubernetes project and will not be disseminated to other projects unless it is necessary to get the issue fixed.
+Any vulnerability information shared with Security Response Committee stays within Kubernetes project
+and will not be disseminated to other projects unless it is necessary to get the issue fixed.
 -->
 与安全响应委员会共享的任何漏洞信息都保留在 Kubernetes 项目中，除非有必要修复该问题，否则不会传播到其他项目。
 
@@ -122,18 +133,23 @@ As the security issue moves from triage, to identified fix, to release planning 
 ## 公开披露时间 {#public-disclosure-timing}
 
 <!--
-A public disclosure date is negotiated by the Kubernetes Security Response Committee and the bug submitter. We prefer to fully disclose the bug as soon as possible once a user mitigation is available.
+A public disclosure date is negotiated by the Kubernetes Security Response Committee and the bug submitter.
+We prefer to fully disclose the bug as soon as possible once a user mitigation is available.
 -->
 公开披露日期由 Kubernetes 安全响应委员会和 bug 提交者协商。
 我们倾向于在能够为用户提供缓解措施之后尽快完全披露该 bug。
 
 <!--
-It is reasonable to delay disclosure when the bug or the fix is not yet fully understood, the solution is not well-tested, or for vendor coordination.
+It is reasonable to delay disclosure when the bug or the fix is not yet fully understood,
+the solution is not well-tested, or for vendor coordination.
 -->
 当 bug 或其修复还没有被完全理解，解决方案没有经过良好的测试，或者为了处理供应商协调问题时，延迟披露是合理的。
 
 <!--
-The timeframe for disclosure is from immediate (especially if it's already publicly known) to a few weeks. For a vulnerability with a straightforward mitigation, we expect report date to disclosure date to be on the order of 7 days. The Kubernetes Security Response Committee holds the final say when setting a disclosure date.
+The timeframe for disclosure is from immediate (especially if it's already publicly known)
+to a few weeks. For a vulnerability with a straightforward mitigation, we expect report date
+to disclosure date to be on the order of 7 days. The Kubernetes Security Response Committee
+holds the final say when setting a disclosure date.
 -->
 信息披露的时间范围从即时（尤其是已经公开的）到几周不等。
 对于具有直接缓解措施的漏洞，我们希望报告日期到披露日期的间隔是 7 天。

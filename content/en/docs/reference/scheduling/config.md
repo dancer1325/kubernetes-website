@@ -33,8 +33,7 @@ clientConnection:
 ```
 
 {{< note >}}
-KubeSchedulerConfiguration [v1beta3](/docs/reference/config-api/kube-scheduler-config.v1beta3/)
-is deprecated in v1.26 and will be removed in v1.29.
+KubeSchedulerConfiguration v1beta3 is deprecated in v1.26 and is removed in v1.29.
 Please migrate KubeSchedulerConfiguration to [v1](/docs/reference/config-api/kube-scheduler-config.v1/).
 {{< /note >}}
 
@@ -144,7 +143,7 @@ extension points:
   {{< glossary_tooltip text="volumes" term_id="volume" >}}.
   Extension points: `preFilter`, `filter`, `reserve`, `preBind`, `score`.
   {{< note >}}
-  `score` extension point is enabled when `VolumeCapacityPriority` feature is
+  `score` extension point is enabled when `StorageCapacityScoring` feature is
   enabled. It prioritizes the smallest PVs that can fit the requested volume
   size.
   {{< /note >}}
@@ -155,7 +154,10 @@ extension points:
   might have.
   Extension points: `filter`.
 - `NodeVolumeLimits`: Checks that CSI volume limits can be satisfied for the
-  node.
+  node. This plugin can also prevent pod placement to a node if no CSI driver is installed on the node, 
+  which requires `VolumeLimitScaling` feature gate to be enabled. It also
+  allows cluster-autoscaler to accurately calculate number of nodes required
+  for scheduling pending pods with attachable CSI volumes.
   Extension points: `filter`.
 - `EBSLimits`: Checks that AWS EBS volume limits can be satisfied for the node.
   Extension points: `filter`.
@@ -218,9 +220,11 @@ If a Pod doesn't specify a scheduler name, kube-apiserver will set it to
 to get those pods scheduled.
 
 {{< note >}}
-Pod's scheduling events have `.spec.schedulerName` as the ReportingController.
-Events for leader election use the scheduler name of the first profile in the
-list.
+Pod's scheduling events have `.spec.schedulerName` as their `reportingController`.
+Events for leader election use the scheduler name of the first profile in the list.
+
+For more information, please refer to the `reportingController` section under
+[Event API Reference](/docs/reference/kubernetes-api/cluster-resources/event-v1/).
 {{< /note >}}
 
 {{< note >}}
@@ -331,14 +335,14 @@ The general hierarchy for precedence when configuring `MultiPoint` plugins is as
 3. Default plugins and their default settings
 
 To demonstrate the above hierarchy, the following example is based on these plugins:
-|Plugin|Extension Points|
-|---|---|
-|`DefaultQueueSort`|`QueueSort`|
-|`CustomQueueSort`|`QueueSort`|
-|`DefaultPlugin1`|`Score`, `Filter`|
-|`DefaultPlugin2`|`Score`|
-|`CustomPlugin1`|`Score`, `Filter`|
-|`CustomPlugin2`|`Score`, `Filter`|
+| Plugin             | Extension Points  |
+| ------------------ | ----------------- |
+| `DefaultQueueSort` | `QueueSort`       |
+| `CustomQueueSort`  | `QueueSort`       |
+| `DefaultPlugin1`   | `Score`, `Filter` |
+| `DefaultPlugin2`   | `Score`           |
+| `CustomPlugin1`    | `Score`, `Filter` |
+| `CustomPlugin2`    | `Score`, `Filter` |
 
 A valid sample configuration for these plugins would be:
 
@@ -375,6 +379,7 @@ Besides keeping most of the config in one spot, this sample does a few things:
 * Reorders `DefaultPlugin2` to run first in `score` (even before the custom plugins)
 
 In versions of the config before `v1beta3`, without `multiPoint`, the above snippet would equate to this:
+
 ```yaml
 apiVersion: kubescheduler.config.k8s.io/v1beta2
 kind: KubeSchedulerConfiguration
@@ -463,6 +468,4 @@ to achieve similar behavior.
 
 * Read the [kube-scheduler reference](/docs/reference/command-line-tools-reference/kube-scheduler/)
 * Learn about [scheduling](/docs/concepts/scheduling-eviction/kube-scheduler/)
-* Read the [kube-scheduler configuration (v1beta2)](/docs/reference/config-api/kube-scheduler-config.v1beta2/) reference
-* Read the [kube-scheduler configuration (v1beta3)](/docs/reference/config-api/kube-scheduler-config.v1beta3/) reference
 * Read the [kube-scheduler configuration (v1)](/docs/reference/config-api/kube-scheduler-config.v1/) reference

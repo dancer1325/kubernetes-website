@@ -1,7 +1,6 @@
 ---
 title: Container Runtime
 id: container-runtime
-date: 2019-06-05
 full_link: /docs/setup/production-environment/container-runtimes
 short_description: >
  *Container runtime* to oprogramowanie zajmujące się uruchamianiem kontenerów.
@@ -11,7 +10,8 @@ tags:
 - fundamental
 - workload
 ---
- *Container runtime* to oprogramowanie zajmujące się uruchamianiem kontenerów.
+ Podstawowy komponent umożliwiający efektywne uruchamianie kontenerów w Kubernetesie.
+Odpowiada za zarządzanie uruchamianiem i cyklem życia kontenerów w środowisku Kubernetes.
 
 <!--more-->
 

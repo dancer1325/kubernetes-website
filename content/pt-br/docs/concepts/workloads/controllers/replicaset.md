@@ -280,7 +280,7 @@ Se o Pod obedecer todos os items acima simultaneamente, a seleção é aleatóri
 Utilizando a anotação [`controller.kubernetes.io/pod-deletion-cost`](/docs/reference/labels-annotations-taints/#pod-deletion-cost),
 usuários podem definir uma preferência em relação à quais pods serão removidos primeiro caso o ReplicaSet precise escalonar para baixo.
 
-A anotação deve ser definida no pod, com uma variação de [-2147483647, 2147483647]. Isso representa o custo de deletar um pod comparado com outros pods que pertencem à esse mesmo ReplicaSet. Pods com um custo de deleção menor são eleitos para deleção antes de pods com um custo maior.
+A anotação deve ser definida no pod, com uma variação de [-2147483648, 2147483647]. Isso representa o custo de deletar um pod comparado com outros pods que pertencem à esse mesmo ReplicaSet. Pods com um custo de deleção menor são eleitos para deleção antes de pods com um custo maior.
 
 O valor implícito para essa anotação para pods que não a tem definida é 0;  valores negativos são permitidos.
 Valores inválidos serão rejeitados pelo servidor API.
@@ -318,7 +318,7 @@ Alternativamente, você pode usar o comando `kubectl autoscale` para realizar a 
 (e é bem mais simples!)
 
 ```shell
-kubectl autoscale rs frontend --max=10 --min=3 --cpu-percent=50
+kubectl autoscale rs frontend --max=10 --min=3 --cpu=50%
 ```
 
 ## Alternativas ao ReplicaSet
@@ -331,7 +331,7 @@ Por isso, é recomendado o uso de Deployments quando você deseja ReplicaSets.
 
 ### Bare Pods
 
-Diferente do caso onde um usuário cria Pods diretamente, um ReplicaSet substitui Pods que forem deletados ou terminados por qualquer motivo, como em caso de falha de nó ou manutenção disruptiva de nó, como uma atualização de kernel. Por esse motivo, nós recomendamos que você use um ReplicaSet mesmo que sua aplicação necessite apenas de um único Pod. Pense na semelhança com um supervisor de processos, apenas que ele supervisione vários Pods em múltiplos nós ao invés de apenas um Pod. Um ReplicaSet delega reinicializações de um container local para algum agente do nó (Kubelet ou Docker, por exemplo).
+Diferente do caso onde um usuário cria Pods diretamente, um ReplicaSet substitui Pods que forem deletados ou terminados por qualquer motivo, como em caso de falha de nó ou manutenção disruptiva de nó, como uma atualização de kernel. Por esse motivo, nós recomendamos que você use um ReplicaSet mesmo que sua aplicação necessite apenas de um único Pod. Pense na semelhança com um supervisor de processos, apenas que ele supervisione vários Pods em múltiplos nós ao invés de apenas um Pod. Um ReplicaSet delega reinicializações de um contêiner local para algum agente do nó (Kubelet ou Docker, por exemplo).
 
 ### Job
 

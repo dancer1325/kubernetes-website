@@ -13,9 +13,9 @@ weight: 420
 
 You will need to have the following tools installed:
 
-- `cosign` ([install guide](https://docs.sigstore.dev/cosign/installation/))
+- `cosign` ([install guide](https://docs.sigstore.dev/cosign/system_config/installation/))
 - `curl` (often provided by your operating system)
-- `jq` ([download jq](https://stedolan.github.io/jq/download/))
+- `jq` ([download jq](https://jqlang.github.io/jq/download/))
 
 ## Verifying binary signatures
 
@@ -51,11 +51,11 @@ cosign verify-blob "$BINARY" \
 {{< note >}}
 Cosign 2.0 requires the `--certificate-identity` and `--certificate-oidc-issuer` options.
 
-To learn more about keyless signing, please refer to [Keyless Signatures](https://docs.sigstore.dev/cosign/keyless).
+To learn more about keyless signing, please refer to [Keyless Signatures](https://docs.sigstore.dev/cosign/signing/overview/).
 
 Previous versions of Cosign required that you set `COSIGN_EXPERIMENTAL=1`.
 
-For additional information, plase refer to the [sigstore Blog](https://blog.sigstore.dev/cosign-2-0-released/)
+For additional information, please refer to the [sigstore Blog](https://blog.sigstore.dev/cosign-2-0-released/)
 {{< /note >}}
 
 ## Verifying image signatures

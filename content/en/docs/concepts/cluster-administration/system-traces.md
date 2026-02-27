@@ -14,13 +14,16 @@ weight: 90
 System component traces record the latency of and relationships between operations in the cluster.
 
 Kubernetes components emit traces using the
-[OpenTelemetry Protocol](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md#opentelemetry-protocol-specification)
+[OpenTelemetry Protocol](https://opentelemetry.io/docs/specs/otlp/)
 with the gRPC exporter and can be collected and routed to tracing backends using an
 [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector#-opentelemetry-collector).
 
 <!-- body -->
 
 ## Trace Collection
+
+Kubernetes components have built-in gRPC exporters for OTLP to export traces, either with an OpenTelemetry Collector, 
+or without an OpenTelemetry Collector.
 
 For a complete guide to collecting traces and using the collector, see
 [Getting Started with the OpenTelemetry Collector](https://opentelemetry.io/docs/collector/getting-started/).
@@ -38,14 +41,25 @@ receivers:
       grpc:
 exporters:
   # Replace this exporter with the exporter for your backend
-  logging:
-    logLevel: debug
+  exporters:
+    debug:
+      verbosity: detailed
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging]
+      exporters: [debug]
 ```
+
+To directly emit traces to a backend without utilizing a collector, 
+specify the endpoint field in the Kubernetes tracing configuration file with the desired trace backend address. 
+This method negates the need for a collector and simplifies the overall structure.
+
+For trace backend header configuration, including authentication details, environment variables can be used with `OTEL_EXPORTER_OTLP_HEADERS`, 
+see [OTLP Exporter Configuration](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/).
+
+Additionally, for trace resource attribute configuration such as Kubernetes cluster name, namespace, Pod name, etc., 
+environment variables can also be used with `OTEL_RESOURCE_ATTRIBUTES`, see [OTLP Kubernetes Resource](https://opentelemetry.io/docs/specs/semconv/resource/k8s/).
 
 ## Component traces
 
@@ -64,7 +78,7 @@ with `--tracing-config-file=<path-to-config>`. This is an example config that re
 spans for 1 in 10000 requests, and uses the default OpenTelemetry endpoint:
 
 ```yaml
-apiVersion: apiserver.config.k8s.io/v1beta1
+apiVersion: apiserver.config.k8s.io/v1
 kind: TracingConfiguration
 # default value
 #endpoint: localhost:4317
@@ -72,11 +86,11 @@ samplingRatePerMillion: 100
 ```
 
 For more information about the `TracingConfiguration` struct, see
-[API server config API (v1beta1)](/docs/reference/config-api/apiserver-config.v1beta1/#apiserver-k8s-io-v1beta1-TracingConfiguration).
+[API server config API (v1)](/docs/reference/config-api/apiserver-config.v1/#apiserver-k8s-io-v1-TracingConfiguration).
 
 ### kubelet traces
 
-{{< feature-state for_k8s_version="v1.27" state="beta" >}}
+{{< feature-state feature_gate_name="KubeletTracing" >}}
 
 The kubelet CRI interface and authenticated http servers are instrumented to generate
 trace spans. As with the apiserver, the endpoint and sampling rate are configurable.
@@ -92,8 +106,6 @@ This is an example snippet of a kubelet config that records spans for 1 in 10000
 ```yaml
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
-featureGates:
-  KubeletTracing: true
 tracing:
   # default value
   #endpoint: localhost:4317
@@ -129,4 +141,6 @@ there are no guarantees of backwards compatibility for tracing instrumentation.
 ## {{% heading "whatsnext" %}}
 
 * Read about [Getting Started with the OpenTelemetry Collector](https://opentelemetry.io/docs/collector/getting-started/)
+* Read about [OTLP Exporter Configuration](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/)
+
 

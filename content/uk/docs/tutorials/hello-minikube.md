@@ -3,15 +3,6 @@
 title: Привіт Minikube
 content_type: tutorial
 weight: 5
-menu:
-  main:
-    #title: "Get Started"
-    title: "Початок роботи"
-    weight: 10
-    #post: >
-      #<p>Ready to get your hands dirty? Build a simple Kubernetes cluster that runs "Hello World" for Node.js.</p>
-    post: >
-      <p>Готові попрацювати? Створимо простий Kubernetes кластер для запуску Node.js застосунку "Hello World".</p>
 card: 
   #name: tutorials
   name: навчальні матеріали
@@ -119,7 +110,7 @@ Pod runs a Container based on the provided Docker image.
 1. За допомогою команди `kubectl create` створіть Deployment, який керуватиме Pod'ом. Pod запускає контейнер на основі наданого Docker образу.
 
     ```shell
-    kubectl create deployment hello-node --image=registry.k8s.io/echoserver:1.4
+    kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.53 -- /agnhost netexec --http-port=8080
     ```
 
 <!--2. View the Deployment:

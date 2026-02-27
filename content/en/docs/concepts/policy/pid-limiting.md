@@ -52,7 +52,7 @@ allocation to Pods. This is similar to how you can reserve CPU, memory, or other
 resources for use by the operating system and other facilities outside of Pods
 and their containers.
 
-PID limiting is a an important sibling to [compute
+PID limiting is an important sibling to [compute
 resource](/docs/concepts/configuration/manage-resources-containers/) requests
 and limits. However, you specify it in a different way: rather than defining a
 Pod's resource limit in the `.spec` for a Pod, you configure the limit as a
@@ -97,7 +97,7 @@ Eviction signal value is calculated periodically and does NOT enforce the limit.
 PID limiting - per Pod and per Node sets the hard limit.
 Once the limit is hit, workload will start experiencing failures when trying to get a new PID.
 It may or may not lead to rescheduling of a Pod,
-depending on how workload reacts on these failures and how liveleness and readiness
+depending on how workload reacts on these failures and how liveness and readiness
 probes are configured for the Pod. However, if limits were set correctly,
 you can guarantee that other Pods workload and system processes will not run out of PIDs
 when one Pod is misbehaving.

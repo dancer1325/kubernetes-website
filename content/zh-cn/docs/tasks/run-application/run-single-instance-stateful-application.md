@@ -58,8 +58,8 @@ for a secure solution.
 注意：在配置的 YAML 文件中定义密码的做法是不安全的。具体安全解决方案请参考
 [Kubernetes Secrets](/zh-cn/docs/concepts/configuration/secret/)。
 
-{{% code file="application/mysql/mysql-deployment.yaml" %}}
-{{% code file="application/mysql/mysql-pv.yaml" %}}
+{{% code_sample file="application/mysql/mysql-deployment.yaml" %}}
+{{% code_sample file="application/mysql/mysql-pv.yaml" %}}
 
 <!--
 1. Deploy the PV and PVC of the YAML file:
@@ -107,7 +107,7 @@ for a secure solution.
      Labels:       app=mysql
      Containers:
       mysql:
-       Image:      mysql:5.6
+       Image:      mysql:9
        Port:       3306/TCP
        Environment:
          MYSQL_ROOT_PASSWORD:      password
@@ -198,7 +198,7 @@ Run a MySQL client to connect to the server:
 运行 MySQL 客户端以连接到服务器：
 
 ```shell
-kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -ppassword
+kubectl run -it --rm --image=mysql:9 --restart=Never mysql-client -- mysql -h mysql -ppassword
 ```
 
 <!--

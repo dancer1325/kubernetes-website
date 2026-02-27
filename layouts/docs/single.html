@@ -1,12 +1,12 @@
 {{ define "main" }}
     <div class="td-content">
-    {{ partial "docs/content-page" (dict "ctx" . "page" .) }}
+    {{- if .HasShortcode "kat-button" -}}
+    <div class="pageinfo pageinfo-secondary">
+    {{ T "katacoda_message" | safeHTML }}
     </div>
-{{ end }}
-{{ define "hero-more" }}
-{{ if .IsHome }}
-{{ with site.GetPage "section" "docs/tutorials/kubernetes-basics" }}
-<a href="{{ .RelPermalink }}" id="quickstartButton" class="button">{{ .LinkTitle }}</a>
-{{ end }}
-{{ end }}
+    {{- end -}}
+    {{ partial "docs/content-page" (dict "ctx" . "page" .) }}
+    <!-- Partial "docs/api-reference-links" determines API reference links for 'partial/page-meta-links.html' -->
+    {{ partial "docs/api-reference-links" . }}
+    </div>
 {{ end }}

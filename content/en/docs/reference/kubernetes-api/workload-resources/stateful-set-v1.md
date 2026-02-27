@@ -6,7 +6,7 @@ api_metadata:
 content_type: "api_reference"
 description: "StatefulSet represents a set of pods with consistent identities."
 title: "StatefulSet"
-weight: 6
+weight: 7
 auto_generated: true
 ---
 
@@ -64,7 +64,7 @@ A StatefulSetSpec is the specification of a StatefulSet.
 
 <hr>
 
-- **serviceName** (string), required
+- **serviceName** (string)
 
   serviceName is the name of the service that governs this StatefulSet. This service must exist before the StatefulSet, and is responsible for the network identity of the set. Pods get DNS/hostnames that follow the pattern: pod-specific-string.serviceName.default.svc.cluster.local where "pod-specific-string" is managed by the StatefulSet controller.
 
@@ -90,6 +90,10 @@ A StatefulSetSpec is the specification of a StatefulSet.
   - **updateStrategy.type** (string)
 
     Type indicates the type of the StatefulSetUpdateStrategy. Default is RollingUpdate.
+    
+    Possible enum values:
+     - `"OnDelete"` triggers the legacy behavior. Version tracking and ordered rolling restarts are disabled. Pods are recreated from the StatefulSetSpec when they are manually deleted. When a scale operation is performed with this strategy,specification version indicated by the StatefulSet's currentRevision.
+     - `"RollingUpdate"` indicates that update will be applied to all Pods in the StatefulSet with respect to the StatefulSet ordering constraints. When a scale operation is performed with this strategy, new Pods will be created from the specification version indicated by the StatefulSet's updateRevision.
 
   - **updateStrategy.rollingUpdate** (RollingUpdateStatefulSetStrategy)
 
@@ -100,7 +104,7 @@ A StatefulSetSpec is the specification of a StatefulSet.
 
     - **updateStrategy.rollingUpdate.maxUnavailable** (IntOrString)
 
-      The maximum number of pods that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%). Absolute number is calculated from percentage by rounding up. This can not be 0. Defaults to 1. This field is alpha-level and is only honored by servers that enable the MaxUnavailableStatefulSet feature. The field applies to all pods in the range 0 to Replicas-1. That means if there is any unavailable pod in the range 0 to Replicas-1, it will be counted towards MaxUnavailable.
+      The maximum number of pods that can be unavailable during the update. Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%). Absolute number is calculated from percentage by rounding up. This can not be 0. Defaults to 1. This field is beta-level and is enabled by default. The field applies to all pods in the range 0 to Replicas-1. That means if there is any unavailable pod in the range 0 to Replicas-1, it will be counted towards MaxUnavailable. This setting might not be effective for the OrderedReady podManagementPolicy. That policy ensures pods are created and become ready one at a time.
 
       <a name="IntOrString"></a>
       *IntOrString is a type that can hold an int32 or a string.  When used in JSON or YAML marshalling and unmarshalling, it produces or consumes the inner type.  This allows you to have, for example, a JSON field that can accept a name or number.*
@@ -112,6 +116,10 @@ A StatefulSetSpec is the specification of a StatefulSet.
 - **podManagementPolicy** (string)
 
   podManagementPolicy controls how pods are created during initial scale up, when replacing pods on nodes, or when scaling down. The default policy is `OrderedReady`, where pods are created in increasing order (pod-0, then pod-1, etc) and the controller will wait until each pod is ready before continuing. When scaling down, the pods are removed in the opposite order. The alternative policy is `Parallel` which will create pods in parallel to match the desired scale without waiting, and on scale down will delete all pods at once.
+  
+  Possible enum values:
+   - `"OrderedReady"` will create pods in strictly increasing order on scale up and strictly decreasing order on scale down, progressing only when the previous pod is ready or terminated. At most one pod will be changed at any time.
+   - `"Parallel"` will create and delete pods as soon as the stateful set replica count is changed, and will not wait for pods to be ready or complete termination.
 
 - **revisionHistoryLimit** (int32)
 
@@ -119,6 +127,8 @@ A StatefulSetSpec is the specification of a StatefulSet.
 
 - **volumeClaimTemplates** ([]<a href="{{< ref "../config-and-storage-resources/persistent-volume-claim-v1#PersistentVolumeClaim" >}}">PersistentVolumeClaim</a>)
 
+  *Atomic: will be replaced during a merge*
+  
   volumeClaimTemplates is a list of claims that pods are allowed to reference. The StatefulSet controller is responsible for mapping network identities to claims in a way that maintains the identity of a pod. Every claim in this list must have at least one matching (by name) volumeMount in one container in the template. A claim in this list takes precedence over any volumes in the template, with the same name.
 
 - **minReadySeconds** (int32)
@@ -127,7 +137,7 @@ A StatefulSetSpec is the specification of a StatefulSet.
 
 - **persistentVolumeClaimRetentionPolicy** (StatefulSetPersistentVolumeClaimRetentionPolicy)
 
-  persistentVolumeClaimRetentionPolicy describes the lifecycle of persistent volume claims created from volumeClaimTemplates. By default, all persistent volume claims are created as needed and retained until manually deleted. This policy allows the lifecycle to be altered, for example by deleting persistent volume claims when their stateful set is deleted, or when their pod is scaled down. This requires the StatefulSetAutoDeletePVC feature gate to be enabled, which is alpha.  +optional
+  persistentVolumeClaimRetentionPolicy describes the lifecycle of persistent volume claims created from volumeClaimTemplates. By default, all persistent volume claims are created as needed and retained until manually deleted. This policy allows the lifecycle to be altered, for example by deleting persistent volume claims when their stateful set is deleted, or when their pod is scaled down.
 
   <a name="StatefulSetPersistentVolumeClaimRetentionPolicy"></a>
   *StatefulSetPersistentVolumeClaimRetentionPolicy describes the policy used for PVCs created from the StatefulSet VolumeClaimTemplates.*
@@ -142,7 +152,7 @@ A StatefulSetSpec is the specification of a StatefulSet.
 
 - **ordinals** (StatefulSetOrdinals)
 
-  ordinals controls the numbering of replica indices in a StatefulSet. The default ordinals behavior assigns a "0" index to the first replica and increments the index by one for each additional replica requested. Using the ordinals field requires the StatefulSetStartOrdinal feature gate to be enabled, which is beta.
+  ordinals controls the numbering of replica indices in a StatefulSet. The default ordinals behavior assigns a "0" index to the first replica and increments the index by one for each additional replica requested.
 
   <a name="StatefulSetOrdinals"></a>
   *StatefulSetOrdinals describes the policy used for replica ordinal assignment in this StatefulSet.*
@@ -191,6 +201,8 @@ StatefulSetStatus represents the current state of a StatefulSet.
 - **conditions** ([]StatefulSetCondition)
 
   *Patch strategy: merge on key `type`*
+  
+  *Map: unique values on key type will be kept during a merge*
   
   Represents the latest available observations of a statefulset's current state.
 
@@ -804,6 +816,11 @@ DELETE /apis/apps/v1/namespaces/{namespace}/statefulsets/{name}
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
 
 
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
+
+
 - **pretty** (*in query*): string
 
   <a href="{{< ref "../common-parameters/common-parameters#pretty" >}}">pretty</a>
@@ -862,6 +879,11 @@ DELETE /apis/apps/v1/namespaces/{namespace}/statefulsets
 - **gracePeriodSeconds** (*in query*): integer
 
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
+
+
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
 
 
 - **labelSelector** (*in query*): string

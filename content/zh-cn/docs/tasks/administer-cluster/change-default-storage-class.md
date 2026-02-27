@@ -58,14 +58,17 @@ for details about addon manager and how to disable individual addons.
 ## 改变默认 StorageClass
 
 <!--
-1. List the StorageClasses in your cluster: 
+1. List the StorageClasses in your cluster:
 -->
-1. 列出你的集群中的 StorageClasses：
+1. 列出你的集群中的 StorageClass：
 
    ```shell
    kubectl get storageclass
    ```
 
+   <!--
+   The output is similar to this:
+   -->
    输出类似这样：
 
    ```bash
@@ -74,6 +77,9 @@ for details about addon manager and how to disable individual addons.
    gold                 kubernetes.io/gce-pd      1d
    ```
 
+   <!--
+   The default StorageClass is marked by `(default)`.
+   -->
    默认 StorageClass 以 `(default)` 标记。
 
 <!--
@@ -118,13 +124,20 @@ for details about addon manager and how to disable individual addons.
    ```
 
    <!--
-   Please note that at most one StorageClass can be marked as default. If two
-   or more of them are marked as default, a `PersistentVolumeClaim` without
-   `storageClassName` explicitly specified cannot be created.
+   Please note you can have multiple `StorageClass` marked as default. If more 
+   than one `StorageClass` is marked as default, a `PersistentVolumeClaim` without 
+   an explicitly defined `storageClassName` will be created using the most recently 
+   created default `StorageClass`.
+   When a `PersistentVolumeClaim` is created with a specified `volumeName`, it remains 
+   in a pending state if the static volume's `storageClassName` does not match the 
+   `StorageClass` on the `PersistentVolumeClaim`.
    -->
-   请注意，最多只能有一个 StorageClass 能够被标记为默认。
-   如果它们中有两个或多个被标记为默认，Kubernetes 将忽略这个注解，
-   也就是它将表现为没有默认 StorageClass。
+   请注意，你可以将多个 `StorageClass` 标记为默认值。
+   如果存在多个被标记为默认的 `StorageClass`，对于未明确指定 `storageClassName`
+   的 `PersistentVolumeClaim`，将使用最近创建的默认 `StorageClass` 进行创建。
+   当带有指定 `volumeName` 的 `PersistentVolumeClaim` 被创建时，如果静态卷的
+   `storageClassName` 与 `PersistentVolumeClaim` 上的 `StorageClass` 不匹配，
+   则该 `PersistentVolumeClaim` 将保持在待处理状态。
 
 <!--
 1. Verify that your chosen StorageClass is default:
@@ -151,5 +164,4 @@ for details about addon manager and how to disable individual addons.
 <!--
 * Learn more about [PersistentVolumes](/docs/concepts/storage/persistent-volumes/).
 -->
-* 进一步了解 [PersistentVolumes](/zh-cn/docs/concepts/storage/persistent-volumes/)
-
+* 进一步了解 [PersistentVolume](/zh-cn/docs/concepts/storage/persistent-volumes/)。

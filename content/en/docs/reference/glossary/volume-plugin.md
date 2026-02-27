@@ -1,14 +1,12 @@
 ---
 title: Volume Plugin
 id: volumeplugin
-date: 2018-04-12
 full_link: 
 short_description: >
   A Volume Plugin enables integration of storage within a Pod.
 
 aka: 
 tags:
-- core-object
 - storage
 ---
  A Volume Plugin enables integration of storage within a {{< glossary_tooltip text="Pod" term_id="pod" >}}.

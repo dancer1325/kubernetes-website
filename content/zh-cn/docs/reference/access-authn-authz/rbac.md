@@ -2,7 +2,7 @@
 title: 使用 RBAC 鉴权
 content_type: concept
 aliases: [/zh-cn/rbac/]
-weight: 70
+weight: 33
 ---
 
 <!--
@@ -13,7 +13,7 @@ reviewers:
 title: Using RBAC Authorization
 content_type: concept
 aliases: [/rbac/]
-weight: 70
+weight: 33
 -->
 
 <!-- overview -->
@@ -37,19 +37,37 @@ RBAC 鉴权机制使用 `rbac.authorization.k8s.io`
 
 <!--
 To enable RBAC, start the {{< glossary_tooltip text="API server" term_id="kube-apiserver" >}}
-with the `--authorization-mode` flag set to a comma-separated list that includes `RBAC`;
-for example:
+with the `--authorization-config` flag set to a file that includes the `RBAC` authorizer; for example:
 -->
 要启用 RBAC，在启动 {{< glossary_tooltip text="API 服务器" term_id="kube-apiserver" >}}时将
-`--authorization-mode` 参数设置为一个逗号分隔的列表并确保其中包含 `RBAC`。
+`--authorization-config` 标志设置为包含 `RBAC` 授权者的文件；
+例如：
+
+```yaml
+apiVersion: apiserver.config.k8s.io/v1
+kind: AuthorizationConfiguration
+authorizers:
+  ...
+  - type: RBAC
+  ...
+```
+
+<!--
+Or, start the {{< glossary_tooltip text="API server" term_id="kube-apiserver" >}} with
+the `--authorization-mode` flag set to a comma-separated list that includes `RBAC`;
+for example:
+-->
+或者，启动 {{< glossary_tooltip text="API 服务器" term_id="kube-apiserver" >}}时，
+将 `--authorization-mode` 标志设置为包含 `RBAC` 的逗号分隔列表；
+例如：
 
 <!--
 ```shell
-kube-apiserver --authorization-mode=Example,RBAC --other-options --more-options
+kube-apiserver --authorization-mode=...,RBAC --other-options --more-options
 ```
 -->
 ```shell
-kube-apiserver --authorization-mode=Example,RBAC --<其他选项> --<其他选项>
+kube-apiserver --authorization-mode=...,RBAC --<其他选项> --<其他选项>
 ```
 
 <!--
@@ -133,30 +151,7 @@ Here's an example Role in the "default" namespace that can be used to grant read
 下面是一个位于 "default" 名字空间的 Role 的示例，可用来授予对
 {{< glossary_tooltip text="Pod" term_id="pod" >}} 的读访问权限：
 
-<!--
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  namespace: default
-  name: pod-reader
-rules:
-- apiGroups: [""] # "" indicates the core API group
-  resources: ["pods"]
-  verbs: ["get", "watch", "list"]
-```
--->
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  namespace: default
-  name: pod-reader
-rules:
-- apiGroups: [""] # "" 标明 core API 组
-  resources: ["pods"]
-  verbs: ["get", "watch", "list"]
-```
+{{% code_sample file="access/simple-role.yaml" %}}
 
 <!--
 #### ClusterRole example
@@ -191,34 +186,7 @@ or across all namespaces (depending on how it is [bound](#rolebinding-and-cluste
 {{< glossary_tooltip text="Secret" term_id="secret" >}} 授予读访问权限，
 或者跨名字空间的访问权限（取决于该角色是如何[绑定](#rolebinding-and-clusterrolebinding)的）：
 
-<!--
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  # "namespace" omitted since ClusterRoles are not namespaced
-  name: secret-reader
-rules:
-- apiGroups: [""]
-  #
-  # at the HTTP level, the name of the resource for accessing Secret
-  # objects is "secrets"
-  resources: ["secrets"]
-  verbs: ["get", "watch", "list"]
-```
--->
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  # "namespace" 被忽略，因为 ClusterRoles 不受名字空间限制
-  name: secret-reader
-rules:
-- apiGroups: [""]
-  # 在 HTTP 层面，用来访问 Secret 资源的名称为 "secrets"
-  resources: ["secrets"]
-  verbs: ["get", "watch", "list"]
-```
+{{% code_sample file="access/simple-clusterrole.yaml" %}}
 
 <!--
 The name of a Role or a ClusterRole object must be a valid
@@ -252,7 +220,7 @@ RoleBinding 在指定的名字空间中执行授权，而 ClusterRoleBinding 在
 一个 RoleBinding 可以引用同一的名字空间中的任何 Role。
 或者，一个 RoleBinding 可以引用某 ClusterRole 并将该 ClusterRole 绑定到
 RoleBinding 所在的名字空间。
-如果你希望将某  ClusterRole 绑定到集群中所有名字空间，你要使用 ClusterRoleBinding。
+如果你希望将某 ClusterRole 绑定到集群中所有名字空间，你要使用 ClusterRoleBinding。
 
 RoleBinding 或 ClusterRoleBinding 对象的名称必须是合法的
 [路径分段名称](/zh-cn/docs/concepts/overview/working-with-objects/names#path-segment-names)。
@@ -573,6 +541,19 @@ This is similar to the built-in `cluster-admin` role.
 下面的示例对 `example.com` API 组中所有当前和未来资源执行所有动作。
 这类似于内置的 `cluster-admin`。
 
+<!--
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: example.com-superuser # DO NOT USE THIS ROLE, IT IS JUST AN EXAMPLE
+rules:
+- apiGroups: ["example.com"]
+  resources: ["*"]
+  verbs: ["*"]
+```
+-->
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -598,7 +579,7 @@ workload to function correctly are applied.
 在 resources 和 verbs 条目中使用通配符会为敏感资源授予过多的访问权限。
 例如，如果添加了新的资源类型、新的子资源或新的自定义动词，
 通配符条目会自动授予访问权限，用户可能不希望出现这种情况。
-应该执行[最小特权原则](zh-cn/docs/concepts/security/rbac-good-practices/#least-privilege)，
+应该执行[最小特权原则](/zh-cn/docs/concepts/security/rbac-good-practices/#least-privilege)，
 使用具体的 resources 和 verbs 确保仅赋予工作负载正常运行所需的权限。
 {{< /caution >}}
 
@@ -674,14 +655,17 @@ ClusterRole labeled `rbac.example.com/aggregate-to-monitoring: true`.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: monitoring-endpoints
+  name: monitoring-endpointslices
   labels:
     rbac.example.com/aggregate-to-monitoring: "true"
-# When you create the "monitoring-endpoints" ClusterRole,
+# When you create the "monitoring-endpointslices" ClusterRole,
 # the rules below will be added to the "monitoring" ClusterRole.
 rules:
 - apiGroups: [""]
-  resources: ["services", "endpointslices", "pods"]
+  resources: ["services", "pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["discovery.k8s.io"]
+  resources: ["endpointslices"]
   verbs: ["get", "list", "watch"]
 ```
 -->
@@ -689,14 +673,17 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: monitoring-endpoints
+  name: monitoring-endpointslices
   labels:
     rbac.example.com/aggregate-to-monitoring: "true"
-# 当你创建 "monitoring-endpoints" ClusterRole 时，
+# 当你创建 "monitoring-endpointslices" ClusterRole 时，
 # 下面的规则会被添加到 "monitoring" ClusterRole 中
 rules:
 - apiGroups: [""]
-  resources: ["services", "endpointslices", "pods"]
+  resources: ["services", "pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["discovery.k8s.io"]
+  resources: ["endpointslices"]
   verbs: ["get", "list", "watch"]
 ```
 
@@ -960,7 +947,7 @@ so that authentication produces usernames in the format you want.
 -->
 ### 对主体的引用   {#referring-to-subjects}
 
-RoleBinding 或者 ClusterRoleBinding 可绑定角色到某**主体（Subject）**上。
+RoleBinding 或者 ClusterRoleBinding 可绑定角色到某**主体（Subject）** 上。
 主体可以是组，用户或者{{< glossary_tooltip text="服务账户" term_id="service-account" >}}。
 
 Kubernetes 用字符串来表示用户名。
@@ -1148,7 +1135,7 @@ This allows the cluster to repair accidental modifications, and helps to keep ro
 up-to-date as permissions and subjects change in new Kubernetes releases.
 
 To opt out of this reconciliation, set the `rbac.authorization.kubernetes.io/autoupdate`
-annotation on a default cluster role or rolebinding to `false`.
+annotation on a default cluster role or default cluster RoleBinding to `false`.
 Be aware that missing default permissions and subjects can result in non-functional clusters.
 
 Auto-reconciliation is enabled by default if the RBAC authorizer is active.
@@ -1160,7 +1147,7 @@ Auto-reconciliation is enabled by default if the RBAC authorizer is active.
 这种自动协商机制允许集群去修复一些不小心发生的修改，
 并且有助于保证角色和角色绑定在新的发行版本中有权限或主体变更时仍然保持最新。
 
-如果要禁止此功能，请将默认 ClusterRole 以及 ClusterRoleBinding 的
+如果要禁止此功能，请将默认 ClusterRole 以及默认 ClusterRoleBinding 的
 `rbac.authorization.kubernetes.io/autoupdate` 注解设置成 `false`。
 注意，缺少默认权限和角色绑定主体可能会导致集群无法正常工作。
 
@@ -1169,9 +1156,9 @@ Auto-reconciliation is enabled by default if the RBAC authorizer is active.
 <!--
 ### API discovery roles {#discovery-roles}
 
-Default role bindings authorize unauthenticated and authenticated users to read API information
+Default cluster role bindings authorize unauthenticated and authenticated users to read API information
 that is deemed safe to be publicly accessible (including CustomResourceDefinitions).
-To disable anonymous unauthenticated access, add `--anonymous-auth=false` to
+To disable anonymous unauthenticated access, add `--anonymous-auth=false` flag to
 the API server configuration.
 
 To view the configuration of these roles via `kubectl` run:
@@ -1179,8 +1166,8 @@ To view the configuration of these roles via `kubectl` run:
 ### API 发现角色  {#discovery-roles}
 
 无论是经过身份验证的还是未经过身份验证的用户，
-默认的角色绑定都授权他们读取被认为是可安全地公开访问的 API（包括 CustomResourceDefinitions）。
-如果要禁用匿名的未经过身份验证的用户访问，请在 API 服务器配置中中添加
+默认的集群角色绑定都授权他们读取被认为是可安全地公开访问的 API（包括 CustomResourceDefinitions）。
+如果要禁用匿名的未经过身份验证的用户访问，请在 API 服务器配置中添加
 `--anonymous-auth=false` 的配置选项。
 
 通过运行命令 `kubectl` 可以查看这些角色的配置信息:
@@ -1339,17 +1326,17 @@ Allows admin access, intended to be granted within a namespace using a <b>RoleBi
 If used in a <b>RoleBinding</b>, allows read/write access to most resources in a namespace,
 including the ability to create roles and role bindings within the namespace.
 This role does not allow write access to resource quota or to the namespace itself.
-This role also does not allow write access to EndpointSlices (or Endpoints) in clusters created
+This role also does not allow write access to EndpointSlices in clusters created
 using Kubernetes v1.22+. More information is available in the
-["Write Access for EndpointSlices and Endpoints" section](#write-access-for-endpoints).
+["Write Access for EndpointSlices section](#write-access-for-endpoints).
 -->
 允许管理员访问权限，旨在使用 <b>RoleBinding</b> 在名字空间内执行授权。
 
 如果在 <b>RoleBinding</b> 中使用，则可授予对名字空间中的大多数资源的读/写权限，
 包括创建角色和角色绑定的能力。
 此角色不允许对资源配额或者名字空间本身进行写操作。
-此角色也不允许对 Kubernetes v1.22+ 创建的 EndpointSlices（或 Endpoints）进行写操作。
-更多信息参阅 [“EndpointSlices 和 Endpoints 写权限”小节](#write-access-for-endpoints)。
+此角色也不允许对 Kubernetes v1.22+ 创建的 EndpointSlices 进行写操作。
+更多信息参阅 [“EndpointSlices 写权限”小节](#write-access-for-endpoints)。
 </td>
 </tr>
 <tr>
@@ -1364,17 +1351,17 @@ Allows read/write access to most objects in a namespace.
 This role does not allow viewing or modifying roles or role bindings.
 However, this role allows accessing Secrets and running Pods as any ServiceAccount in
 the namespace, so it can be used to gain the API access levels of any ServiceAccount in
-the namespace. This role also does not allow write access to EndpointSlices (or Endpoints) in
+the namespace. This role also does not allow write access to EndpointSlices in
 clusters created using Kubernetes v1.22+. More information is available in the
-["Write Access for EndpointSlices and Endpoints" section](#write-access-for-endpoints).
+["Write Access for EndpointSlices section](#write-access-for-endpoints).
 -->
 允许对名字空间的大多数对象进行读/写操作。
 
 此角色不允许查看或者修改角色或者角色绑定。
 不过，此角色可以访问 Secret，以名字空间中任何 ServiceAccount 的身份运行 Pod，
 所以可以用来了解名字空间内所有服务账户的 API 访问级别。
-此角色也不允许对 Kubernetes v1.22+ 创建的 EndpointSlices（或 Endpoints）进行写操作。
-更多信息参阅 [“EndpointSlices 和 Endpoints 写操作”小节](#write-access-for-endpoints)。
+此角色也不允许对 Kubernetes v1.22+ 创建的 EndpointSlices 进行写操作。
+更多信息参阅 [“EndpointSlices 写操作”小节](#write-access-for-endpoints)。
 </td>
 </tr>
 <tr>
@@ -1640,12 +1627,14 @@ Allows access to the resources required by most <a href="/docs/concepts/storage/
 Allows read access to control-plane monitoring endpoints
 (i.e. {{< glossary_tooltip term_id="kube-apiserver" text="kube-apiserver" >}} liveness and readiness endpoints
 (<tt>/healthz</tt>, <tt>/livez</tt>, <tt>/readyz</tt>), the individual health-check endpoints
-(<tt>/healthz/*</tt>, <tt>/livez/*</tt>, <tt>/readyz/*</tt>),  and <tt>/metrics</tt>).
+(<tt>/healthz/*</tt>, <tt>/livez/*</tt>, <tt>/readyz/*</tt>), <tt>/metrics</tt>),
+, and causes the kube-apiserver to respect the traceparent header provided with requests for tracing.
  Note that individual health check endpoints and the metric endpoint may expose sensitive information.
 -->
 允许对控制平面监控端点的读取访问（例如：{{< glossary_tooltip term_id="kube-apiserver" text="kube-apiserver" >}}
 存活和就绪端点（<tt>/healthz</tt>、<tt>/livez</tt>、<tt>/readyz</tt>），
-各个健康检查端点（<tt>/healthz/*</tt>、<tt>/livez/*</tt>、<tt>/readyz/*</tt>）和 <tt>/metrics</tt>）。
+各个健康检查端点（<tt>/healthz/*</tt>、<tt>/livez/*</tt>、<tt>/readyz/*</tt>、<tt>/metrics</tt>），
+以及导致 kube-apiserver 尊重跟踪请求中提供的 traceparent 标头。
 请注意，各个运行状况检查端点和度量标准端点可能会公开敏感信息。
 </td>
 </tr>
@@ -2107,7 +2096,7 @@ Examples:
 
 Default RBAC policies grant scoped permissions to control-plane components, nodes,
 and controllers, but grant *no permissions* to service accounts outside the `kube-system` namespace
-(beyond discovery permissions given to all authenticated users).
+(beyond the permissions given by [API discovery roles](#discovery-roles)).
 
 This allows you to grant particular roles to particular ServiceAccounts as needed.
 Fine-grained role bindings provide greater security, but require more effort to administrate.
@@ -2118,7 +2107,7 @@ ServiceAccounts, but are easier to administrate.
 
 默认的 RBAC 策略为控制面组件、节点和控制器授予权限。
 但是不会对 `kube-system` 名字空间之外的服务账户授予权限。
-（除了授予所有已认证用户的发现权限）
+（除了 [API 发现角色](#discovery-roles) 授予的权限）
 
 这使得你可以根据需要向特定 ServiceAccount 授予特定权限。
 细粒度的角色绑定可带来更好的安全性，但需要更多精力管理。
@@ -2274,18 +2263,18 @@ In order from most secure to least secure, the approaches are:
    ```
 
 <!--
-## Write access for EndpointSlices and Endpoints {#write-access-for-endpoints}
+## Write access for EndpointSlices {#write-access-for-endpoints}
 
 Kubernetes clusters created before Kubernetes v1.22 include write access to
-EndpointSlices (and Endpoints) in the aggregated "edit" and "admin" roles.
+EndpointSlices (and the now-deprecated Endpoints API) in the aggregated "edit" and "admin" roles.
 As a mitigation for [CVE-2021-25740](https://github.com/kubernetes/kubernetes/issues/103675),
 this access is not part of the aggregated roles in clusters that you create using
 Kubernetes v1.22 or later.
 -->
-## EndpointSlices 和 Endpoints 写权限 {#write-access-for-endpoints}
+## EndpointSlices 写权限 {#write-access-for-endpoints}
 
 在 Kubernetes v1.22 之前版本创建的集群里，
-“edit” 和 “admin” 聚合角色包含对 EndpointSlices（和 Endpoints）的写权限。
+“edit” 和 “admin” 聚合角色包含对 EndpointSlices（和 现在已经弃用的 Endpoints API）的写权限。
 作为 [CVE-2021-25740](https://github.com/kubernetes/kubernetes/issues/103675) 的缓解措施，
 此访问权限不包含在 Kubernetes 1.22 以及更高版本集群的聚合角色里。
 
@@ -2320,13 +2309,13 @@ service accounts.
 <!--
 Default RBAC policies grant scoped permissions to control-plane components, nodes,
 and controllers, but grant *no permissions* to service accounts outside the `kube-system` namespace
-(beyond discovery permissions given to all authenticated users).
+(beyond the permissions given by [API discovery roles](#discovery-roles)).
 
 While far more secure, this can be disruptive to existing workloads expecting to automatically receive API permissions.
 Here are two approaches for managing this transition:
 -->
 默认的 RBAC 策略为控制面组件、节点和控制器等授予有限的权限，但不会为
-`kube-system` 名字空间外的服务账户授权（除了授予所有认证用户的发现权限之外）。
+`kube-system` 名字空间外的服务账户授权（除了 [API 发现角色](#discovery-roles)授予的权限）。
 
 这样做虽然安全得多，但可能会干扰期望自动获得 API 权限的现有工作负载。
 这里有两种方法来完成这种转换:

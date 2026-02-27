@@ -34,10 +34,10 @@ picking a Node with the highest score among the feasible ones to run
 the Pod. The scheduler then notifies the API server about this decision
 in a process called _Binding_.
 -->
-在一个集群中，满足一个 Pod 调度请求的所有 Node 称之为 _可调度_ Node。
+在一个集群中，满足一个 Pod 调度请求的所有 Node 称之为**可调度** Node。
 调度器先在集群中找到一个 Pod 的可调度 Node，然后根据一系列函数对这些可调度 Node 打分，
 之后选出其中得分最高的 Node 来运行 Pod。
-最后，调度器将这个调度决定告知 kube-apiserver，这个过程叫做 _绑定（Binding）_。
+最后，调度器将这个调度决定告知 kube-apiserver，这个过程叫做**绑定（Binding）**。
 
 <!--
 This page explains performance tuning optimizations that are relevant for
@@ -55,7 +55,7 @@ accuracy (the scheduler rarely makes poor placement decisions).
 You configure this tuning setting via kube-scheduler setting
 `percentageOfNodesToScore`. This KubeSchedulerConfiguration setting determines
 a threshold for scheduling nodes in your cluster.
- -->
+-->
 在大规模集群中，你可以调节调度器的表现来平衡调度的延迟（新 Pod 快速就位）
 和精度（调度器很少做出糟糕的放置决策）。
 
@@ -64,7 +64,7 @@ a threshold for scheduling nodes in your cluster.
 
 <!--
 ### Setting the threshold
- -->
+-->
 ### 设置阈值
 
 <!--
@@ -73,7 +73,7 @@ and 100. The value 0 is a special number which indicates that the kube-scheduler
 should use its compiled-in default.
 If you set `percentageOfNodesToScore` above 100, kube-scheduler acts as if you
 had set a value of 100.
- -->
+-->
 `percentageOfNodesToScore` 选项接受从 0 到 100 之间的整数值。
 0 值比较特殊，表示 kube-scheduler 应该使用其编译后的默认值。
 如果你设置 `percentageOfNodesToScore` 的值超过了 100，
@@ -81,17 +81,17 @@ kube-scheduler 的表现等价于设置值为 100。
 
 <!--
 To change the value, edit the
-[kube-scheduler configuration file](/docs/reference/config-api/kube-scheduler-config.v1beta3/)
+[kube-scheduler configuration file](/docs/reference/config-api/kube-scheduler-config.v1/)
 and then restart the scheduler.
 In many cases, the configuration file can be found at `/etc/kubernetes/config/kube-scheduler.yaml`.
- -->
-要修改这个值，先编辑 [kube-scheduler 的配置文件](/zh-cn/docs/reference/config-api/kube-scheduler-config.v1beta3/)
-然后重启调度器。
+-->
+要修改这个值，先编辑
+[kube-scheduler 的配置文件](/zh-cn/docs/reference/config-api/kube-scheduler-config.v1/)然后重启调度器。
 大多数情况下，这个配置文件是 `/etc/kubernetes/config/kube-scheduler.yaml`。
 
 <!--
 After you have made this change, you can run
- -->
+-->
 修改完成后，你可以执行
 
 ```bash
@@ -100,19 +100,19 @@ kubectl get pods -n kube-system | grep kube-scheduler
 
 <!--
 to verify that the kube-scheduler component is healthy.
- -->
+-->
 来检查该 kube-scheduler 组件是否健康。
 
 <!--
 ## Node scoring threshold {#percentage-of-nodes-to-score}
- -->
+-->
 ## 节点打分阈值 {#percentage-of-nodes-to-score}
 
 <!--
 To improve scheduling performance, the kube-scheduler can stop looking for
 feasible nodes once it has found enough of them. In large clusters, this saves
 time compared to a naive approach that would consider every node.
- -->
+-->
 要提升调度性能，kube-scheduler 可以在找到足够的可调度节点之后停止查找。
 在大规模集群中，比起考虑每个节点的简单方法相比可以节省时间。
 
@@ -123,7 +123,7 @@ integer number of nodes. During scheduling, if the kube-scheduler has identified
 enough feasible nodes to exceed the configured percentage, the kube-scheduler
 stops searching for more feasible nodes and moves on to the
 [scoring phase](/docs/concepts/scheduling-eviction/kube-scheduler/#kube-scheduler-implementation).
- -->
+-->
 你可以使用整个集群节点总数的百分比作为阈值来指定需要多少节点就足够。
 kube-scheduler 会将它转换为节点数的整数值。在调度期间，如果
 kube-scheduler 已确认的可调度节点数足以超过了配置的百分比数量，
@@ -133,38 +133,38 @@ kube-scheduler 将停止继续查找可调度节点并继续进行
 <!--
 [How the scheduler iterates over Nodes](#how-the-scheduler-iterates-over-nodes)
 describes the process in detail.
- -->
-[调度器如何遍历节点](#how-the-scheduler-iterates-over-nodes) 详细介绍了这个过程。
+-->
+[调度器如何遍历节点](#how-the-scheduler-iterates-over-nodes)详细介绍了这个过程。
 
 <!--
 ### Default threshold
- -->
+-->
 ### 默认阈值
 
 <!--
 If you don't specify a threshold, Kubernetes calculates a figure using a
 linear formula that yields 50% for a 100-node cluster and yields 10%
 for a 5000-node cluster. The lower bound for the automatic value is 5%.
- -->
+-->
 如果你不指定阈值，Kubernetes 使用线性公式计算出一个比例，在 100-节点集群
 下取 50%，在 5000-节点的集群下取 10%。这个自动设置的参数的最低值是 5%。
 
 <!--
-This means that, the kube-scheduler always scores at least 5% of your cluster no
+This means that the kube-scheduler always scores at least 5% of your cluster no
 matter how large the cluster is, unless you have explicitly set
 `percentageOfNodesToScore` to be smaller than 5.
- -->
+-->
 这意味着，调度器至少会对集群中 5% 的节点进行打分，除非用户将该参数设置的低于 5。
 
 <!--
 If you want the scheduler to score all nodes in your cluster, set
 `percentageOfNodesToScore` to 100.
- -->
+-->
 如果你想让调度器对集群内所有节点进行打分，则将 `percentageOfNodesToScore` 设置为 100。
 
 <!--
 ## Example
- -->
+-->
 ## 示例
 
 <!--
@@ -191,13 +191,13 @@ percentageOfNodesToScore: 50
 <!--
 `percentageOfNodesToScore` must be a value between 1 and 100 with the default
 value being calculated based on the cluster size. There is also a hardcoded
-minimum value of 50 nodes.
+minimum value of 100 nodes.
 -->
 `percentageOfNodesToScore` 的值必须在 1 到 100 之间，而且其默认值是通过集群的规模计算得来的。
-另外，还有一个 50 个 Node 的最小值是硬编码在程序中。
+另外，还有一个 100 个 Node 的最小值是硬编码在程序中。
 
 <!--
-{{< note >}} In clusters with less than 50 feasible nodes, the scheduler still
+{{< note >}} In clusters with less than 100 feasible nodes, the scheduler still
 checks all the nodes because there are not enough feasible nodes to stop
 the scheduler's search early.
 
@@ -210,11 +210,11 @@ scheduler's performance significantly.
 {{< /note >}}
 -->
 {{< note >}}
-当集群中的可调度节点少于 50 个时，调度器仍然会去检查所有的 Node，
+当集群中的可调度节点少于 100 个时，调度器仍然会去检查所有的 Node，
 因为可调度节点太少，不足以停止调度器最初的过滤选择。
 
-同理，在小规模集群中，如果你将 `percentageOfNodesToScore` 设置为
-一个较低的值，则没有或者只有很小的效果。
+同理，在小规模集群中，如果你将 `percentageOfNodesToScore`
+设置为一个较低的值，则没有或者只有很小的效果。
 
 如果集群只有几百个节点或者更少，请保持这个配置的默认值。
 改变基本不会对调度器的性能有明显的提升。
@@ -297,10 +297,89 @@ After going over all the Nodes, it goes back to Node 1.
 -->
 在评估完所有 Node 后，将会返回到 Node 1，从头开始。
 
+<!--
+## Enabling Opportunistic Batching
+-->
+## 启用 Opportunistic 批处理
+
+{{< feature-state feature_gate_name="OpportunisticBatching" >}}
+
+<!--
+When scheduling large workloads, pod definitions are typically identical and require the scheduler
+to perform the same operations over and over again. The [Opportunistic Batching](/docs/reference/command-line-tools-reference/feature-gates/#OpportunisticBatching)
+feature allows the scheduler to reuse the filtering and scoring results between scheduling cycles
+which greatly speeds up the scheduling process.
+-->
+在调度大型工作负载时，Pod 定义通常相同，这需要调度器反复执行相同的操作。
+[Opportunistic 批处理](/zh-cn/docs/reference/command-line-tools-reference/feature-gates/#OpportunisticBatching)
+特性允许调度器在调度周期之间重用过滤和评分结果，从而显著加快调度过程。
+
+<!--
+Basically, this feature works like:
+1. The scheduler schedules pod-1 and caches the scheduling result.
+1. The scheduler schedules pod-2, 3, ... with the cached results.
+1. The cache expires after 0.5 second. The scheduler schedules the next pod which builds a new cache.
+
+Pods with equivalent scheduling constraints have to come to the scheduling cycle back to back. When the scheduler schedules a pod with different constraints, the cache is not used, but replaced with a new one.
+-->
+基本上，此功能的工作原理如下：
+
+1. 调度器调度 pod-1 并将调度结果缓存。
+1. 调度器使用缓存的结果调度 pod-2、pod-3 等。
+1. 缓存会在 0.5 秒后过期。调度器调度下一个 Pod，该 Pod 会构建一个新的缓存。
+
+具有相同调度约束的 Pod 必须连续进入调度周期。
+当调度器调度具有不同约束的 Pod 时，缓存不会被使用，而是会被新的缓存替换。
+
+<!--
+We apply this batching scheduling to specific pods that:
+1. Don't have inter pod affinity/anti-affinity
+1. Don't have tpology spread constraints
+1. Don't have DRA (i.e., don't have any Resource Claims)
+1. Scheduled exclusively on nodes (i.e., placing more than one pods on one node invalidates the cache)
+-->
+我们将这种批量调度应用于满足以下条件的特定 Pod：
+
+1. Pod 之间不存在亲和性/反亲和性
+1. 没有拓扑分布约束
+1. 没有 DRA（即没有任何资源申领）
+1. 排他性调度在节点上（即，将多个 Pod 部署在同一节点上会使缓存失效）
+
+<!--
+Also, to enable this feature, the scheduler configuration needs to:
+1. Disable [default topology spread](/docs/concepts/scheduling-eviction/topology-spread-constraints/#internal-default-constraints) (set empty)
+1. Disable [DRAExtendedResource](/docs/reference/command-line-tools-reference/feature-gates/DRAExtendedResource.md) feature.
+1. Set `IgnorePreferredTermsOfExistingPods` of [InterPodAffinityArgs](/docs/reference/config-api/kube-scheduler-config.v1/#kubescheduler-config-k8s-io-v1-InterPodAffinityArgs)
+to `true` to make the batching more efficient
+-->
+此外，要启用此特性，调度器配置需要：
+
+1. 禁用[默认拓扑扩展](/zh-cn/docs/concepts/scheduling-eviction/topology-spread-constraints/#internal-default-constraints)（设置为空）
+
+1. 禁用 [DRAExtendedResource](/zh-cn/docs/reference/command-line-tools-reference/feature-gates/DRAExtendedResource.md) 特性
+
+1. 将 [InterPodAffinityArgs](/zh-cn/docs/reference/config-api/kube-scheduler-config.v1/#kubescheduler-config-k8s-io-v1-InterPodAffinityArgs)
+   的 `IgnorePreferredTermsOfExistingPods` 设置为 `true`，
+
+以提高批处理效率。
+
+<!--
+Note that whenever:
+1. Existing pods use pod affinity constraints that match any of the scheduled pods' labels, the feature may bring no benefit
+1. Custom plugins are used, they need to implement the Signature extension point
+
+The restrictions and conditions are expected to evolve in future releases.
+-->
+请注意以下情况：
+
+1. 如果现有 Pod 所使用的 Pod 亲和性约束与任何已调度 Pod 的标签匹配，则此特性可能无法带来任何好处。
+1. 如果使用了自定义插件，这些插件需要实现 Signature 扩展点。
+
+这些限制和条件预计会在未来的版本中进行调整。
+
 ## {{% heading "whatsnext" %}}
 
 <!--
-* Check the [kube-scheduler configuration reference (v1beta3)](/docs/reference/config-api/kube-scheduler-config.v1beta3/)
+* Check the [kube-scheduler configuration reference (v1)](/docs/reference/config-api/kube-scheduler-config.v1/)
 -->
-
-* 参见 [kube-scheduler 配置参考 (v1beta3)](/zh-cn/docs/reference/config-api/kube-scheduler-config.v1beta3/)
+* 参见 [kube-scheduler 配置参考（v1）](/zh-cn/docs/reference/config-api/kube-scheduler-config.v1/)

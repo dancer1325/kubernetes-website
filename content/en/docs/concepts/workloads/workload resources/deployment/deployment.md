@@ -2,6 +2,9 @@
 reviewers:
 - janetkuo
 title: Deployments
+api_metadata:
+- apiVersion: "apps/v1"
+  kind: "Deployment"
 feature:
   title: Automated rollouts and rollbacks
   description: >
@@ -31,7 +34,7 @@ Do not manage ReplicaSets owned by a Deployment. Consider opening an issue in th
 The following are typical use cases for Deployments:
 
 * [Create a Deployment to rollout a ReplicaSet](#creating-a-deployment). The ReplicaSet creates Pods in the background. Check the status of the rollout to see if it succeeds or not.
-* [Declare the new state of the Pods](#updating-a-deployment) by updating the PodTemplateSpec of the Deployment. A new ReplicaSet is created and the Deployment manages moving the Pods from the old ReplicaSet to the new one at a controlled rate. Each new ReplicaSet updates the revision of the Deployment.
+* [Declare the new state of the Pods](#updating-a-deployment) by updating the PodTemplateSpec of the Deployment. A new ReplicaSet is created, and the Deployment gradually scales it up while scaling down the old ReplicaSet, ensuring Pods are replaced at a controlled rate. Each new ReplicaSet updates the revision of the Deployment.
 * [Rollback to an earlier Deployment revision](#rolling-back-a-deployment) if the current state of the Deployment is not stable. Each rollback updates the revision of the Deployment.
 * [Scale up the Deployment to facilitate more load](#scaling-a-deployment).
 * [Pause the rollout of a Deployment](#pausing-and-resuming-a-deployment) to apply multiple fixes to its PodTemplateSpec and then resume it to start a new rollout.
@@ -63,12 +66,12 @@ In this example:
   All of the requirements, from both `matchLabels` and `matchExpressions`, must be satisfied in order to match.
   {{< /note >}}
 
-* The `template` field contains the following sub-fields:
+* The `.spec.template` field contains the following sub-fields:
   * The Pods are labeled `app: nginx`using the `.metadata.labels` field.
-  * The Pod template's specification, or `.template.spec` field, indicates that
-  the Pods run one container, `nginx`, which runs the `nginx`
-  [Docker Hub](https://hub.docker.com/) image at version 1.14.2.
-  * Create one container and name it `nginx` using the `.spec.template.spec.containers[0].name` field.
+  * The Pod template's specification, or `.spec` field, indicates that
+    the Pods run one container, `nginx`, which runs the `nginx`
+    [Docker Hub](https://hub.docker.com/) image at version 1.14.2.
+  * Create one container and name it `nginx` using the `.spec.containers[0].name` field.
 
 Before you begin, make sure your Kubernetes cluster is up and running.
 Follow the steps given below to create the above Deployment:
@@ -224,7 +227,7 @@ Get more details on your updated Deployment:
 * After the rollout succeeds, you can view the Deployment by running `kubectl get deployments`.
   The output is similar to this:
 
-  ```ini
+  ```
   NAME               READY   UP-TO-DATE   AVAILABLE   AGE
   nginx-deployment   3/3     3            3           36s
   ```
@@ -332,7 +335,7 @@ until the `terminationGracePeriodSeconds` of the terminating Pods expires.
 
 Each time a new Deployment is observed by the Deployment controller, a ReplicaSet is created to bring up
 the desired Pods. If the Deployment is updated, the existing ReplicaSet that controls Pods whose labels
-match `.spec.selector` but whose template does not match `.spec.template` are scaled down. Eventually, the new
+match `.spec.selector` but whose template does not match `.spec.template` is scaled down. Eventually, the new
 ReplicaSet is scaled to `.spec.replicas` and all old ReplicaSets is scaled to 0.
 
 If you update a Deployment while an existing rollout is in progress, the Deployment creates a new ReplicaSet
@@ -500,15 +503,20 @@ Follow the steps given below to check the rollout history:
    ```
    deployments "nginx-deployment"
    REVISION    CHANGE-CAUSE
-   1           kubectl apply --filename=https://k8s.io/examples/controllers/nginx-deployment.yaml
-   2           kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
-   3           kubectl set image deployment/nginx-deployment nginx=nginx:1.161
+   1           <none>
+   2           <none>
+   3           <none>
    ```
 
    `CHANGE-CAUSE` is copied from the Deployment annotation `kubernetes.io/change-cause` to its revisions upon creation. You can specify the`CHANGE-CAUSE` message by:
 
    * Annotating the Deployment with `kubectl annotate deployment/nginx-deployment kubernetes.io/change-cause="image updated to 1.16.1"`
    * Manually editing the manifest of the resource.
+   * Using tooling that sets the annotation automatically.
+
+   {{< note >}}
+   In older versions of Kubernetes, you could use the `--record` flag with kubectl commands to automatically populate the `CHANGE-CAUSE` field. This flag is deprecated and will be removed in a future release.
+   {{< /note >}}
 
 2. To see the details of each revision, run:
    ```shell
@@ -520,7 +528,6 @@ Follow the steps given below to check the rollout history:
    deployments "nginx-deployment" revision 2
      Labels:       app=nginx
              pod-template-hash=1159050644
-     Annotations:  kubernetes.io/change-cause=kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
      Containers:
       nginx:
        Image:      nginx:1.16.1
@@ -581,7 +588,6 @@ Follow the steps given below to rollback the Deployment from the current version
    CreationTimestamp:      Sun, 02 Sep 2018 18:17:55 -0500
    Labels:                 app=nginx
    Annotations:            deployment.kubernetes.io/revision=4
-                           kubernetes.io/change-cause=kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
    Selector:               app=nginx
    Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
    StrategyType:           RollingUpdate
@@ -631,7 +637,7 @@ The output is similar to this:
 deployment.apps/nginx-deployment scaled
 ```
 
-Assuming [horizontal Pod autoscaling](/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/) is enabled
+Assuming [horizontal Pod autoscaling](/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/) is enabled
 in your cluster, you can set up an autoscaler for your Deployment and choose the minimum and maximum number of
 Pods you want to run based on the CPU utilization of your existing Pods.
 
@@ -810,9 +816,9 @@ apply multiple fixes in between pausing and resuming without triggering unnecess
   ```
   deployment.apps/nginx-deployment resumed
   ```
-* Watch the status of the rollout until it's done.
+* {{< glossary_tooltip text="Watch" term_id="watch" >}} the status of the rollout until it's done.
   ```shell
-  kubectl get rs -w
+  kubectl get rs --watch
   ```
 
   The output is similar to this:
@@ -1076,11 +1082,21 @@ Explicitly setting this field to 0, will result in cleaning up all the history o
 thus that Deployment will not be able to roll back.
 {{< /note >}}
 
+The cleanup only starts **after** a Deployment reaches a 
+[complete state](/docs/concepts/workloads/controllers/deployment/#complete-deployment).
+If you set `.spec.revisionHistoryLimit` to 0, any rollout nonetheless triggers creation of a new
+ReplicaSet before Kubernetes removes the old one.
+
+Even with a non-zero revision history limit, you can have more ReplicaSets than the limit
+you configure. For example, if pods are crash looping, and there are multiple rolling updates
+events triggered over time, you might end up with more ReplicaSets than the 
+`.spec.revisionHistoryLimit` because the Deployment never reaches a complete state.
+
 ## Canary Deployment
 
 If you want to roll out releases to a subset of users or servers using the Deployment, you
 can create multiple Deployments, one for each release, following the canary pattern described in
-[managing resources](/docs/concepts/cluster-administration/manage-deployment/#canary-deployments).
+[managing resources](/docs/concepts/workloads/management/#canary-deployments).
 
 ## Writing a Deployment Spec
 
@@ -1119,7 +1135,7 @@ deployment --replicas=X`, and then you update that Deployment based on a manifes
 (for example: by running `kubectl apply -f deployment.yaml`),
 then applying that manifest overwrites the manual scaling that you previously did.
 
-If a [HorizontalPodAutoscaler](/docs/tasks/run-application/horizontal-pod-autoscale/) (or any
+If a [HorizontalPodAutoscaler](/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/) (or any
 similar API for horizontal scaling) is managing scaling for a Deployment, don't set `.spec.replicas`.
 
 Instead, allow the Kubernetes
@@ -1170,7 +1186,7 @@ replacement will be created immediately (even if the old Pod is still in a Termi
 #### Rolling Update Deployment
 
 The Deployment updates Pods in a rolling update
-fashion when `.spec.strategy.type==RollingUpdate`. You can specify `maxUnavailable` and `maxSurge` to control
+fashion (gradually scale down the old ReplicaSets and scale up the new one) when `.spec.strategy.type==RollingUpdate`. You can specify `maxUnavailable` and `maxSurge` to control
 the rolling update process.
 
 ##### Max Unavailable
@@ -1189,13 +1205,112 @@ at all times during the update is at least 70% of the desired Pods.
 
 `.spec.strategy.rollingUpdate.maxSurge` is an optional field that specifies the maximum number of Pods
 that can be created over the desired number of Pods. The value can be an absolute number (for example, 5) or a
-percentage of desired Pods (for example, 10%). The value cannot be 0 if `MaxUnavailable` is 0. The absolute number
+percentage of desired Pods (for example, 10%). The value cannot be 0 if `maxUnavailable` is 0. The absolute number
 is calculated from the percentage by rounding up. The default value is 25%.
 
 For example, when this value is set to 30%, the new ReplicaSet can be scaled up immediately when the
 rolling update starts, such that the total number of old and new Pods does not exceed 130% of desired
 Pods. Once old Pods have been killed, the new ReplicaSet can be scaled up further, ensuring that the
 total number of Pods running at any time during the update is at most 130% of desired Pods.
+
+Here are some Rolling Update Deployment examples that use the `maxUnavailable` and `maxSurge`:
+
+{{< tabs name="tab_with_md" >}}
+{{% tab name="Max Unavailable" %}}
+
+ ```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+ ```
+
+{{% /tab %}}
+{{% tab name="Max Surge" %}}
+
+ ```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+ ```
+
+{{% /tab %}}
+{{% tab name="Hybrid" %}}
+
+ ```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+ ```
+
+{{% /tab %}}
+{{< /tabs >}}
 
 ### Progress Deadline Seconds
 
@@ -1214,6 +1329,19 @@ If specified, this field needs to be greater than `.spec.minReadySeconds`.
 created Pod should be ready without any of its containers crashing, for it to be considered available.
 This defaults to 0 (the Pod will be considered available as soon as it is ready). To learn more about when
 a Pod is considered ready, see [Container Probes](/docs/concepts/workloads/pods/pod-lifecycle/#container-probes).
+
+### Terminating Pods
+
+{{< feature-state feature_gate_name="DeploymentReplicaSetTerminatingReplicas" >}}
+
+You can see the terminating pods only if the `DeploymentReplicaSetTerminatingReplicas`
+[feature gate](/docs/reference/command-line-tools-reference/feature-gates/) is enabled
+on the [API server](/docs/reference/command-line-tools-reference/kube-apiserver/)
+and on the [kube-controller-manager](/docs/reference/command-line-tools-reference/kube-controller-manager/)
+
+Pods that become terminating due to deletion or scale down may take a long time to terminate, and may consume
+additional resources during that period. As a result, the total number of all pods can temporarily exceed
+`.spec.replicas`. Terminating pods can be tracked using the `.status.terminatingReplicas` field of the Deployment.
 
 ### Revision History Limit
 

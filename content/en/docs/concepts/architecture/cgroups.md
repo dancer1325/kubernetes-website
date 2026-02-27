@@ -38,7 +38,7 @@ cgroup v2 offers several improvements over cgroup v1, such as the following:
 
 Some Kubernetes features exclusively use cgroup v2 for enhanced resource
 management and isolation. For example, the
-[MemoryQoS](/blog/2021/11/26/qos-memory-resources/) feature improves memory QoS
+[MemoryQoS](/docs/concepts/workloads/pods/pod-qos/#memory-qos-with-cgroup-v2) feature improves memory QoS
 and relies on cgroup v2 primitives.
 
 
@@ -104,8 +104,8 @@ updated to newer versions that support cgroup v2. For example:
  DaemonSet for monitoring pods and containers, update it to v0.43.0 or later.
 * If you deploy Java applications, prefer to use versions which fully support cgroup v2:
     * [OpenJDK / HotSpot](https://bugs.openjdk.org/browse/JDK-8230305): jdk8u372, 11.0.16, 15 and later
-    * [IBM Semeru Runtimes](https://www.eclipse.org/openj9/docs/version0.33/#control-groups-v2-support): jdk8u345-b01, 11.0.16.0, 17.0.4.0, 18.0.2.0 and later
-    * [IBM Java](https://www.ibm.com/docs/en/sdk-java-technology/8?topic=new-service-refresh-7#whatsnew_sr7__fp15): 8.0.7.15 and later
+    * [IBM Semeru Runtimes](https://www.ibm.com/support/pages/apar/IJ46681): 8.0.382.0, 11.0.20.0, 17.0.8.0, and later
+    * [IBM Java](https://www.ibm.com/support/pages/apar/IJ46681): 8.0.8.6 and later
 * If you are using the [uber-go/automaxprocs](https://github.com/uber-go/automaxprocs) package, make sure
   the version you use is v1.5.1 or higher.
 
@@ -123,6 +123,16 @@ stat -fc %T /sys/fs/cgroup/
 For cgroup v2, the output is `cgroup2fs`.
 
 For cgroup v1, the output is `tmpfs.`
+
+## Deprecation of cgroup v1
+
+{{< feature-state for_k8s_version="v1.35" state="deprecated" >}}
+
+Kubernetes has deprecated cgroup v1.
+Removal will follow [Kubernetes deprecation policy](/docs/reference/using-api/deprecation-policy/).
+
+Kubelet will no longer start on a cgroup v1 node by default.
+To disable this setting a cluster admin should set `failCgroupV1` to false in the [kubelet configuration file](/docs/tasks/administer-cluster/kubelet-config-file/).
 
 ## {{% heading "whatsnext" %}}
 

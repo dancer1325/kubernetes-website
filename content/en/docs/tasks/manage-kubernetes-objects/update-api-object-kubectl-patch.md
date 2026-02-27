@@ -243,7 +243,7 @@ spec:
     spec:
       containers:
       - name: patch-demo-ctr-3
-        image: gcr.io/google-samples/node-hello:1.0
+        image: gcr.io/google-samples/hello-app:2.0
 ```
 
 In your patch command, set `type` to `merge`:
@@ -264,7 +264,7 @@ The output shows that your list of one Container replaced the existing `containe
 ```yaml
 spec:
   containers:
-  - image: gcr.io/google-samples/node-hello:1.0
+  - image: gcr.io/google-samples/hello-app:2.0
     ...
     name: patch-demo-ctr-3
 ```
@@ -429,13 +429,13 @@ kubectl patch deployment patch-demo --patch '{"spec": {"template": {"spec": {"co
 
 ### Update an object's replica count using `kubectl patch` with `--subresource` {#scale-kubectl-patch}
 
-{{< feature-state for_k8s_version="v1.24" state="alpha" >}}
-
 The flag `--subresource=[subresource-name]` is used with kubectl commands like get, patch,
-edit and replace to fetch and update `status` and `scale` subresources of the resources
-(applicable for kubectl version v1.24 or more). This flag is used with all the API resources
-(built-in and CRs) that have `status` or `scale` subresource. Deployment is one of the
-examples which supports these subresources.
+edit, apply and replace to fetch and update `status`, `scale` and `resize` subresource of the
+resources you specify. You can specify a subresource for any of the Kubernetes API resources
+(built-in and CRs) that have `status`, `scale` or `resize` subresource.
+
+For example, a Deployment has a `status` subresource and a `scale` subresource, so you can
+use `kubectl` to get or modify just the `status` subresource of a Deployment.
 
 Here's a manifest for a Deployment that has two replicas:
 

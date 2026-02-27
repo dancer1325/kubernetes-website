@@ -6,7 +6,7 @@ api_metadata:
 content_type: "api_reference"
 description: "PriorityClass defines mapping from a priority class name to the priority integer value."
 title: "PriorityClass"
-weight: 13
+weight: 14
 auto_generated: true
 ---
 
@@ -57,6 +57,10 @@ PriorityClass defines mapping from a priority class name to the priority integer
 - **preemptionPolicy** (string)
 
   preemptionPolicy is the Policy for preempting pods with lower priority. One of Never, PreemptLowerPriority. Defaults to PreemptLowerPriority if unset.
+  
+  Possible enum values:
+   - `"Never"` means that pod never preempts other pods with lower priority.
+   - `"PreemptLowerPriority"` means that pod can preempt other pods with lower priority.
 
 
 
@@ -379,6 +383,11 @@ DELETE /apis/scheduling.k8s.io/v1/priorityclasses/{name}
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
 
 
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
+
+
 - **pretty** (*in query*): string
 
   <a href="{{< ref "../common-parameters/common-parameters#pretty" >}}">pretty</a>
@@ -432,6 +441,11 @@ DELETE /apis/scheduling.k8s.io/v1/priorityclasses
 - **gracePeriodSeconds** (*in query*): integer
 
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
+
+
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
 
 
 - **labelSelector** (*in query*): string

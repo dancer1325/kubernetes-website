@@ -19,7 +19,8 @@ This page explains the custom Hugo shortcodes that can be used in Kubernetes Mar
 <!--
 Read more about shortcodes in the [Hugo documentation](https://gohugo.io/content-management/shortcodes).
 -->
-关于短代码的更多信息可参见 [Hugo 文档](https://gohugo.io/content-management/shortcodes)。
+关于短代码的更多信息可参见
+[Hugo 文档](https://gohugo.io/content-management/shortcodes)。
 
 <!-- body -->
 
@@ -87,6 +88,64 @@ Renders to:
 {{< feature-state for_k8s_version="v1.10" state="beta" >}}
 
 <!--
+### Feature state retrieval from description file
+
+To dynamically determine the state of the feature, make use of the `feature_gate_name`
+shortcode parameter. The feature state details will be extracted from the corresponding feature gate 
+description file located in `content/en/docs/reference/command-line-tools-reference/feature-gates/`.
+For example:
+-->
+### 从描述文件中检索特征状态
+
+要动态确定特性的状态，请使用 `feature_gate_name` 短代码参数，此参数将从
+`content/en/docs/reference/command-line-tools-reference/feature-gates/`
+中相应的特性门控描述文件中提取特性的详细状态信息。
+
+例如：
+
+```
+{{</* feature-state feature_gate_name="NodeSwap" */>}}
+```
+
+<!--
+Renders to:
+-->
+会转换为：
+
+{{< feature-state feature_gate_name="NodeSwap" >}}
+
+<!--
+## Feature gate description
+
+In a Markdown page (`.md` file) on this site, you can add a shortcode to
+display the description for a shortcode.
+-->
+## 特性门控介绍
+
+在此站点上的 Markdown 页面（`.md` 文件）中，你可以添加短代码来显示短代码的描述。
+
+<!--
+### Feature gate description demo
+
+Below is a demo of the feature state snippet, which displays the feature as
+stable in the latest Kubernetes version.
+-->
+### 特性门控 Demo 演示
+
+下面是特性状态片段的 Demo，它显示该特性在最新的 Kubernetes 版本中处于稳定状态。
+
+```
+{{</* feature-gate-description name="DryRun" */>}}
+```
+
+<!--
+Renders to:
+-->
+会转换为：
+
+{{< feature-gate-description name="DryRun" >}}
+
+<!--
 ## Glossary
 There are two glossary shortcodes: `glossary_tooltip` and `glossary_definition`.
 
@@ -143,7 +202,8 @@ Here's a short glossary definition:
 which renders as:
 {{< glossary_definition prepend="A cluster is" term_id="cluster" length="short" >}}
 -->
-呈现为： 
+呈现为：
+
 {{< glossary_definition prepend="A cluster is" term_id="cluster" length="short" >}}
 
 <!--
@@ -158,7 +218,8 @@ You can also include a full definition:
 <!--
 which renders as:
 -->
-呈现为： 
+呈现为：
+
 {{< glossary_definition term_id="cluster" length="all" >}}
 
 <!--
@@ -184,7 +245,6 @@ The content of the `page` parameter is the suffix of the URL of the API referenc
 -->
 本语句中 `page` 参数的内容是 API 参考页面的 URL 后缀。
 
-
 <!--
 You can link to a specific place into a page by specifying an `anchor`
 parameter, for example to the {{< api-reference page="workload-resources/pod-v1" anchor="PodSpec" >}}
@@ -201,21 +261,18 @@ section of the page:
 {{</* api-reference page="workload-resources/pod-v1" anchor="environment-variables" */>}}
 ```
 
-
 <!--
 You can change the text of the link by specifying a `text` parameter, for
 example by linking to the
 {{< api-reference page="workload-resources/pod-v1" anchor="environment-variables" text="Environment Variables">}}
 section of the page:
 -->
-你可以通过指定 `text` 参数来更改链接的文本，例如通过链接到页面的
-{{< api-reference page="workload-resources/pod-v1" anchor="environment-variables" text="环境变量">}}
-部分：
+你可以通过指定 `text` 参数来更改链接的文本，
+例如通过链接到页面的{{< api-reference page="workload-resources/pod-v1" anchor="environment-variables" text="环境变量">}}部分：
 
 ```
 {{</* api-reference page="workload-resources/pod-v1" anchor="environment-variables" text="环境变量" */>}}
 ```
-
 
 <!--
 ## Table captions
@@ -285,8 +342,8 @@ after the opening `<table>` element:
 <caption style="display: none;">Configuration parameters</caption>
 ```
 -->
-如果你查看表格的 HTML 输出结果，你会看到 `<table>` 元素
-后面紧接着下面的元素：
+如果你查看表格的 HTML 输出结果，你会看到 `<table>`
+元素后面紧接着下面的元素：
 
 ```html
 <caption style="display: none;">配置参数</caption>
@@ -321,9 +378,9 @@ The `tabs` shortcode takes these parameters:
   under `codelang` or the language is taken based on the file name.
   Non-content files are code-highlighted by default.
 -->
-* `name`： 标签页上显示的名字。
-* `codelang`: 如果要在 `tab` 短代码中加入内部内容，需要告知 Hugo 使用的是什么代码语言，方便代码高亮。
-* `include`: 标签页中所要包含的文件。如果标签页是在 Hugo 的
+* `name`：标签页上显示的名字。
+* `codelang`：如果要在 `tab` 短代码中加入内部内容，需要告知 Hugo 使用的是什么代码语言，方便代码高亮。
+* `include`：标签页中所要包含的文件。如果标签页是在 Hugo 的
   [叶子包](https://gohugo.io/content-management/page-bundles/#leaf-bundles)中定义，
   Hugo 会在包内查找文件（可以是 Hugo 所支持的任何 MIME 类型文件）。
   否则，Hugo 会在当前路径的相对路径下查找所要包含的内容页面。
@@ -390,7 +447,7 @@ println "This is tab 2."
 ```go-html-template
 {{</* tabs name="tab_with_md" >}}
 {{% tab name="Markdown" %}}
-这是 **一些 markdown。**
+这是**一些 markdown。**
 {{< note >}}
 它甚至可以包含短代码。
 {{< /note >}}
@@ -411,7 +468,7 @@ Renders to:
 
 {{< tabs name="tab_with_md" >}}
 {{% tab name="Markdown" %}}
-这是 **一些 markdown。**
+这是**一些 markdown。**
 {{< note >}}
 它甚至可以包含短代码。
 {{< /note >}}
@@ -456,6 +513,7 @@ This shortcode is used when the contents of the sample file is generic and reusa
 and you want the users to try it out themselves.
 -->
 ## 源代码文件
+
 你可以使用 `{{%/* code_sample */%}}` 短代码将文件内容嵌入代码块中，
 以允许用户下载或复制其内容到他们的剪贴板。
 当示例文件的内容是通用的、可复用的，并且希望用户自己尝试使用示例文件时，
@@ -475,6 +533,8 @@ For example:
 可选参数 `language` 用于指定文件的编程语言。
 如果未提供 `language` 参数，短代码将尝试根据文件扩展名推测编程语言。
 
+例如：
+
 ```none
 {{%/* code_sample language="yaml" file="application/deployment-scale.yaml" */%}}
 ```
@@ -493,7 +553,7 @@ the page. In the markdown of your page, use the `code` shortcode:
 -->
 添加新的示例文件（例如 YAML 文件）时，在 `<LANG>/examples/`
 子目录之一中创建该文件，其中 `<LANG>` 是页面的语言。
-在你的页面的 markdown 文本中，使用 `code` 短代码：
+在你的页面的 Markdown 文本中，使用 `code` 短代码：
 
 ```none
 {{%/* code_sample file="<RELATIVE-PATH>/example-yaml>" */%}}
@@ -551,6 +611,7 @@ that uses them.
 For a list of several third-party items, add:
 -->
 对于有关几个第三方项目的列表，请添加：
+
 ```
 {{%/* thirdparty-content */%}}
 ```
@@ -580,10 +641,73 @@ Add the shortcode:
 
 before the item, or just below the heading for the specific item.
 -->
+添加短代码：
+
 在项目之前，或在特定项目的段落下方添加此短代码：
+
 ```
 {{%/* thirdparty-content single="true" */%}}
 ```
+
+<!--
+## Details
+
+You can render a `<details>` HTML element using a shortcode:
+-->
+## 详细信息
+
+你可以使用短代码呈现 `<details>` HTML 元素：
+
+<!--
+```markdown
+{{</* details summary="More about widgets" */>}}
+The frobnicator extension API implements _widgets_ using example running text.
+
+Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,
+adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
+dolore magnam aliquam quaerat voluptatem.
+{{</* /details */>}}
+```
+-->
+```markdown
+{{</* details summary="有关 widgets 的更多信息" */>}}
+frobnicator 扩展 API 使用示例运行文本实现 **widgets**。
+
+没有哪个人会因为痛苦本身就是令人愉悦的，而选择痛苦，
+尽管他们有时因为追求某种快乐而不得不承受痛苦。
+但这并不是说他们喜欢痛苦本身，而是因为通过忍受痛苦，他们可以得到更大的快乐。
+{{</* /details */>}}
+```
+
+<!--
+This renders as:
+-->
+渲染结果如下：
+
+<!--
+{{< details summary="More about widgets" >}}
+The frobnicator extension API implements _widgets_ using example running text.
+
+Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,
+adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et
+dolore magnam aliquam quaerat voluptatem.
+{{< /details >}}
+-->
+{{< details summary="有关 widgets 的更多信息" >}}
+frobnicator 扩展 API 使用示例运行文本实现 **widgets**。
+
+没有哪个人会因为痛苦本身就是令人愉悦的，而选择痛苦，
+尽管他们有时因为追求某种快乐而不得不承受痛苦。
+但这并不是说他们喜欢痛苦本身，而是因为通过忍受痛苦，他们可以得到更大的快乐。
+{{< /details >}}
+
+{{< note >}}
+<!--
+Use this shortcode sparingly; it is usually best to have all of the text directly shown
+to readers.
+-->
+谨慎使用此短代码；通常最好将所有文本直接显示给读者。
+{{< /note >}}
 
 <!--
 ## Version strings
@@ -611,16 +735,14 @@ version of the Kubernetes documentation from the `version` site parameter. The
 `{{</* param "version" */>}}` 短代码可以基于站点参数 `version` 生成 Kubernetes
 文档的当前版本号取值。短代码 `param` 允许传入一个站点参数名称，在这里是 `version`。
 
-<!--
 {{< note >}}
+<!--
 In previously released documentation, `latest` and `version` parameter values
 are not equivalent.  After a new version is released, `latest` is incremented
 and the value of `version` for the documentation set remains unchanged. For
 example, a previously released version of the documentation displays `version`
 as `v1.19` and `latest` as `v1.20`.
-{{< /note >}}
 -->
-{{< note >}}
 在先前已经发布的文档中，`latest` 和 `version` 参数值并不完全等价。新版本文档发布后，参数
 `latest` 会增加，而 `version` 则保持不变。例如，在上一版本的文档中使用 `version` 会得到
 `v1.19`，而使用 `latest` 则会得到 `v1.20`。
@@ -661,7 +783,8 @@ Renders to:
 -->
 ### `{{</* latest-semver */>}}`
 
-`{{</* latest-semver */>}}` 短代码可以生成站点参数 `latest` 不含前缀 `v` 的版本号取值。
+`{{</* latest-semver */>}}` 短代码可以生成站点参数 `latest` 不含前缀
+`v` 的版本号取值。
 
 转换为：
 

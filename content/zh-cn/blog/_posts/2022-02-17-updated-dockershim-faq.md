@@ -199,7 +199,7 @@ even better fit for your environment.
 应该是一个相对容易地转换，并将获得更好的性能和更少的开销。
 然而，我们鼓励你探索 [CNCF landscape] 提供的所有选项，做出更适合你的选择。
 
-[CNCF landscape]: https://landscape.cncf.io/card-mode?category=container-runtime&grouping=category
+[CNCF landscape]: https://landscape.cncf.io/?group=projects-and-products&view-mode=card#runtime--container-runtime
 
 <!--
 #### Can I still use Docker Engine as my container runtime?
@@ -217,12 +217,12 @@ Kubernetes clusters. Containers make this kind of interoperability possible.
 <!--
 Mirantis and Docker have [committed][mirantis] to maintaining a replacement adapter for
 Docker Engine, and to maintain that adapter even after the in-tree dockershim is removed
-from Kubernetes. The replacement adapter is named [`cri-dockerd`](https://github.com/Mirantis/cri-dockerd).
+from Kubernetes. The replacement adapter is named [`cri-dockerd`](https://mirantis.github.io/cri-dockerd/).
 -->
 Mirantis 和 Docker 已[承诺](https://www.mirantis.com/blog/mirantis-to-take-over-support-of-kubernetes-dockershim-2/)
 为 Docker Engine 维护一个替代适配器，
 并在 dockershim 从 Kubernetes 移除后维护该适配器。
-替代适配器名为 [`cri-dockerd`](https://github.com/Mirantis/cri-dockerd)。
+替代适配器名为 [`cri-dockerd`](https://mirantis.github.io/cri-dockerd/)。
 
 <!--
 You can install `cri-dockerd` and use it to connect the kubelet to Docker Engine. Read [Migrate Docker Engine nodes from dockershim to cri-dockerd](/docs/tasks/administer-cluster/migrating-from-dockershim/migrate-dockershim-dockerd/) to learn more.

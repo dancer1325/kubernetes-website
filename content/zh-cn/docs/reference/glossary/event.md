@@ -4,7 +4,7 @@ id: event
 date: 2022-01-16
 full_link: /zh-cn/docs/reference/kubernetes-api/cluster-resources/event-v1/
 short_description: >
-   对集群中某处所发生事件的报告。通常用来表述系统中某种状态变更。
+  描述集群中某些状态变化的 Kubernetes 对象。
 aka: 
 tags:
 - core-object
@@ -16,7 +16,7 @@ id: event
 date: 2022-01-16
 full_link: /docs/reference/kubernetes-api/cluster-resources/event-v1/
 short_description: >
-   A report of an event somewhere in the cluster. It generally denotes some state change in the system.
+   Kubernetes objects that describe some state change in the cluster.
 aka: 
 tags:
 - core-object
@@ -24,18 +24,17 @@ tags:
 -->
 
 <!--
-Each Event is a report of an event somewhere in the {{< glossary_tooltip text="cluster" term_id="cluster" >}}. 
-It generally denotes some state change in the system.
+A Kubernetes {{< glossary_tooltip text="object" term_id="object" >}} that describes state changes
+or notable occurrences in the cluster.
 -->
-每个 Event 是{{< glossary_tooltip text="集群" term_id="cluster" >}}中某处所发生事件的报告。
-它通常用来表述系统中的某种状态变更。
-
+一个 Kubernetes {{< glossary_tooltip text="对象" term_id="object" >}}，
+描述集群中的状态状态变化或需要注意的事件。
 <!--more-->
 
 <!--
-Events have a limited retention time and triggers and messages may evolve with time. 
-Event consumers should not rely on the timing of an event with a given reason reflecting a consistent underlying trigger, 
-or the continued existence of events with that reason. 
+Events have a limited retention time and triggers and messages may evolve with time.
+Event consumers should not rely on the timing of an event with a given reason reflecting a consistent underlying trigger,
+or the continued existence of events with that reason.
 -->
 事件的保留时间有限，随着时间推进，其触发方式和消息都可能发生变化。
 事件用户不应该对带有给定原因（反映下层触发源）的时间特征有任何依赖，
@@ -50,5 +49,6 @@ Events should be treated as informative, best-effort, supplemental data.
 In Kubernetes, [auditing](/docs/tasks/debug/debug-cluster/audit/) generates a different kind of
 Event record (API group `audit.k8s.io`).
 -->
-在 Kubernetes 中，[审计](/zh-cn/docs/tasks/debug/debug-cluster/audit/)
-机制会生成一种不同类别的 Event 记录（API 组为 `audit.k8s.io`）。
+在 Kubernetes 中，
+[审计](/zh-cn/docs/tasks/debug/debug-cluster/audit/)机制会生成一种不同类别的
+Event 记录（API 组为 `audit.k8s.io`）。

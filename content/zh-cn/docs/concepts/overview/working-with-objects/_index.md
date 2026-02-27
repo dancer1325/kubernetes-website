@@ -1,7 +1,7 @@
 ---
 title: Kubernetes 对象
 content_type: concept
-weight: 10
+weight: 30
 description: >
   Kubernetes 对象是 Kubernetes 系统中的持久性实体。
   Kubernetes 使用这些实体表示你的集群状态。
@@ -14,7 +14,7 @@ card:
 <!--
 title: Objects In Kubernetes
 content_type: concept
-weight: 10
+weight: 30
 description: >
   Kubernetes objects are persistent entities in the Kubernetes system.
   Kubernetes uses these entities to represent the state of your cluster.
@@ -58,7 +58,7 @@ Kubernetes 使用这些实体去表示整个集群的状态。
 
 <!--
 A Kubernetes object is a "record of intent"--once you create the object, the Kubernetes system
-will constantly work to ensure that object exists. By creating an object, you're effectively
+will constantly work to ensure that the object exists. By creating an object, you're effectively
 telling the Kubernetes system what you want your cluster's workload to look like; this is your
 cluster's *desired state*.
 -->
@@ -68,7 +68,7 @@ Kubernetes 系统，你想要的集群工作负载状态看起来应是什么样
 这就是 Kubernetes 集群所谓的**期望状态（Desired State）**。
 
 <!--
-To work with Kubernetes objects--whether to create, modify, or delete them--you'll need to use the
+To work with Kubernetes objects—whether to create, modify, or delete them—you'll need to use the
 [Kubernetes API](/docs/concepts/overview/kubernetes-api/). When you use the `kubectl` command-line
 interface, for example, the CLI makes the necessary Kubernetes API calls for you. You can also use
 the Kubernetes API directly in your own programs using one of the
@@ -139,9 +139,11 @@ For more information on the object spec, status, and metadata, see the
 When you create an object in Kubernetes, you must provide the object spec that describes its
 desired state, as well as some basic information about the object (such as a name). When you use
 the Kubernetes API to create the object (either directly or via `kubectl`), that API request must
-include that information as JSON in the request body. **Most often, you provide the information to
-`kubectl` in a .yaml file.** `kubectl` converts the information to JSON when making the API
-request.
+include that information as JSON in the request body.
+Most often, you provide the information to `kubectl` in a file known as a _manifest_.
+By convention, manifests are YAML (you could also use JSON format).
+Tools such as `kubectl` convert the information from a manifest into JSON or another supported
+serialization format when making the API request over HTTP.
 -->
 ### 描述 Kubernetes 对象    {#describing-a-kubernetes-object}
 
@@ -149,22 +151,24 @@ request.
 以及关于对象的一些基本信息（例如名称）。
 当使用 Kubernetes API 创建对象时（直接创建或经由 `kubectl` 创建），
 API 请求必须在请求主体中包含 JSON 格式的信息。
-**大多数情况下，你需要提供 `.yaml` 文件为 kubectl 提供这些信息**。
-`kubectl` 在发起 API 请求时，将这些信息转换成 JSON 格式。
-
+大多数情况下，你会通过 **清单（Manifest）** 文件为 `kubectl` 提供这些信息。
+按照惯例，清单是 YAML 格式的（你也可以使用 JSON 格式）。
+像 `kubectl` 这样的工具在通过 HTTP 进行 API 请求时，
+会将清单中的信息转换为 JSON 或其他受支持的序列化格式。
 <!--
-Here's an example `.yaml` file that shows the required fields and object spec for a Kubernetes Deployment:
+Here's an example manifest that shows the required fields and object spec for a Kubernetes
+Deployment:
 -->
-这里有一个 `.yaml` 示例文件，展示了 Kubernetes Deployment 的必需字段和对象 `spec`：
+这里有一个清单示例文件，展示了 Kubernetes Deployment 的必需字段和对象 `spec`：
 
-{{< code file="application/deployment.yaml" >}}
+{{% code_sample file="application/deployment.yaml" %}}
 
 <!--
-One way to create a Deployment using a `.yaml` file like the one above is to use the
+One way to create a Deployment using a manifest file like the one above is to use the
 [`kubectl apply`](/docs/reference/generated/kubectl/kubectl-commands#apply) command
 in the `kubectl` command-line interface, passing the `.yaml` file as an argument. Here's an example:
 -->
-相较于上面使用 `.yaml` 文件来创建 Deployment，另一种类似的方式是使用 `kubectl` 命令行接口（CLI）中的
+与上面使用清单文件来创建 Deployment 类似，另一种方式是使用 `kubectl` 命令行接口（CLI）的
 [`kubectl apply`](/docs/reference/generated/kubectl/kubectl-commands#apply) 命令，
 将 `.yaml` 文件作为参数。下面是一个示例：
 
@@ -184,7 +188,8 @@ deployment.apps/nginx-deployment created
 <!--
 ### Required fields
 
-In the `.yaml` file for the Kubernetes object you want to create, you'll need to set values for the following fields:
+In the manifest (YAML or JSON file) for the Kubernetes object you want to create, you'll need to set values for
+the following fields:
 
 * `apiVersion` - Which version of the Kubernetes API you're using to create this object
 * `kind` - What kind of object you want to create
@@ -193,7 +198,7 @@ In the `.yaml` file for the Kubernetes object you want to create, you'll need to
 -->
 ### 必需字段    {#required-fields}
 
-在想要创建的 Kubernetes 对象所对应的 `.yaml` 文件中，需要配置的字段如下：
+在想要创建的 Kubernetes 对象所对应的清单（YAML 或 JSON 文件）中，需要配置的字段如下：
 
 * `apiVersion` - 创建该对象所使用的 Kubernetes API 的版本
 * `kind` - 想要创建的对象的类别
@@ -221,7 +226,7 @@ its desired state.
 Within the `.spec` of a StatefulSet is a [template](/docs/concepts/workloads/pods/#pod-templates)
 for Pod objects. That template describes Pods that the StatefulSet controller will create in order to
 satisfy the StatefulSet specification.
-Different kinds of object can also have different `.status`; again, the API reference pages
+Different kinds of objects can also have different `.status`; again, the API reference pages
 detail the structure of that `.status` field, and its content for each different type of object.
 -->
 例如，参阅 Pod API 参考文档中
@@ -237,10 +242,11 @@ detail the structure of that `.status` field, and its content for each different
 
 {{< note >}}
 <!--
-See [Configuration Best Practices](/docs/concepts/configuration/overview/) for additional
+See [Kubernetes Configuration Best Practices](/blog/2025/11/25/configuration-good-practices/) for additional
 information on writing YAML configuration files.
 -->
-请查看[配置最佳实践](/zh-cn/docs/concepts/configuration/overview/)来获取有关编写 YAML 配置文件的更多信息。
+请查看 [Kubernetes 配置最佳实践](/zh-cn/blog/2025/11/25/configuration-good-practices/)来获取有关编写
+YAML 配置文件的更多信息。
 {{< /note >}}
 
 <!--
@@ -304,6 +310,10 @@ If you're new to Kubernetes, read more about the following:
 * [Deployment](/docs/concepts/workloads/controllers/deployment/) objects.
 * [Controllers](/docs/concepts/architecture/controller/) in Kubernetes.
 * [kubectl](/docs/reference/kubectl/) and [kubectl commands](/docs/reference/generated/kubectl/kubectl-commands).
+
+[Kubernetes Object Management](/docs/concepts/overview/working-with-objects/object-management/)
+explains how to use `kubectl` to manage objects.
+You might need to [install kubectl](/docs/tasks/tools/#kubectl) if you don't already have it available.
 -->
 如果你刚开始学习 Kubernetes，可以进一步阅读以下信息：
 
@@ -312,6 +322,10 @@ If you're new to Kubernetes, read more about the following:
 * Kubernetes 中的[控制器](/zh-cn/docs/concepts/architecture/controller/)。
 * [kubectl](/zh-cn/docs/reference/kubectl/) 和
   [kubectl 命令](/docs/reference/generated/kubectl/kubectl-commands)。
+
+[Kubernetes 对象管理](/zh-cn/docs/concepts/overview/working-with-objects/object-management/)
+介绍了如何使用 `kubectl` 来管理对象。
+如果你还没有安装 `kubectl`，你可能需要[安装 kubectl](/zh-cn/docs/tasks/tools/#kubectl)。
 
 <!--
 To learn about the Kubernetes API in general, visit:

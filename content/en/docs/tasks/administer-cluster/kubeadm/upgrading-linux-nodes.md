@@ -1,7 +1,7 @@
 ---
 title: Upgrading Linux nodes
 content_type: task
-weight: 100
+weight: 40
 ---
 
 <!-- overview -->
@@ -10,7 +10,7 @@ This page explains how to upgrade a Linux Worker Nodes created with kubeadm.
 
 ## {{% heading "prerequisites" %}}
 
-{{< include "task-tutorial-prereqs.md" >}} {{< version-check >}}
+{{< include "task-tutorial-prereqs-node-upgrade.md" >}} {{< version-check >}}
 * Familiarize yourself with [the process for upgrading the rest of your kubeadm
 cluster](/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade). You will want to
 upgrade the control plane nodes before upgrading your Linux Worker nodes.
@@ -19,10 +19,12 @@ upgrade the control plane nodes before upgrading your Linux Worker nodes.
 
 ## Changing the package repository
 
-If you're using the Kubernetes community-owned repositories, you need to change
-the package repository to one that contains packages for your desired Kubernetes
-minor version. This is explained in [Changing the Kubernetes package repository](/docs/tasks/administer-cluster/kubeadm/change-package-repository/)
+If you're using the community-owned package repositories (`pkgs.k8s.io`), you need to 
+enable the package repository for the desired Kubernetes minor release. This is explained in
+[Changing the Kubernetes package repository](/docs/tasks/administer-cluster/kubeadm/change-package-repository/)
 document.
+
+{{% legacy-repos-deprecation %}}
 
 ## Upgrading worker nodes
 
@@ -34,15 +36,21 @@ Upgrade kubeadm:
 {{% tab name="Ubuntu, Debian or HypriotOS" %}}
 ```shell
 # replace x in {{< skew currentVersion >}}.x-* with the latest patch version
-apt-mark unhold kubeadm && \
-apt-get update && apt-get install -y kubeadm='{{< skew currentVersion >}}.x-*' && \
-apt-mark hold kubeadm
+sudo apt-mark unhold kubeadm && \
+sudo apt-get update && sudo apt-get install -y kubeadm='{{< skew currentVersion >}}.x-*' && \
+sudo apt-mark hold kubeadm
 ```
 {{% /tab %}}
 {{% tab name="CentOS, RHEL or Fedora" %}}
+For systems with DNF:
 ```shell
 # replace x in {{< skew currentVersion >}}.x-* with the latest patch version
-yum install -y kubeadm-'{{< skew currentVersion >}}.x-*' --disableexcludes=kubernetes
+sudo yum install -y kubeadm-'{{< skew currentVersion >}}.x-*' --disableexcludes=kubernetes
+```
+For systems with DNF5:
+```shell
+# replace x in {{< skew currentVersion >}}.x-* with the latest patch version
+sudo yum install -y kubeadm-'{{< skew currentVersion >}}.x-*' --setopt=disable_excludes=kubernetes
 ```
 {{% /tab %}}
 {{< /tabs >}}
@@ -60,6 +68,7 @@ sudo kubeadm upgrade node
 Prepare the node for maintenance by marking it unschedulable and evicting the workloads:
 
 ```shell
+# execute this command on a control plane node
 # replace <node-to-drain> with the name of your node you are draining
 kubectl drain <node-to-drain> --ignore-daemonsets
 ```
@@ -72,15 +81,21 @@ kubectl drain <node-to-drain> --ignore-daemonsets
    {{% tab name="Ubuntu, Debian or HypriotOS" %}}
    ```shell
    # replace x in {{< skew currentVersion >}}.x-* with the latest patch version
-   apt-mark unhold kubelet kubectl && \
-   apt-get update && apt-get install -y kubelet='{{< skew currentVersion >}}.x-*' kubectl='{{< skew currentVersion >}}.x-*' && \
-   apt-mark hold kubelet kubectl
+   sudo apt-mark unhold kubelet kubectl && \
+   sudo apt-get update && sudo apt-get install -y kubelet='{{< skew currentVersion >}}.x-*' kubectl='{{< skew currentVersion >}}.x-*' && \
+   sudo apt-mark hold kubelet kubectl
    ```
    {{% /tab %}}
    {{% tab name="CentOS, RHEL or Fedora" %}}
+   For systems with DNF:
    ```shell
    # replace x in {{< skew currentVersion >}}.x-* with the latest patch version
-   yum install -y kubelet-'{{< skew currentVersion >}}.x-*' kubectl-'{{< skew currentVersion >}}.x-*' --disableexcludes=kubernetes
+   sudo yum install -y kubelet-'{{< skew currentVersion >}}.x-*' kubectl-'{{< skew currentVersion >}}.x-*' --disableexcludes=kubernetes
+   ```
+   For systems with DNF5:
+   ```shell
+   # replace x in {{< skew currentVersion >}}.x-* with the latest patch version
+   sudo yum install -y kubelet-'{{< skew currentVersion >}}.x-*' kubectl-'{{< skew currentVersion >}}.x-*' --setopt=disable_excludes=kubernetes
    ```
    {{% /tab %}}
    {{< /tabs >}}
@@ -97,6 +112,7 @@ kubectl drain <node-to-drain> --ignore-daemonsets
 Bring the node back online by marking it schedulable:
 
 ```shell
+# execute this command on a control plane node
 # replace <node-to-uncordon> with the name of your node
 kubectl uncordon <node-to-uncordon>
 ```

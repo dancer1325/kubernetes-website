@@ -15,6 +15,18 @@ card:
   title: Use the Web UI Dashboard
 ---
 
+{{% pageinfo color="primary" %}}
+**Kubernetes Dashboard is deprecated and unmaintained.**
+
+The Kubernetes Dashboard project has been archived and is no longer actively maintained.
+For new installations, consider using [Headlamp](https://headlamp.dev/).
+{{% /pageinfo %}}
+
+{{< note >}}
+For in-cluster deployments similar to Kubernetes Dashboard, see the
+[Headlamp in-cluster installation guide](https://headlamp.dev/docs/latest/installation/in-cluster/).
+{{< /note >}}
+
 <!-- overview -->
 
 Dashboard is a web-based Kubernetes user interface.
@@ -34,10 +46,18 @@ Dashboard also provides information on the state of Kubernetes resources in your
 
 ## Deploying the Dashboard UI
 
+{{< note >}}
+Kubernetes Dashboard supports only Helm-based installation currently as it is faster
+and gives us better control over all dependencies required by Dashboard to run.
+{{< /note >}}
+
 The Dashboard UI is not deployed by default. To deploy it, run the following command:
 
-```
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+```shell
+# Add kubernetes-dashboard repository
+helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+# Deploy a Helm Release named "kubernetes-dashboard" using the kubernetes-dashboard chart
+helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
 ```
 
 ## Accessing the Dashboard UI
@@ -57,12 +77,12 @@ You can enable access to the Dashboard using the `kubectl` command-line tool,
 by running the following command:
 
 ```
-kubectl proxy
+kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
 ```
 
-Kubectl will make Dashboard available at [http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/).
+Kubectl will make Dashboard available at [https://localhost:8443](https://localhost:8443).
 
-The UI can _only_ be accessed from the machine where the command is executed. See `kubectl proxy --help` for more options.
+The UI can _only_ be accessed from the machine where the command is executed. See `kubectl port-forward --help` for more options.
 
 {{< note >}}
 The kubeconfig authentication method does **not** support external identity providers

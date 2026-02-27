@@ -1,26 +1,47 @@
 ---
 title: Changing The Kubernetes Package Repository
 content_type: task
-weight: 120
+weight: 150
 ---
 
 <!-- overview -->
 
-This page explains how to switch from one Kubernetes package repository to another
-when upgrading Kubernetes minor releases. Unlike deprecated Google-hosted
-repositories, the Kubernetes package repositories are structured in a way that
-there's a dedicated package repository for each Kubernetes minor version.
+This page explains how to enable a package repository for the desired
+Kubernetes minor release upon upgrading a cluster. This is only needed 
+for users of the community-owned package repositories hosted at `pkgs.k8s.io`.
+Unlike the legacy package repositories, the community-owned package
+repositories are structured in a way that there's a dedicated package
+repository for each Kubernetes minor version.
+
+{{< note >}}
+This guide only covers a part of the Kubernetes upgrade process. Please see the
+[upgrade guide](/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/) for
+more information about upgrading Kubernetes clusters.
+{{</ note >}}
+
+{{< note >}}
+This step is only needed upon upgrading a cluster to another **minor** release.
+If you're upgrading to another patch release within the same minor release (e.g.
+v{{< skew currentVersion >}}.5 to v{{< skew currentVersion >}}.7), you don't
+need to follow this guide. However, if you're still using the legacy package
+repositories, you'll need to migrate to the new community-owned package
+repositories before upgrading (see the next section for more details on how to
+do this).
+{{</ note >}}
 
 ## {{% heading "prerequisites" %}}
 
-This document assumes that you're already using the Kubernetes community-owned
-package repositories. If that's not the case, it's strongly recommended to migrate
-to the Kubernetes package repositories.
+This document assumes that you're already using the community-owned
+package repositories (`pkgs.k8s.io`). If that's not the case, it's strongly
+recommended to migrate to the community-owned package repositories as described
+in the [official announcement](/blog/2023/08/15/pkgs-k8s-io-introduction/).
+
+{{% legacy-repos-deprecation %}}
 
 ### Verifying if the Kubernetes package repositories are used
 
-If you're unsure whether you're using the Kubernetes package repositories or the
-Google-hosted repository, take the following steps to verify:
+If you're unsure whether you're using the community-owned package repositories or the
+legacy package repositories, take the following steps to verify:
 
 {{< tabs name="k8s_install_versions" >}}
 {{% tab name="Ubuntu, Debian or HypriotOS" %}}
@@ -39,7 +60,8 @@ deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io
 ```
 
 **You're using the Kubernetes package repositories and this guide applies to you.**
-Otherwise, it's strongly recommended to migrate to the Kubernetes package repositories.
+Otherwise, it's strongly recommended to migrate to the Kubernetes package repositories
+as described in the [official announcement](/blog/2023/08/15/pkgs-k8s-io-introduction/).
 
 {{% /tab %}}
 {{% tab name="CentOS, RHEL or Fedora" %}}
@@ -64,7 +86,35 @@ exclude=kubelet kubeadm kubectl
 ```
 
 **You're using the Kubernetes package repositories and this guide applies to you.**
-Otherwise, it's strongly recommended to migrate to the Kubernetes package repositories.
+Otherwise, it's strongly recommended to migrate to the Kubernetes package repositories
+as described in the [official announcement](/blog/2023/08/15/pkgs-k8s-io-introduction/).
+
+{{% /tab %}}
+
+{{% tab name="openSUSE or SLES" %}}
+
+Print the contents of the file that defines the Kubernetes `zypper` repository:
+
+```shell
+# On your system, this configuration file could have a different name
+cat /etc/zypp/repos.d/kubernetes.repo
+```
+
+If you see a `baseurl` similar to the `baseurl` in the output below:
+
+```
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v{{< skew currentVersionAddMinor -1 "." >}}/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v{{< skew currentVersionAddMinor -1 "." >}}/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl
+```
+
+**You're using the Kubernetes package repositories and this guide applies to you.**
+Otherwise, it's strongly recommended to migrate to the Kubernetes package repositories
+as described in the [official announcement](/blog/2023/08/15/pkgs-k8s-io-introduction/).
 
 {{% /tab %}}
 {{< /tabs >}}
@@ -86,7 +136,7 @@ This step should be done upon upgrading from one to another Kubernetes minor
 release in order to get access to the packages of the desired Kubernetes minor
 version.
 
-{{< tabs name="k8s_install_versions" >}}
+{{< tabs name="k8s_upgrade_versions" >}}
 {{% tab name="Ubuntu, Debian or HypriotOS" %}}
 
 1. Open the file that defines the Kubernetes `apt` repository using a text editor of your choice:
@@ -139,10 +189,10 @@ version.
    ```
    [kubernetes]
    name=Kubernetes
-   baseurl=https://pkgs.k8s.io/core:/stable:/v{{< param "version" >}}/rpm/
+   baseurl=https://pkgs.k8s.io/core:/stable:/{{< param "version" >}}/rpm/
    enabled=1
    gpgcheck=1
-   gpgkey=https://pkgs.k8s.io/core:/stable:/v{{< param "version" >}}/rpm/repodata/repomd.xml.key
+   gpgkey=https://pkgs.k8s.io/core:/stable:/{{< param "version" >}}/rpm/repodata/repomd.xml.key
    exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
    ```
 

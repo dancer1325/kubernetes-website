@@ -49,7 +49,7 @@ weight: 40
 작은 nginx 웹 서버를 이용한다. 다음과 같이 생성할 수 있다.
 
 ```shell
-kubectl create deployment source-ip-app --image=registry.k8s.io/echoserver:1.4
+kubectl create deployment source-ip-app --image=registry.k8s.io/echoserver:1.10
 ```
 출력은 다음과 같다.
 ```
@@ -200,7 +200,7 @@ client_address=10.240.0.3
 
 * 클라이언트는 `node2:nodePort`로 패킷을 보낸다.
 * `node2`는 소스 IP 주소(SNAT)를 패킷 상에서 자신의 IP 주소로 교체한다.
-* `noee2`는 대상 IP를 패킷 상에서 파드의 IP로 교체한다.
+* `node2`는 대상 IP를 패킷 상에서 파드의 IP로 교체한다.
 * 패킷은 node 1로 라우팅 된 다음 엔드포인트로 라우팅 된다.
 * 파드의 응답은 node2로 다시 라우팅된다.
 * 파드의 응답은 클라이언트로 다시 전송된다.

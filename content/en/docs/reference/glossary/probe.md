@@ -1,7 +1,6 @@
 ---
 title: Probe
 id: probe
-date: 2023-03-21
 full_link: /docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 
 short_description: >
@@ -10,7 +9,7 @@ short_description: >
 tags:
 - tool
 ---
-A check that the kubelet periodically performs against a container that is 
+A check that the {{< glossary_tooltip text="kubelet" term_id="kubelet" >}} periodically performs against a container that is 
 running in a pod, that will define container's state and health and informing container's lifecycle.
 
 <!--more-->

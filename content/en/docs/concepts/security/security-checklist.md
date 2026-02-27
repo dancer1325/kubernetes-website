@@ -41,7 +41,7 @@ evaluated on its merits.
 - [ ] A process exists for periodic access review, and reviews occur no more
   than 24 months apart.
 - [ ] The [Role Based Access Control Good Practices](/docs/concepts/security/rbac-good-practices/)
-  is followed for guidance related to authentication and authorization.
+  are followed for guidance related to authentication and authorization.
 
 After bootstrapping, neither users nor components should authenticate to the
 Kubernetes API as `system:masters`. Similarly, running all of
@@ -51,7 +51,7 @@ an admin user.
 
 ## Network security
 
-- [ ] CNI plugins in-use supports network policies.
+- [ ] CNI plugins in use support network policies.
 - [ ] Ingress and egress network policies are applied to all workloads in the
   cluster.
 - [ ] Default network policies within each namespace, selecting all pods, denying
@@ -66,9 +66,8 @@ plugins provide the functionality to
 restrict network resources that pods may communicate with. This is most commonly done
 through [Network Policies](/docs/concepts/services-networking/network-policies/)
 which provide a namespaced resource to define rules. Default network policies
-blocking everything egress and ingress, in each namespace, selecting all the
-pods, can be useful to adopt an allow list approach, ensuring that no workloads
-is missed.
+that block all egress and ingress, in each namespace, selecting all pods, can be
+useful to adopt an allow list approach to ensure that no workloads are missed.
 
 Not all CNI plugins provide encryption in transit. If the chosen plugin lacks this
 feature, an alternative solution could be to use a service mesh to provide that
@@ -80,12 +79,12 @@ be used to communicate securely with it. The certificate authority for this
 should be unique to etcd.
 
 External Internet access to the Kubernetes API server should be restricted to
-not expose the API publicly. Be careful as many managed Kubernetes distribution
+not expose the API publicly. Be careful, as many managed Kubernetes distributions
 are publicly exposing the API server by default. You can then use a bastion host
 to access the server.
 
 The [kubelet](/docs/reference/command-line-tools-reference/kubelet/) API access
-should be restricted and not publicly exposed, the defaults authentication and
+should be restricted and not exposed publicly, the default authentication and
 authorization settings, when no configuration file specified with the `--config`
 flag, are overly permissive.
 
@@ -177,10 +176,10 @@ Seccomp is only available on Linux nodes.
 
 #### AppArmor
 
-[AppArmor](https://apparmor.net/) is a Linux kernel security module that can
+[AppArmor](/docs/tutorials/security/apparmor/) is a Linux kernel security module that can
 provide an easy way to implement Mandatory Access Control (MAC) and better
-auditing through system logs. To [enable AppArmor in Kubernetes](/docs/tutorials/security/apparmor/),
-at least version 1.4 is required. Like seccomp, AppArmor is also configured
+auditing through system logs. A default AppArmor profile is enforced on nodes that support it, or a custom profile can be configured.
+Like seccomp, AppArmor is also configured
 through profiles, where each profile is either running in enforcing mode, which
 blocks access to disallowed resources or complain mode, which only reports
 violations. AppArmor profiles are enforced on a per-container basis, with an
@@ -207,21 +206,7 @@ SELinux is only available on Linux nodes, and enabled in
 ## Logs and auditing
 
 - [ ] Audit logs, if enabled, are protected from general access.
-- [ ] The `/logs` API is disabled (you are running kube-apiserver with
-  `--enable-logs-handler=false`).
 
-  Kubernetes includes a `/logs` API endpoint, enabled by default,
-  that lets users request the contents of the API server's `/var/log` directory over HTTP. Accessing
-  that endpoint requires authentication.
-
-Allowing broad access to Kubernetes logs can make security information
-available to a potential attacker.
-
-As a good practice, set up a separate means to collect and aggregate
-control plane logs, and do not use the `/logs` API endpoint.
-Alternatively, if you run your control plane with the `/logs` API endpoint
-and limit the content of `/var/log` (within the host or container where the API server is running) to
-Kubernetes API server logs only.
 
 ## Pod placement
 
@@ -339,7 +324,7 @@ Production.
   webhook admission controller.
 - [ ] The admission chain plugins and webhooks are securely configured.
 
-Admission controllers can help to improve the security of the cluster. However,
+Admission controllers can help improve the security of the cluster. However,
 they can present risks themselves as they extend the API server and
 [should be properly secured](/blog/2022/01/19/secure-your-admission-controllers-and-webhooks/).
 
@@ -364,11 +349,11 @@ permission to sign certificate requests.
 attribute') of `system:masters`.
 
 [`LimitRanger`](/docs/reference/access-authn-authz/admission-controllers/#limitranger)
-: Enforce the LimitRange API constraints.
+: Enforces the LimitRange API constraints.
 
 [`MutatingAdmissionWebhook`](/docs/reference/access-authn-authz/admission-controllers/#mutatingadmissionwebhook)
 : Allows the use of custom controllers through webhooks, these controllers may
-mutate requests that it reviews.
+mutate requests that they review.
 
 [`PodSecurity`](/docs/reference/access-authn-authz/admission-controllers/#podsecurity)
 : Replacement for Pod Security Policy, restricts security contexts of deployed
@@ -381,8 +366,8 @@ Pods.
 : Allows the use of custom controllers through webhooks, these controllers do
 not mutate requests that it reviews.
 
-The second group includes plugin that are not enabled by default but in general
-availability state and recommended to improve your security posture:
+The second group includes plugins that are not enabled by default but are in general
+availability state and are recommended to improve your security posture:
 
 [`DenyServiceExternalIPs`](/docs/reference/access-authn-authz/admission-controllers/#denyserviceexternalips)
 : Rejects all net-new usage of the `Service.spec.externalIPs` field. This is a mitigation for
@@ -390,7 +375,7 @@ availability state and recommended to improve your security posture:
 
 [`NodeRestriction`](/docs/reference/access-authn-authz/admission-controllers/#noderestriction)
 : Restricts kubelet's permissions to only modify the pods API resources they own
-or the node API ressource that represent themselves. It also prevents kubelet
+or the node API resource that represent themselves. It also prevents kubelet
 from using the `node-restriction.kubernetes.io/` annotation, which can be used
 by an attacker with access to the kubelet's credentials to influence pod
 placement to the controlled node.
@@ -419,8 +404,12 @@ alpha state but could be considered for certain use cases:
 
 ## What's next
 
-- [RBAC Good Practices](/docs/concepts/security/rbac-good-practices/) for
-  further information on authorization.
+- [Privilege escalation via Pod creation](/docs/reference/access-authn-authz/authorization/#privilege-escalation-via-pod-creation)
+  warns you about a specific access control risk; check how you're managing that
+  threat.
+  - If you use Kubernetes RBAC, read
+    [RBAC Good Practices](/docs/concepts/security/rbac-good-practices/) for
+    further information on authorization.
 - [Securing a Cluster](/docs/tasks/administer-cluster/securing-a-cluster/) for
   information on protecting a cluster from accidental or malicious access.
 - [Cluster Multi-tenancy guide](/docs/concepts/security/multi-tenancy/) for

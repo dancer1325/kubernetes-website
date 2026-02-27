@@ -168,7 +168,7 @@ simply as *nodes*).
 - *Configure nodes*: Nodes can be physical or virtual machines. If you want to
   create and manage your own nodes, you can install a supported operating system,
   then add and run the appropriate
-  [Node services](/docs/concepts/overview/components/#node-components). Consider:
+  [Node services](/docs/concepts/architecture/#node-components). Consider:
   - The demands of your workloads when you set up nodes by having appropriate memory, CPU, and disk speed and storage capacity available.
   - Whether generic computer systems will do or you have workloads that need GPU processors, Windows nodes, or VM isolation.
 - *Validate nodes*: See [Valid node setup](/docs/setup/best-practices/node-conformance/)
@@ -183,15 +183,9 @@ simply as *nodes*).
   to help determine how many nodes you need, based on the number of pods and
   containers you need to run. If you are managing nodes yourself, this can mean
   purchasing and installing your own physical equipment.
-- *Autoscale nodes*: Most cloud providers support
-  [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler#readme)
-  to replace unhealthy nodes or grow and shrink the number of nodes as demand requires. See the
-  [Frequently Asked Questions](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md)
-  for how the autoscaler works and
-  [Deployment](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler#deployment)
-  for how it is implemented by different cloud providers. For on-premises, there
-  are some virtualization platforms that can be scripted to spin up new nodes
-  based on demand.
+- *Autoscale nodes*: Read [Node Autoscaling](/docs/concepts/cluster-administration/node-autoscaling) to learn about the
+  tools available to automatically manage your nodes and the capacity they
+  provide.
 - *Set up node health checks*: For important workloads, you want to make sure
   that the nodes and pods running on those nodes are healthy. Using the
   [Node Problem Detector](/docs/tasks/debug/debug-cluster/monitor-node-health/)
@@ -238,7 +232,7 @@ As someone setting up authentication and authorization on your production Kubern
 
 - *Set the authorization mode*: When the Kubernetes API server
   ([kube-apiserver](/docs/reference/command-line-tools-reference/kube-apiserver/))
-  starts, the supported authentication modes must be set using the *--authorization-mode*
+  starts, supported authorization modes must be set using an *--authorization-config* file or the *--authorization-mode*
   flag. For example, that flag in the *kube-adminserver.yaml* file (in */etc/kubernetes/manifests*)
   could be set to Node,RBAC. This would allow Node and RBAC authorization for authenticated requests.
 - *Create user certificates and role bindings (RBAC)*: If you are using RBAC
@@ -266,9 +260,7 @@ needs of your cluster's workloads:
 
 - *Set namespace limits*: Set per-namespace quotas on things like memory and CPU. See
   [Manage Memory, CPU, and API Resources](/docs/tasks/administer-cluster/manage-resources/)
-  for details. You can also set
-  [Hierarchical Namespaces](/blog/2020/08/14/introducing-hierarchical-namespaces/)
-  for inheriting limits.
+  for details.
 - *Prepare for DNS demand*: If you expect workloads to massively scale up,
   your DNS service must be ready to scale up as well. See
   [Autoscale the DNS service in a Cluster](/docs/tasks/administer-cluster/dns-horizontal-autoscaling/).
@@ -296,9 +288,8 @@ needs of your cluster's workloads:
   and the
   [API server](/docs/setup/production-environment/tools/kubeadm/ha-topology/).
 - Choose from [kubeadm](/docs/setup/production-environment/tools/kubeadm/),
-  [kops](/docs/setup/production-environment/tools/kops/) or
-  [Kubespray](/docs/setup/production-environment/tools/kubespray/)
-  deployment methods.
+  [kops](https://kops.sigs.k8s.io/) or
+  [Kubespray](https://kubespray.io/) deployment methods.
 - Configure user management by determining your
   [Authentication](/docs/reference/access-authn-authz/authentication/) and
   [Authorization](/docs/reference/access-authn-authz/authorization/) methods.

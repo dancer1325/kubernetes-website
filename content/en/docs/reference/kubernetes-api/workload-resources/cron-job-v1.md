@@ -6,7 +6,7 @@ api_metadata:
 content_type: "api_reference"
 description: "CronJob represents the configuration of a single cron job."
 title: "CronJob"
-weight: 10
+weight: 11
 auto_generated: true
 ---
 
@@ -88,6 +88,11 @@ CronJobSpec describes how the job execution will look like and when it will actu
   Specifies how to treat concurrent executions of a Job. Valid values are:
   
   - "Allow" (default): allows CronJobs to run concurrently; - "Forbid": forbids concurrent runs, skipping next run if previous run hasn't finished yet; - "Replace": cancels currently running job and replaces it with a new one
+  
+  Possible enum values:
+   - `"Allow"` allows CronJobs to run concurrently.
+   - `"Forbid"` forbids concurrent runs, skipping next run if previous hasn't finished yet.
+   - `"Replace"` cancels currently running job and replaces it with a new one.
 
 - **startingDeadlineSeconds** (int64)
 
@@ -707,6 +712,11 @@ DELETE /apis/batch/v1/namespaces/{namespace}/cronjobs/{name}
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
 
 
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
+
+
 - **pretty** (*in query*): string
 
   <a href="{{< ref "../common-parameters/common-parameters#pretty" >}}">pretty</a>
@@ -765,6 +775,11 @@ DELETE /apis/batch/v1/namespaces/{namespace}/cronjobs
 - **gracePeriodSeconds** (*in query*): integer
 
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
+
+
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
 
 
 - **labelSelector** (*in query*): string

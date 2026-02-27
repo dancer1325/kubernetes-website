@@ -1,5 +1,4 @@
 ---
-reviewers:
 title: ReplicaSet
 content_type: concept
 weight: 20
@@ -275,7 +274,7 @@ ReplicaSetは、ただ`.spec.replicas`フィールドを更新することによ
 
 [`controller.kubernetes.io/pod-deletion-cost`](/docs/reference/labels-annotations-taints/#pod-deletion-cost)アノテーションを使用すると、ReplicaSetをスケールダウンする際に、どのPodを最初に削除するかについて、ユーザーが優先順位を設定することができます。
 
-アノテーションはPodに設定する必要があり、範囲は[-2147483647, 2147483647]になります。同じReplicaSetに属する他のPodと比較して、Podを削除する際のコストを表しています。削除コストの低いPodは、削除コストの高いPodより優先的に削除されます。
+アノテーションはPodに設定する必要があり、範囲は[-2147483648, 2147483647]になります。同じReplicaSetに属する他のPodと比較して、Podを削除する際のコストを表しています。削除コストの低いPodは、削除コストの高いPodより優先的に削除されます。
 
 このアノテーションを設定しないPodは暗黙的に0と設定され、負の値は許容されます。
 無効な値はAPIサーバーによって拒否されます。
@@ -308,7 +307,7 @@ kubectl apply -f https://k8s.io/examples/controllers/hpa-rs.yaml
 同様のことを行うための代替案として、`kubectl autoscale`コマンドも使用できます。(こちらの方がより簡単です。)
 
 ```shell
-kubectl autoscale rs frontend --max=10 --min=3 --cpu-percent=50
+kubectl autoscale rs frontend --max=10 --min=3 --cpu=50%
 ```
 
 ## ReplicaSetの代替案

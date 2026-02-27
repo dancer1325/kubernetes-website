@@ -208,10 +208,10 @@ spec:
         name: log-config
         items:
           - key: log_level
-            path: log_level
+            path: log_level.conf
 ```
 
-ConfigMap `log-config` ditambatkan sebagai sebuah Volume, dan semua isinya yang ditaruh di dalam entri `log_level`-nya ditambatkan dalam Pod tersebut pada _path_ "`/etc/config/log_level`".
+ConfigMap `log-config` ditambatkan sebagai sebuah Volume, dan semua isinya yang ditaruh di dalam entri `log_level`-nya ditambatkan dalam Pod tersebut pada _path_ "`/etc/config/log_level.conf`".
 Perlu dicatat bahwa _path_ tersebut berasal dari isian `mountPath` pada Volume, dan `path` yang ditunjuk dengan `key` bernama `log_level`.
 
 {{< caution >}}
@@ -899,7 +899,7 @@ Lebih banyak contoh dapat ditemukan [di sini](https://github.com/kubernetes/exam
 
 ## Menggunakan subPath
 
-Terkadang, diperlukan untuk membagi sebuah Volume untuk banyak kegunaan berbeda pada sebuah Pod. Kolom `volumeMounts.subPath` dapat digunakan untuk merinci sebuah _sub-path_ di dalam Volume yang dimaksud, menggantikan _root path_-nya.
+Terkadang, diperlukan untuk membagi sebuah Volume untuk banyak kegunaan berbeda pada sebuah Pod. Kolom `volumeMounts[*].subPath` dapat digunakan untuk merinci sebuah _sub-path_ di dalam Volume yang dimaksud, menggantikan _root path_-nya.
 
 Berikut contoh sebuah Pod dengan _stack_ LAMP (Linux Apache Mysql PHP) menggunakan sebuah Volume yang dibagi-bagi.
 Isi HTML-nya dipetakan ke dalam direktori `html`-nya, dan _database_-nya akan disimpan di dalam direktori `mysql`-nya.
@@ -1099,7 +1099,7 @@ Untuk lebih lanjut, dapat ditemukan [di sini](https://github.com/kubernetes/comm
 
 _Mount propagation_ memungkinkan berbagi volume-volume yang ditambatkan oleh sebuah Container kepada Container-container lain di dalam Pod yang sama, atau bahkan pada Pod lainnya di dalam Node yang sama.
 
-_Mount propagation_ dari sebuah volume diatur oleh kolom `mountPropagation` di dalam `Container.volumeMounts`.
+_Mount propagation_ dari sebuah volume diatur oleh kolom `mountPropagation` di dalam `containers[*].volumeMounts`.
 Nilai-nilainya adalah sebagai berikut:
 
 * `None` - Tambatan volume ini tidak akan menerima apapun tambatan selanjutnya yang ditambatkan pada volume ini atau apapun sub-direktori yang dimilikinya oleh _host_.

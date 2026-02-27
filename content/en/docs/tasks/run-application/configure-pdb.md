@@ -124,7 +124,7 @@ for policy/v1 an empty selector matches every pod in the namespace.
 
 You can specify only one of `maxUnavailable` and `minAvailable` in a single `PodDisruptionBudget`.
 `maxUnavailable` can only be used to control the eviction of pods
-that have an associated controller managing them. In the examples below, "desired replicas"
+that all have the same associated controller managing them. In the examples below, "desired replicas"
 is the `scale` of the controller managing the pods being selected by the
 `PodDisruptionBudget`.
 
@@ -241,13 +241,7 @@ These pods are tracked via `.status.currentHealthy` field in the PDB status.
 
 ## Unhealthy Pod Eviction Policy
 
-{{< feature-state for_k8s_version="v1.27" state="beta" >}}
-
-{{< note >}}
-This feature is enabled by default. You can disable it by disabling the `PDBUnhealthyPodEvictionPolicy`
-[feature gate](/docs/reference/command-line-tools-reference/feature-gates/)
-on the [API server](/docs/reference/command-line-tools-reference/kube-apiserver/).
-{{< /note >}}
+{{< feature-state feature_gate_name="PDBUnhealthyPodEvictionPolicy" >}}
 
 PodDisruptionBudget guarding an application ensures that `.status.currentHealthy` number of pods
 does not fall below the number specified in `.status.desiredHealthy` by disallowing eviction of healthy pods.

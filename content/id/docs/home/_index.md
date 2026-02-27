@@ -4,16 +4,14 @@ noedit: true
 cid: docsHome
 layout: docsportal_home
 class: gridPage gridPageHome
-linkTitle: "Home"
+linkTitle: "Dokumentasi"
 main_menu: true
 weight: 10
 hide_feedback: true
 menu:
   main:
     title: "Dokumentasi"
-    weight: 20
-    post: >
-      <p>Mengerti penggunaan Kubernetes dengan belajar konsep, tutorial, dan referensinya. Kamupun bisa <a href="/editdocs/" data-auto-burger-exclude>bantu kami perbaiki dan lengkapi dokumentasinya</a>, yuk kontribusi!</p>
+    weight: 10
 overview: >
   Kubernetes adalah sebuah orkestrator kontainer open source, yang mengotomasi deployment, replikasi, dan pengaturan aplikasi kontainer dengan mudah. Cloud Native Computing Foundation (<a href="https://www.cncf.io/about">CNCF</a>) mewadahi proyek open source ini.
 cards:
@@ -50,6 +48,8 @@ cards:
 - name: download
   title: Unduh Kubernetes
   description: Untuk instalasi atau pembaharuan Kubernetes ke versi terbaru, lihat catatan rilis saat ini.
+  button: Unduh Kubernetes Sekarang
+  button_path: /releases/download/
 - name: about
   title: Tentang dokumentasi
   description: Situs ini merupakan dokumentasi dari Kubernetes versi saat ini dan 4 versi sebelumnya.

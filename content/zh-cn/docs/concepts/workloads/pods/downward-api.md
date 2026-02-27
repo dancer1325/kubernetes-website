@@ -155,11 +155,9 @@ The following information is available through environment variables
 <!--
 `status.hostIPs`
 : the IP addresses is a dual-stack version of `status.hostIP`, the first is always the same as `status.hostIP`.
-  The field is available if you enable the `PodHostIPs` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/).
 -->
 `status.hostIPs`
 : 这组 IP 地址是 `status.hostIP` 的双协议栈版本，第一个 IP 始终与 `status.hostIP` 相同。
-  该字段在启用了 `PodHostIPs` [特性门控](/zh-cn/docs/reference/command-line-tools-reference/feature-gates/)后可用。
 
 <!--
 `status.podIP`
@@ -203,6 +201,25 @@ These container-level fields allow you to provide information about
 for resources such as CPU and memory.
 -->
 ### 可通过 `resourceFieldRef` 获得的信息  {#downwardapi-resourceFieldRef}
+
+这些容器级别的字段允许你提供关于
+[请求和限制](/zh-cn/docs/concepts/configuration/manage-resources-containers/#requests-and-limits)
+的资源（如 CPU 和内存）信息。
+
+{{< note >}}
+{{< feature-state feature_gate_name="InPlacePodVerticalScaling" >}}
+<!--
+Container CPU and memory resources can be resized while the container is running.
+If this happens, a downward API volume will be updated,
+but environment variables will not be updated unless the container restarts.
+See [Resize CPU and Memory Resources assigned to Containers](/docs/tasks/configure-pod-container/resize-container-resources/)
+for more details.
+-->
+容器的 CPU 和内存资源可以在容器运行时调整大小。
+如果发生这种情况，Downward API 卷将会被更新，
+但是环境变量不会被更新，除非容器重启。
+更多详情请参见[调整分配给容器的 CPU 和内存资源](/zh-cn/docs/tasks/configure-pod-container/resize-container-resources/)。
+{{< /note >}}
 
 <!--
 `resource: limits.cpu`
@@ -274,7 +291,6 @@ calculation.
 如果没有为容器指定 CPU 和内存限制时尝试使用 Downward API 暴露该信息，那么 kubelet 默认会根据
 [节点可分配资源](/zh-cn/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable)
 计算并暴露 CPU 和内存的最大可分配值。
-
 
 ## {{% heading "whatsnext" %}}
 

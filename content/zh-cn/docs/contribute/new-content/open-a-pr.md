@@ -71,13 +71,13 @@ subgraph tasks[使用 GitHub 提交变更]
 direction TB
     0[ ] -.-
     1[1. 编辑此页] --> 2[2. 使用 GitHub markdown<br>编辑器进行修改]
-    2 --> 3[3. 填写 Propose file change]
+    2 --> 3[3. 选择 Commit changes...]
 
 end
 subgraph tasks2[ ]
 direction TB
-4[4. 选择 Propose file change] --> 5[5. 选择 Create pull request] --> 6[6. 填写 Open a pull request]
-6 --> 7[7. 选择 Create pull request] 
+4[4. 选择 Propose changes] --> 5[5. 选择 Create pull request] --> 6[6. 填写 Open a pull request]
+6 --> 7[7. 选择 Create pull request]
 end
 
 id1 --> tasks --> tasks2
@@ -102,7 +102,7 @@ Figure 1. Steps for opening a PR using GitHub.
 
 1. Make your changes in the GitHub markdown editor.
 
-1. Below the editor, fill in the **Propose file change** form.
+1. On the right above the editor, Select **Commit changes**.
    In the first field, give your commit message a title.
    In the second field, provide a description.
 -->
@@ -110,7 +110,7 @@ Figure 1. Steps for opening a PR using GitHub.
 
 2. 在 GitHub 的 Markdown 编辑器中修改内容。
 
-3. 在编辑器的下方，填写 **Propose file change** 表单。
+3. 在编辑器右上方，选择 **Commit changes**。。
    在第一个字段中，为你的提交消息取一个标题。
    在第二个字段中，为你的提交写一些描述文字。
 
@@ -119,32 +119,33 @@ Figure 1. Steps for opening a PR using GitHub.
    Do not use any [GitHub Keywords](https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword)
    in your commit message. You can add those to the pull request description later.
    -->
-   不要在提交消息中使用 [GitHub 关键词](https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword)。
+   不要在提交消息中使用
+   [GitHub 关键词](https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword)。
    你可以在后续的 PR 描述中使用这些关键词。
    {{< /note >}}
 
 <!--
-1. Select **Propose file change**.
+1. Select **Propose changes**.
 
 1. Select **Create pull request**.
 
 1. The **Open a pull request** screen appears. Fill in the form:
 
-   - The **Subject** field of the pull request defaults to the commit summary.
+   - The **Add a title** field of the pull request defaults to the commit summary.
      You can change it if needed.
-   - The **Body** contains your extended commit message, if you have one,
+   - The **Add a description** field contains your extended commit message, if you have one,
      and some template text. Add the
      details the template text asks for, then delete the extra template text.
    - Leave the **Allow edits from maintainers** checkbox selected.
 -->
-4. 选择 **Propose File Change**。
+4. 选择 **Propose changes**。
 
 5. 选择 **Create pull request**。
 
 6. 出现 **Open a pull request** 界面。填写表单：
 
-   - **Subject** 字段默认为提交的概要信息，你可以根据需要进行修改。
-   - **Body** 字段包含更为详细的提交消息（如果你之前有填写过的话）和一些模板文字。
+   - **Add a title** 字段默认为提交的概要信息，你可以根据需要进行修改。
+   - **Add a description** 字段包含更为详细的提交消息（如果你之前有填写过的话）和一些模板文字。
      填写模板所要求的详细信息，之后删除多余的模板文字。
    - 确保 **Allow edits from maintainers** 复选框被勾选。
 
@@ -215,10 +216,10 @@ Figure 2 shows the steps to follow when you work from a local fork. The details 
 -->
 ## 基于本地克隆副本开展工作   {#fork-the-repo}
 
-如果你有 git 的使用经验，或者你要提议的修改不仅仅几行，请使用本地克隆副本来开展工作。
+如果你有 Git 的使用经验，或者你要提议的修改不仅仅几行，请使用本地克隆副本来开展工作。
 
-首先要确保你在本地计算机上安装了 [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)。
-你也可以使用 git 的带用户界面的应用。
+首先要确保你在本地计算机上安装了 [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)。
+你也可以使用 Git 的带用户界面的应用。
 
 图 2 显示了基于本地克隆副本开展工作的步骤。每个步骤的细节如下。
 
@@ -231,7 +232,7 @@ flowchart LR
 subgraph changes[你的变更]
 direction TB
 S[ ] -.-
-3[创建一个分支<br>例如: my_new_branch] --> 3a[使用文本编辑器<br>进行修改] --> 4["使用 Hugo 在本地<br>预览你的变更<br>(localhost:1313)<br>或构建容器镜像"]
+3[创建一个分支<br>例如：my_new_branch] --> 3a[使用文本编辑器<br>进行修改] --> 4["使用 Hugo 在本地<br>预览你的变更<br>(localhost:1313)<br>或构建容器镜像"]
 end
 subgraph changes2[提交 / 推送]
 direction TB
@@ -278,7 +279,6 @@ Figure 2. Working from a local fork to make your changes.
    ```shell
    git clone git@github.com:<github_username>/website
    cd website
-   git submodule update --init --recursive --depth 1
    ```
 
 <!--
@@ -317,7 +317,8 @@ Figure 2. Working from a local fork to make your changes.
 <!--
 1. Fetch commits from your fork's `origin/main` and `kubernetes/website`'s `upstream/main`:
 -->
-4. 从你的克隆副本取回 `origin/main` 分支，从 `kubernetes/website` 取回 `upstream/main`：
+4. 从你的克隆副本取回 `origin/main` 分支，从 `kubernetes/website`
+   取回 `upstream/main`：
 
    ```shell
    git fetch origin
@@ -343,7 +344,7 @@ Figure 2. Working from a local fork to make your changes.
 <!--
 ### Create a branch
 
-1. Decide which branch base to your work on:
+1. Decide which branch to base your work on:
 
    - For improvements to existing content, use `upstream/main`.
    - For new content about existing features, use `upstream/main`.
@@ -471,72 +472,13 @@ When you are ready to submit a pull request, commit your changes.
    ```
 
 <!--
-### Preview your changes locally {#preview-locally}
-
-It's a good idea to preview your changes locally before pushing them or opening a pull request.
-A preview lets you catch build errors or markdown formatting problems.
-
-You can either build the website's container image or run Hugo locally. Building the container
-image is slower but displays [Hugo shortcodes](/docs/contribute/style/hugo-shortcodes/), which can
-be useful for debugging.
+It's a good idea to preview your changes locally before pushing them or
+opening a pull request. The [Previewing locally](/docs/contribute/new-content/preview-locally/)
+article explains how you can run a website locally and preview
+the suggested changes.
 -->
-### 在本地预览你的变更   {#preview-locally}
-
 在推送变更或者发起 PR 之前在本地查看一下预览是个不错的主意。
-通过预览你可以发现构建错误或者 Markdown 格式问题。
-
-你可以构建网站的容器镜像或者在本地运行 Hugo。
-构建容器镜像的方式比较慢，不过能够显示 [Hugo 短代码（shortcodes）](/zh-cn/docs/contribute/style/hugo-shortcodes/)，
-因此对于调试是很有用的。
-
-{{< tabs name="tab_with_hugo" >}}
-{{% tab name="在容器内执行 Hugo" %}}
-
-<!--
-The commands below use Docker as default container engine. Set the `CONTAINER_ENGINE` environment
-variable to override this behaviour.
--->
-{{< note >}}
-下面的命令中使用 Docker 作为默认的容器引擎。
-如果需要重载这一行为，可以设置 `CONTAINER_ENGINE` 环境变量。
-{{< /note >}}
-
-<!--
-1. Build the container image locally  
-   _You only need this step if you are testing a change to the Hugo tool itself_
--->
-1. 在本地构建容器镜像
-   _如果你正在测试对 Hugo 工具本身的更改，则仅需要此步骤_
-
-   ```shell
-   # 在终端窗口中执行（如果有需要）
-   make container-image
-   ```
-
-<!--
-1. Start Hugo in a container:
--->
-2. 在容器中启动 Hugo：
-
-   ```shell
-   # 在终端窗口中执行
-   make container-serve
-   ```
-
-<!--
-1. In a web browser, navigate to `https://localhost:1313`. Hugo watches the
-   changes and rebuilds the site as needed.
-
-1. To stop the local Hugo instance, go back to the terminal and type `Ctrl+C`,
-   or close the terminal window.
--->
-3. 启动浏览器，浏览 `https://localhost:1313`。
-   Hugo 会监测文件的变更并根据需要重新构建网站。
-
-4. 要停止本地 Hugo 实例，可返回到终端并输入 `Ctrl+C`，或者关闭终端窗口。
-
-{{% /tab %}}
-{{% tab name="在命令行执行 Hugo" %}}
+[本地预览](/zh-cn/docs/contribute/new-content/preview-locally/)这篇文章解释了如何在本地运行网站并预览建议的更改。
 
 <!--
 Alternately, install and use the `hugo` command on your computer:
@@ -544,21 +486,19 @@ Alternately, install and use the `hugo` command on your computer:
 另一种方式是，在你的本地计算机上安装并使用 `hugo` 命令：
 
 <!--
-1. Install the [Hugo](https://gohugo.io/getting-started/installing/) version specified in
+1. Install the [Hugo (Extended edition)](https://gohugo.io/getting-started/installing/) and [Node](https://nodejs.org/en) version specified in
    [`website/netlify.toml`](https://raw.githubusercontent.com/kubernetes/website/main/netlify.toml).
 
-1. If you have not updated your website repository, the `website/themes/docsy` directory is empty.
-   The site cannot build without a local copy of the theme. To update the website theme, run:
+1. Install any dependencies:
 -->
 1. 安装 [`website/netlify.toml`](https://raw.githubusercontent.com/kubernetes/website/main/netlify.toml)
-   文件中指定的 [Hugo](https://gohugo.io/getting-started/installing/) 版本。
+   文件中指定的 [Hugo（扩展版）](https://gohugo.io/getting-started/installing/)
+   和 [Node](https://nodejs.org/zh-cn) 版本。
 
-2.  如果你尚未更新你的网站仓库，则 `website/themes/docsy` 目录是空的。
-    如果本地缺少主题的副本，则该站点无法构建。
-    要更新网站主题，运行以下命令：
+2. 安装所有依赖项：
 
    ```shell
-   git submodule update --init --recursive --depth 1
+   npm ci
    ```
 
 <!--
@@ -568,23 +508,29 @@ Alternately, install and use the `hugo` command on your computer:
 
    ```shell
    cd <path_to_your_repo>/website
+   make server
+   ```
+
+   <!--
+   If you're on a Windows machine or unable to run the `make` command, use the following command:
+   -->
+   如果你使用的是 Windows 机器或无法运行 `make` 命令，请使用以下命令：
+
+   ```
    hugo server --buildFuture
    ```
 
 <!--
-1. In a web browser, navigate to `https://localhost:1313`. Hugo watches the
+1. In a web browser, navigate to `http://localhost:1313`. Hugo watches the
    changes and rebuilds the site as needed.
 
 1. To stop the local Hugo instance, go back to the terminal and type `Ctrl+C`,
    or close the terminal window.
 -->
-4. 在浏览器的地址栏输入： `https://localhost:1313`。
+4. 在浏览器的地址栏输入： `http://localhost:1313`。
    Hugo 会监测文件的变更并根据需要重新构建网站。
 
 5. 要停止本地 Hugo 实例，返回到终端窗口并输入 `Ctrl+C` 或者关闭终端窗口。
-
-{{% /tab %}}
-{{< /tabs >}}
 
 <!--
 ### Open a pull request from your fork to kubernetes/website {#open-a-pr}
@@ -592,10 +538,14 @@ Alternately, install and use the `hugo` command on your computer:
 ### 从你的克隆副本向 kubernetes/website 发起拉取请求（PR）   {#open-a-pr}
 
 <!-- 
-Figure 3 shows the steps to open a PR from your fork to the kubernetes/website. The details follow.
+Figure 3 shows the steps to open a PR from your fork to the [kubernetes/website](https://github.com/kubernetes/website). The details follow.
+
+Please, note that contributors can mention `kubernetes/website` as `k/website`.
 -->
 图 3 显示了从你的克隆副本向 kubernetes/website 发起 PR 的步骤。
 详细信息如下。
+
+请注意，贡献者可以将 `kubernetes/website` 称为 `k/website`。
 
 <!-- See https://github.com/kubernetes/website/issues/28808 for live-editor URL to this figure -->
 <!-- You can also cut/paste the mermaid code into the live editor at https://mermaid-js.github.io/mermaid-live-editor to play around with it -->
@@ -1055,4 +1005,3 @@ possible when you file issues or PRs.
 - Read [Reviewing](/docs/contribute/review/reviewing-prs) to learn more about the review process.
 -->
 - 阅读[评阅](/zh-cn/docs/contribute/review/reviewing-prs)节，学习评阅过程。
-

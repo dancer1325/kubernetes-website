@@ -1,5 +1,8 @@
 ---
 title: Leases
+api_metadata:
+- apiVersion: "coordination.k8s.io/v1"
+  kind: "Lease"
 content_type: concept
 weight: 30
 ---
@@ -22,7 +25,7 @@ namespace. Under the hood, every kubelet heartbeat is an **update** request to t
 the `spec.renewTime` field for the Lease. The Kubernetes control plane uses the time stamp of this field
 to determine the availability of this `Node`.
 
-See [Node Lease objects](/docs/concepts/architecture/nodes/#heartbeats) for more details.
+See [Node Lease objects](/docs/concepts/architecture/nodes/#node-heartbeats) for more details.
 
 ## Leader election
 
@@ -31,9 +34,13 @@ This is used by control plane components like `kube-controller-manager` and `kub
 HA configurations, where only one instance of the component should be actively running while the other
 instances are on stand-by.
 
+Read [coordinated leader election](/docs/concepts/cluster-administration/coordinated-leader-election)
+to learn about how Kubernetes builds on the Lease API to select which component instance
+acts as leader.
+
 ## API server identity
 
-{{< feature-state for_k8s_version="v1.26" state="beta" >}}
+{{< feature-state feature_gate_name="APIServerIdentity" >}}
 
 Starting in Kubernetes v1.26, each `kube-apiserver` uses the Lease API to publish its identity to the
 rest of the system. While not particularly useful on its own, this provides a mechanism for clients to
@@ -42,7 +49,7 @@ Existence of kube-apiserver leases enables future capabilities that may require 
 each kube-apiserver.
 
 You can inspect Leases owned by each kube-apiserver by checking for lease objects in the `kube-system` namespace
-with the name `kube-apiserver-<sha256-hash>`. Alternatively you can use the label selector `apiserver.kubernetes.io/identity=kube-apiserver`:
+with the name `apiserver-<sha256-hash>`. Alternatively you can use the label selector `apiserver.kubernetes.io/identity=kube-apiserver`:
 
 ```shell
 kubectl -n kube-system get lease -l apiserver.kubernetes.io/identity=kube-apiserver
@@ -58,7 +65,7 @@ apiserver-1dfef752bcb36637d2763d1868        apiserver-1dfef752bcb36637d2763d1868
 The SHA256 hash used in the lease name is based on the OS hostname as seen by that API server. Each kube-apiserver should be
 configured to use a hostname that is unique within the cluster. New instances of kube-apiserver that use the same hostname
 will take over existing Leases using a new holder identity, as opposed to instantiating new Lease objects. You can check the
-hostname used by kube-apisever by checking the value of the `kubernetes.io/hostname` label:
+hostname used by kube-apiserver by checking the value of the `kubernetes.io/hostname` label:
 
 ```shell
 kubectl -n kube-system get lease apiserver-07a5ea9b9b072c4a5f3d1c3702 -o yaml

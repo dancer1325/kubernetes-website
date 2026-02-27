@@ -1,9 +1,12 @@
 ---
 reviewers:
-- alculquicondor
 - erictune
+- mimowo
 - soltysh
 title: Jobs
+api_metadata:
+- apiVersion: "batch/v1"
+  kind: "Job"
 content_type: concept
 description: >-
   Jobs represent one-off tasks that run to completion and then stop.
@@ -317,7 +320,7 @@ a non-zero exit code, or the container was killed for exceeding a memory limit, 
 happens, and the `.spec.template.spec.restartPolicy = "OnFailure"`, then the Pod stays
 on the node, but the container is re-run. Therefore, your program needs to handle the case when it is
 restarted locally, or else specify `.spec.template.spec.restartPolicy = "Never"`.
-See [pod lifecycle](/docs/concepts/workloads/pods/pod-lifecycle/#example-states) for more information on `restartPolicy`.
+See [pod lifecycle](/docs/concepts/workloads/pods/pod-lifecycle/#restart-policy) for more information on `restartPolicy`.
 
 An entire Pod can also fail, for a number of reasons, such as when the pod is kicked off the node
 (node is upgraded, rebooted, deleted, etc.), or if a container of the Pod fails and the
@@ -341,9 +344,7 @@ sometimes be started twice.
 If you do specify `.spec.parallelism` and `.spec.completions` both greater than 1, then there may be
 multiple pods running at once. Therefore, your pods must also be tolerant of concurrency.
 
-When the [feature gates](/docs/reference/command-line-tools-reference/feature-gates/)
-`PodDisruptionConditions` and `JobPodFailurePolicy` are both enabled,
-and the `.spec.podFailurePolicy` field is set, the Job controller does not consider a terminating
+If you specify the `.spec.podFailurePolicy` field, the Job controller does not consider a terminating
 Pod (a pod that has a `.metadata.deletionTimestamp` field set) as a failure until that Pod is
 terminal (its `.status.phase` is `Failed` or `Succeeded`). However, the Job controller
 creates a replacement Pod as soon as the termination becomes apparent. Once the
@@ -359,8 +360,14 @@ with `phase: "Succeeded"`.
 There are situations where you want to fail a Job after some amount of retries
 due to a logical error in configuration etc.
 To do so, set `.spec.backoffLimit` to specify the number of retries before
-considering a Job as failed. The back-off limit is set by default to 6. Failed
-Pods associated with the Job are recreated by the Job controller with an
+considering a Job as failed.
+
+The `.spec.backoffLimit` is set by default to 6, unless the
+[backoff limit per index](#backoff-limit-per-index) (only Indexed Job) is specified.
+When `.spec.backoffLimitPerIndex` is specified, then `.spec.backoffLimit` defaults
+to 2147483647 (MaxInt32).
+
+Failed Pods associated with the Job are recreated by the Job controller with an
 exponential back-off delay (10s, 20s, 40s ...) capped at six minutes.
 
 The number of retries is calculated in two ways:
@@ -373,7 +380,7 @@ If either of the calculations reaches the `.spec.backoffLimit`, the Job is
 considered failed.
 
 {{< note >}}
-If your job has `restartPolicy = "OnFailure"`, keep in mind that your Pod running the Job
+If your Job has `restartPolicy = "OnFailure"`, keep in mind that your Pod running the job
 will be terminated once the job backoff limit has been reached. This can make debugging
 the Job's executable more difficult. We suggest setting
 `restartPolicy = "Never"` when debugging the Job or using a logging system to ensure output
@@ -382,20 +389,14 @@ from failed Jobs is not lost inadvertently.
 
 ### Backoff limit per index {#backoff-limit-per-index}
 
-{{< feature-state for_k8s_version="v1.28" state="alpha" >}}
-
-{{< note >}}
-You can only configure the backoff limit per index for an [Indexed](#completion-mode) Job, if you
-have the `JobBackoffLimitPerIndex` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/)
-enabled in your cluster.
-{{< /note >}}
+{{< feature-state feature_gate_name="JobBackoffLimitPerIndex" >}}
 
 When you run an [indexed](#completion-mode) Job, you can choose to handle retries
 for pod failures independently for each index. To do so, set the
 `.spec.backoffLimitPerIndex` to specify the maximal number of pod failures
 per index.
 
-When the per-index backoff limit is exceeded for an index, Kuberentes considers the index as failed and adds it to the
+When the per-index backoff limit is exceeded for an index, Kubernetes considers the index as failed and adds it to the
 `.status.failedIndexes` field. The succeeded indexes, those with a successfully
 executed pods, are recorded in the `.status.completedIndexes` field, regardless of whether you set
 the `backoffLimitPerIndex` field.
@@ -438,8 +439,18 @@ kubectl get -o yaml job job-backoff-limit-per-index-example
     - message: Job has failed indexes
       reason: FailedIndexes
       status: "True"
+      type: FailureTarget
+    - message: Job has failed indexes
+      reason: FailedIndexes
+      status: "True"
       type: Failed
 ```
+
+The Job controller adds the `FailureTarget` Job condition to trigger
+[Job termination and cleanup](#job-termination-and-cleanup). When all of the
+Job Pods are terminated, the Job controller adds the `Failed` condition
+with the same values for `reason` and `message` as the `FailureTarget` Job
+condition. For details, see [Termination of Job Pods](#termination-of-job-pods).
 
 Additionally, you may want to use the per-index backoff along with a
 [pod failure policy](#pod-failure-policy). When using
@@ -448,17 +459,7 @@ avoid unnecessary retries within an index.
 
 ### Pod failure policy {#pod-failure-policy}
 
-{{< feature-state for_k8s_version="v1.26" state="beta" >}}
-
-{{< note >}}
-You can only configure a Pod failure policy for a Job if you have the
-`JobPodFailurePolicy` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/)
-enabled in your cluster. Additionally, it is recommended
-to enable the `PodDisruptionConditions` feature gate in order to be able to detect and handle
-Pod disruption conditions in the Pod failure policy (see also:
-[Pod disruption conditions](/docs/concepts/workloads/pods/disruptions#pod-disruption-conditions)).
-Both feature gates are available in Kubernetes {{< skew currentVersion >}}.
-{{< /note >}}
+{{< feature-state feature_gate_name="JobPodFailurePolicy" >}}
 
 A Pod failure policy, defined with the `.spec.podFailurePolicy` field, enables
 your cluster to handle Pod failures based on the container exit codes and the
@@ -550,6 +551,59 @@ terminating Pods only once these Pods reach the terminal `Failed` phase. This be
 to `podReplacementPolicy: Failed`. For more information, see [Pod replacement policy](#pod-replacement-policy).
 {{< /note >}}
 
+When you use the `podFailurePolicy`, and the Job fails due to the pod
+matching the rule with the `FailJob` action, then the Job controller triggers
+the Job termination process by adding the `FailureTarget` condition.
+For more details, see [Job termination and cleanup](#job-termination-and-cleanup).
+
+## Success policy {#success-policy}
+
+When creating an Indexed Job, you can define when a Job can be declared as succeeded using a `.spec.successPolicy`,
+based on the pods that succeeded.
+
+By default, a Job succeeds when the number of succeeded Pods equals `.spec.completions`.
+These are some situations where you might want additional control for declaring a Job succeeded:
+
+* When running simulations with different parameters, 
+  you might not need all the simulations to succeed for the overall Job to be successful.
+* When following a leader-worker pattern, only the success of the leader determines the success or
+  failure of a Job. Examples of this are frameworks like MPI and PyTorch etc.
+
+You can configure a success policy, in the `.spec.successPolicy` field,
+to meet the above use cases. This policy can handle Job success based on the
+succeeded pods. After the Job meets the success policy, the job controller terminates the lingering Pods.
+A success policy is defined by rules. Each rule can take one of the following forms:
+
+* When you specify the `succeededIndexes` only,
+  once all indexes specified in the `succeededIndexes` succeed, the job controller marks the Job as succeeded.
+  The `succeededIndexes` must be a list of intervals between 0 and `.spec.completions-1`.
+* When you specify the `succeededCount` only,
+  once the number of succeeded indexes reaches the `succeededCount`, the job controller marks the Job as succeeded.
+* When you specify both `succeededIndexes` and `succeededCount`,
+  once the number of succeeded indexes from the subset of indexes specified in the `succeededIndexes` reaches the `succeededCount`,
+  the job controller marks the Job as succeeded.
+
+Note that when you specify multiple rules in the `.spec.successPolicy.rules`,
+the job controller evaluates the rules in order. Once the Job meets a rule, the job controller ignores remaining rules.
+
+Here is a manifest for a Job with `successPolicy`:
+
+{{% code_sample file="/controllers/job-success-policy.yaml" %}}
+
+In the example above, both `succeededIndexes` and `succeededCount` have been specified.
+Therefore, the job controller will mark the Job as succeeded and terminate the lingering Pods 
+when either of the specified indexes, 0, 2, or 3, succeed.
+The Job that meets the success policy gets the `SuccessCriteriaMet` condition with a `SuccessPolicy` reason.
+After the removal of the lingering Pods is issued, the Job gets the `Complete` condition.
+
+Note that the `succeededIndexes` is represented as intervals separated by a hyphen.
+The number are listed in represented by the first and last element of the series, separated by a hyphen.
+
+{{< note >}}
+When you specify both a success policy and some terminating policies such as `.spec.backoffLimit` and `.spec.podFailurePolicy`,
+once the Job meets either policy, the job controller respects the terminating policy and ignores the success policy.
+{{< /note >}}
+
 ## Job termination and cleanup
 
 When a Job completes, no more Pods are created, but the Pods are [usually](#pod-backoff-failure-policy) not deleted either.
@@ -599,6 +653,70 @@ Keep in mind that the `restartPolicy` applies to the Pod, and not to the Job its
 there is no automatic Job restart once the Job status is `type: Failed`.
 That is, the Job termination mechanisms activated with `.spec.activeDeadlineSeconds`
 and `.spec.backoffLimit` result in a permanent Job failure that requires manual intervention to resolve.
+
+### Terminal Job conditions
+
+A Job has two possible terminal states, each of which has a corresponding Job
+condition:
+* Succeeded:  Job condition `Complete`
+* Failed: Job condition `Failed`
+
+Jobs fail for the following reasons:
+- The number of Pod failures exceeded the specified `.spec.backoffLimit` in the Job
+  specification. For details, see [Pod backoff failure policy](#pod-backoff-failure-policy).
+- The Job runtime exceeded the specified `.spec.activeDeadlineSeconds`
+- An indexed Job that used `.spec.backoffLimitPerIndex` has failed indexes.
+  For details, see [Backoff limit per index](#backoff-limit-per-index).
+- The number of failed indexes in the Job exceeded the specified
+  `spec.maxFailedIndexes`. For details, see [Backoff limit per index](#backoff-limit-per-index)
+- A failed Pod matches a rule in `.spec.podFailurePolicy` that has the `FailJob`
+   action. For details about how Pod failure policy rules might affect failure
+   evaluation, see [Pod failure policy](#pod-failure-policy).
+
+Jobs succeed for the following reasons:
+- The number of succeeded Pods reached the specified `.spec.completions`
+- The criteria specified in `.spec.successPolicy` are met. For details, see
+  [Success policy](#success-policy).
+
+In Kubernetes v1.31 and later the Job controller delays the addition of the
+terminal conditions,`Failed` or `Complete`, until all of the Job Pods are terminated.
+
+In Kubernetes v1.30 and earlier, the Job controller added the `Complete` or the
+`Failed` Job terminal conditions as soon as the Job termination process was
+triggered and all Pod finalizers were removed. However, some Pods would still
+be running or terminating at the moment that the terminal condition was added.
+
+In Kubernetes v1.31 and later, the controller only adds the Job terminal conditions
+_after_ all of the Pods are terminated. You can control this behavior by using the
+`JobManagedBy` and the `JobPodReplacementPolicy` (both enabled by default)
+[feature gates](/docs/reference/command-line-tools-reference/feature-gates/).
+
+### Termination of Job pods
+
+The Job controller adds the `FailureTarget` condition or the `SuccessCriteriaMet`
+condition to the Job to trigger Pod termination after a Job meets either the
+success or failure criteria.
+
+Factors like `terminationGracePeriodSeconds` might increase the amount of time
+from the moment that the Job controller adds the `FailureTarget` condition or the
+`SuccessCriteriaMet` condition to the moment that all of the Job Pods terminate
+and the Job controller adds a [terminal condition](#terminal-job-conditions)
+(`Failed` or `Complete`).
+
+You can use the `FailureTarget` or the `SuccessCriteriaMet` condition to evaluate
+whether the Job has failed or succeeded without having to wait for the controller
+to add a terminal condition.
+
+For example, you might want to decide when to create a replacement Job
+that replaces a failed Job. If you replace the failed Job when the `FailureTarget`
+condition appears, your replacement Job runs sooner, but could result in Pods
+from the failed and the replacement Job running at the same time, using
+extra compute resources.
+
+Alternatively, if your cluster has limited resource capacity, you could choose to
+wait until the `Failed` condition appears on the Job, which would delay your
+replacement Job but would ensure that you conserve resources by waiting
+until all of the failed Pods are removed.
 
 ## Clean up finished jobs automatically
 
@@ -745,12 +863,16 @@ the Job to true; later, when you want to resume it again, update it to false.
 Creating a Job with `.spec.suspend` set to true will create it in the suspended
 state.
 
+In Kubernetes 1.35 or later the `.status.startTime` field is cleared on Job suspension
+when the [MutableSchedulingDirectivesForSuspendedJobs](#mutable-scheduling-directives-for-suspended-jobs)
+feature gate is enabled.
+
 When a Job is resumed from suspension, its `.status.startTime` field will be
 reset to the current time. This means that the `.spec.activeDeadlineSeconds`
 timer will be stopped and reset when a Job is suspended and resumed.
 
 When you suspend a Job, any running Pods that don't have a status of `Completed`
-will be [terminated](/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination).
+will be [terminated](/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination)
 with a SIGTERM signal. The Pod's graceful termination period will be honored and
 your Pod must handle this signal in this period. This may involve saving
 progress for later or undoing changes. Pods terminated this way will not count
@@ -853,11 +975,31 @@ a custom queue controller has no influence on where the pods of a job will actua
 
 This feature allows updating a Job's scheduling directives before it starts, which gives custom queue
 controllers the ability to influence pod placement while at the same time offloading actual
-pod-to-node assignment to kube-scheduler. This is allowed only for suspended Jobs that have never
-been unsuspended before.
+pod-to-node assignment to kube-scheduler. 
 
 The fields in a Job's pod template that can be updated are node affinity, node selector,
 tolerations, labels, annotations and [scheduling gates](/docs/concepts/scheduling-eviction/pod-scheduling-readiness/).
+
+#### Mutable Scheduling Directives for suspended Jobs
+
+{{< feature-state feature_gate_name="MutableSchedulingDirectivesForSuspendedJobs" >}}
+
+In Kubernetes 1.34 or earlier mutating of Pod's scheduling directives is allowed only for
+suspended Jobs that have never been unsuspended before. In Kubernetes 1.35, this is allowed
+for any suspended Jobs when the `MutableSchedulingDirectivesForSuspendedJobs` feature gate is enabled.
+
+Additionally, this feature gate enables clearing of the `.status.startTime` field on [Job suspension](#suspending-a-job).
+
+### Mutable Pod resources for suspended Jobs
+
+{{< feature-state feature_gate_name="MutablePodResourcesForSuspendedJobs" >}}
+
+A cluster administrator can define admission controls in Kubernetes, modifying the resource requests or limits for a Job, based on policy rules.
+
+With this feature, Kubernetes also lets you modify the pod template of a [suspended job](#suspending-a-job), to change the resource requirements of the Pods in the Job.
+This is different from _in-place Pod resize_ which lets you update resources, one Pod at a time, for Pods that are already running.
+
+The client that sets the new resource requests or limits can be different from the client that initially created the Job, and does not need to be a cluster administrator.
 
 ### Specifying your own Pod selector
 
@@ -938,27 +1080,25 @@ creates Pods with the finalizer `batch.kubernetes.io/job-tracking`. The
 controller removes the finalizer only after the Pod has been accounted for in
 the Job status, allowing the Pod to be removed by other controllers or users.
 
+{{< note >}}
+See [My pod stays terminating](/docs/tasks/debug/debug-application/debug-pods/) if you
+observe that pods from a Job are stuck with the tracking finalizer.
+{{< /note >}}
+
 ### Elastic Indexed Jobs
 
-{{< feature-state for_k8s_version="v1.27" state="beta" >}}
+{{< feature-state feature_gate_name="ElasticIndexedJob" >}}
 
 You can scale Indexed Jobs up or down by mutating both `.spec.parallelism` 
 and `.spec.completions` together such that `.spec.parallelism == .spec.completions`. 
-When the `ElasticIndexedJob`[feature gate](/docs/reference/command-line-tools-reference/feature-gates/)
-on the [API server](/docs/reference/command-line-tools-reference/kube-apiserver/)
-is disabled, `.spec.completions` is immutable.
+When scaling down, Kubernetes removes the Pods with higher indexes.
 
 Use cases for elastic Indexed Jobs include batch workloads which require 
-scaling an indexed Job, such as MPI, Horovord, Ray, and PyTorch training jobs.
+scaling an indexed Job, such as MPI, Horovod, Ray, and PyTorch training jobs.
 
 ### Delayed creation of replacement pods {#pod-replacement-policy}
 
-{{< feature-state for_k8s_version="v1.28" state="alpha" >}}
-
-{{< note >}}
-You can only set `podReplacementPolicy` on Jobs if you enable the `JobPodReplacementPolicy`
-[feature gate](/docs/reference/command-line-tools-reference/feature-gates/).
-{{< /note >}}
+{{< feature-state feature_gate_name="JobPodReplacementPolicy" >}}
 
 By default, the Job controller recreates Pods as soon they either fail or are terminating (have a deletion timestamp).
 This means that, at a given time, when some of the Pods are terminating, the number of running Pods for a Job
@@ -1000,6 +1140,35 @@ status:
   terminating: 3 # three Pods are terminating and have not yet reached the Failed phase
 ```
 
+### Delegation of managing a Job object to external controller
+
+{{< feature-state feature_gate_name="JobManagedBy" >}}
+
+This feature allows you to disable the built-in Job controller, for a specific
+Job, and delegate reconciliation of the Job to an external controller.
+
+You indicate the controller that reconciles the Job by setting a custom value
+for the `spec.managedBy` field - any value
+other than `kubernetes.io/job-controller`. The value of the field is immutable.
+
+{{< note >}}
+When using this feature, make sure the controller indicated by the field is
+installed, otherwise the Job may not be reconciled at all.
+{{< /note >}}
+
+{{< note >}}
+When developing an external Job controller be aware that your controller needs
+to operate in a fashion conformant with the definitions of the API spec and
+status fields of the Job object.
+
+Please review these in detail in the [Job API](/docs/reference/kubernetes-api/workload-resources/job-v1/).
+We also recommend that you run the e2e conformance tests for the Job object to
+verify your implementation.
+
+Finally, when developing an external Job controller make sure it does not use the
+`batch.kubernetes.io/job-tracking` finalizer, reserved for the built-in controller.
+{{< /note >}}
+
 ## Alternatives
 
 ### Bare Pods
@@ -1017,17 +1186,16 @@ manages Pods that are expected to terminate (e.g. batch tasks).
 
 As discussed in [Pod Lifecycle](/docs/concepts/workloads/pods/pod-lifecycle/), `Job` is *only* appropriate
 for pods with `RestartPolicy` equal to `OnFailure` or `Never`.
-(Note: If `RestartPolicy` is not set, the default value is `Always`.)
+
+{{< note >}}
+If `RestartPolicy` is not set, the default value is `Always`.
+{{< /note >}}
 
 ### Single Job starts controller Pod
 
 Another pattern is for a single Job to create a Pod which then creates other Pods, acting as a sort
 of custom controller for those Pods. This allows the most flexibility, but may be somewhat
 complicated to get started with and offers less integration with Kubernetes.
-
-One example of this pattern would be a Job which starts a Pod which runs a script that in turn
-starts a Spark master controller (see [spark example](https://github.com/kubernetes/examples/tree/master/staging/spark/README.md)),
-runs a spark driver, and then cleans up.
 
 An advantage of this approach is that the overall process gets the completion guarantee of a Job
 object, but maintains complete control over what Pods are created and how work is assigned to them.

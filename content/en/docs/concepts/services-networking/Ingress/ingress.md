@@ -1,7 +1,13 @@
 ---
 reviewers:
-- bprashanth
+- robscott
+- rikatz
 title: Ingress
+api_metadata:
+- apiVersion: "networking.k8s.io/v1"
+  kind: "Ingress"
+- apiVersion: "networking.k8s.io/v1"
+  kind: "IngressClass"
 content_type: concept
 description: >-
   Make your HTTP (or HTTPS) network service available using a protocol-aware configuration
@@ -15,7 +21,20 @@ weight: 30
 {{< feature-state for_k8s_version="v1.19" state="stable" >}}
 {{< glossary_definition term_id="ingress" length="all" >}}
 
+{{< note >}}
+The Kubernetes project recommends using [Gateway](https://gateway-api.sigs.k8s.io/) instead of
+[Ingress](/docs/concepts/services-networking/ingress/).
+The Ingress API has been frozen.
+
+This means that:
+* The Ingress API is generally available, and is subject to the [stability guarantees](/docs/reference/using-api/deprecation-policy/#deprecating-parts-of-the-api) for generally available APIs.
+  The Kubernetes project has no plans to remove Ingress from Kubernetes.
+* The Ingress API is no longer being developed, and will have no further changes
+  or updates made to it.
+{{< /note >}}
+
 <!-- body -->
+
 
 ## Terminology
 
@@ -59,7 +78,6 @@ uses a service of type [Service.Type=NodePort](/docs/concepts/services-networkin
 You must have an [Ingress controller](/docs/concepts/services-networking/ingress-controllers)
 to satisfy an Ingress. Only creating an Ingress resource has no effect.
 
-You may need to deploy an Ingress controller such as [ingress-nginx](https://kubernetes.github.io/ingress-nginx/deploy/).
 You can choose from a number of [Ingress controllers](/docs/concepts/services-networking/ingress-controllers).
 
 Ideally, all Ingress controllers should fit the reference specification. In reality, the various Ingress
@@ -78,13 +96,14 @@ A minimal Ingress resource example:
 An Ingress needs `apiVersion`, `kind`, `metadata` and `spec` fields.
 The name of an Ingress object must be a valid
 [DNS subdomain name](/docs/concepts/overview/working-with-objects/names#dns-subdomain-names).
-For general information about working with config files, see [deploying applications](/docs/tasks/run-application/run-stateless-application-deployment/), [configuring containers](/docs/tasks/configure-pod-container/configure-pod-configmap/), [managing resources](/docs/concepts/cluster-administration/manage-deployment/).
-Ingress frequently uses annotations to configure some options depending on the Ingress controller, an example of which
-is the [rewrite-target annotation](https://github.com/kubernetes/ingress-nginx/blob/main/docs/examples/rewrite/README.md).
-Different [Ingress controllers](/docs/concepts/services-networking/ingress-controllers) support different annotations.
-Review the documentation for your choice of Ingress controller to learn which annotations are supported.
+For general information about working with config files, see
+[deploying applications](/docs/tasks/run-application/run-stateless-application-deployment/),
+[configuring containers](/docs/tasks/configure-pod-container/configure-pod-configmap/),
+[managing resources](/docs/concepts/workloads/management/).
+Ingress controllers frequently use [annotations](/docs/concepts/overview/working-with-objects/annotations/) to configure behavior.
+Review the documentation for your choice of ingress controller to learn which annotations are expected and / or supported.
 
-The Ingress [spec](https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status)
+The [Ingress spec](/docs/reference/kubernetes-api/service-resources/ingress-v1/#IngressSpec)
 has all the information needed to configure a load balancer or proxy server. Most importantly, it
 contains a list of rules matched against all incoming requests. Ingress resource only supports rules
 for directing HTTP(S) traffic.
@@ -92,11 +111,10 @@ for directing HTTP(S) traffic.
 If the `ingressClassName` is omitted, a [default Ingress class](#default-ingress-class)
 should be defined.
 
-There are some ingress controllers, that work without the definition of a
-default `IngressClass`. For example, the Ingress-NGINX controller can be
-configured with a [flag](https://kubernetes.github.io/ingress-nginx/#what-is-the-flag-watch-ingress-without-class)
-`--watch-ingress-without-class`. It is [recommended](https://kubernetes.github.io/ingress-nginx/#i-have-only-one-instance-of-the-ingresss-nginx-controller-in-my-cluster-what-should-i-do)  though, to specify the
-default `IngressClass` as shown [below](#default-ingress-class).
+Some ingress controllers work even without the definition of a
+default IngressClass. Even if you use an ingress controller that is able
+to operate without any IngressClass, the Kubernetes project still recommends
+that you define a default IngressClass.
 
 ### Ingress rules
 
@@ -363,11 +381,9 @@ an `ingressClassName` specified. You can resolve this by ensuring that at most 1
 IngressClass is marked as default in your cluster.
 {{< /caution >}}
 
-There are some ingress controllers, that work without the definition of a
-default `IngressClass`. For example, the Ingress-NGINX controller can be
-configured with a [flag](https://kubernetes.github.io/ingress-nginx/#what-is-the-flag-watch-ingress-without-class)
-`--watch-ingress-without-class`. It is [recommended](https://kubernetes.github.io/ingress-nginx/#i-have-only-one-instance-of-the-ingresss-nginx-controller-in-my-cluster-what-should-i-do)  though, to specify the
-default `IngressClass`:
+Start by defining a
+default IngressClass. It is recommended though, to specify the default
+IngressClass:
 
 {{% code_sample file="service/networking/default-ingressclass.yaml" %}}
 
@@ -508,11 +524,9 @@ section.
 {{% code_sample file="service/networking/tls-example-ingress.yaml" %}}
 
 {{< note >}}
-There is a gap between TLS features supported by various Ingress
-controllers. Please refer to documentation on
-[nginx](https://kubernetes.github.io/ingress-nginx/user-guide/tls/),
-[GCE](https://git.k8s.io/ingress-gce/README.md#frontend-https), or any other
-platform specific Ingress controller to understand how TLS works in your environment.
+There is a gap between TLS features supported by various ingress controllers.
+You should refer to the documentation for the ingress controller(s) you've chosen to
+understand how TLS works in your environment.
 {{< /note >}}
 
 ### Load balancing {#load-balancing}
@@ -528,9 +542,7 @@ It's also worth noting that even though health checks are not exposed directly
 through the Ingress, there exist parallel concepts in Kubernetes such as
 [readiness probes](/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 that allow you to achieve the same end result. Please review the controller
-specific documentation to see how they handle health checks (for example:
-[nginx](https://git.k8s.io/ingress-nginx/README.md), or
-[GCE](https://git.k8s.io/ingress-gce/README.md#health-checks)).
+specific documentation to see how they handle health checks.
 
 ## Updating an Ingress
 
@@ -550,8 +562,6 @@ Rules:
   ----         ----  --------
   foo.bar.com
                /foo   service1:80 (10.8.0.90:80)
-Annotations:
-  nginx.ingress.kubernetes.io/rewrite-target:  /
 Events:
   Type     Reason  Age                From                     Message
   ----     ------  ----               ----                     -------
@@ -612,8 +622,6 @@ Rules:
                /foo   service1:80 (10.8.0.90:80)
   bar.baz.com
                /foo   service2:80 (10.8.0.91:80)
-Annotations:
-  nginx.ingress.kubernetes.io/rewrite-target:  /
 Events:
   Type     Reason  Age                From                     Message
   ----     ------  ----               ----                     -------
@@ -632,10 +640,10 @@ Please check the documentation of the relevant [Ingress controller](/docs/concep
 You can expose a Service in multiple ways that don't directly involve the Ingress resource:
 
 * Use [Service.Type=LoadBalancer](/docs/concepts/services-networking/service/#loadbalancer)
-* Use [Service.Type=NodePort](/docs/concepts/services-networking/service/#nodeport)
+* Use [Service.Type=NodePort](/docs/concepts/services-networking/service/#type-nodeport)
 
 ## {{% heading "whatsnext" %}}
 
 * Learn about the [Ingress](/docs/reference/kubernetes-api/service-resources/ingress-v1/) API
 * Learn about [Ingress controllers](/docs/concepts/services-networking/ingress-controllers/)
-* [Set up Ingress on Minikube with the NGINX Controller](/docs/tasks/access-application-cluster/ingress-minikube/)
+

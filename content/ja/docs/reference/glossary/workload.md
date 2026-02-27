@@ -1,7 +1,6 @@
 ---
 title: ワークロード
-id: workloads
-date: 2019-02-13
+id: workload
 full_link: /docs/concepts/workloads/
 short_description: >
    ワークロードとは、Kubernetes上で実行中のアプリケーションです。

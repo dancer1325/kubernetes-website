@@ -193,6 +193,7 @@ spec:
   containers:
     - name: test
       image: busybox:1.28
+      command: ['sh', '-c', 'echo "The app is running!" && tail -f /dev/null']
       volumeMounts:
         - name: config-vol
           mountPath: /etc/config
@@ -202,10 +203,10 @@ spec:
         name: log-config
         items:
           - key: log_level
-            path: log_level
+            path: log_level.conf
 ```
 
-O ConfigMap `log-config` é montado como um volume e todos os conteúdos armazenados em sua entrada `log_level` são montados no Pod através do caminho `/etc/config/log_level`. Observe que esse caminho é derivado do volume `mountPath`e do `path` configurado com `log_level`.
+O ConfigMap `log-config` é montado como um volume e todos os conteúdos armazenados em sua entrada `log_level` são montados no Pod através do caminho `/etc/config/log_level.conf`. Observe que esse caminho é derivado do volume `mountPath`e do `path` configurado com `log_level`.
 
 {{< note >}}
 
@@ -265,8 +266,6 @@ spec:
 Um tipo de volume `fc` permite que um volume de armazenamento de fibre channel existente seja montado em um Pod. Você pode especificar um ou vários WWNs usando o parâmetro `targetWWNs` em sua configuração de volume. Se forem especificados vários WWNs, o targetWWNs espera que esses WWNs sejam de conexões multipath.
 
 {{< note >}} Para que os hosts Kubernetes possam acessá-los, é necessário configurar o zoneamento FC SAN para alocar e mascarar essas LUNs (volumes) para os WWNs de destino. {{< /note >}}
-
-Consulte [o exemplo de fibre channel](https://github.com/kubernetes/examples/tree/master/staging/volumes/fibre_channel) para obter mais detalhes.
 
 ### flocker (descontinuado) {#flocker}
 
@@ -506,8 +505,6 @@ Um volume `iscsi` permite que um volume iSCSI (SCSI sobre IP) existente seja mon
 
 Uma característica do iSCSI é que ele pode ser montado como somente leitura por vários consumidores simultaneamente. Isto significa que um volume pode ser previamente populado com seu conjunto de dados e, em seguida, ser disponibilizado em paralelo para tantos Pods quanto necessitar. Infelizmente, os volumes iSCSI só podem ser montados por um único consumidor no modo de leitura-escrita. Não são permitidos gravadores simultâneos.
 
-Consulte o [exemplo iSCSI](https://github.com/kubernetes/examples/tree/master/volumes/iscsi) para obter mais detalhes.
-
 ### local
 
 Um volume `local` representa um dispositivo de armazenamento local montado, como um disco, partição ou diretório.
@@ -584,8 +581,6 @@ spec:
 Note também que você não pode especificar opções de montagem NFS em uma especificação de pod. Você pode definir as opções de montagem do lado do servidor ou usar [/etc/nfsmount.conf](https://man7.org/linux/man-pages/man5/nfsmount.conf.5.html). Você também pode montar volumes NFS por meio de PersistentVolumes, que permitem definir opções de montagem.
 {{< /note >}}
 
-Consulte o [exemplo NFS](https://github.com/kubernetes/examples/tree/master/staging/volumes/nfs) para obter mais detalhes.
-
 ### persistentVolumeClaim {#persistentvolumeclaim}
 
 Um volume `persistentVolumeClaim` é usado para montar um [PersistentVolume](/pt-br/docs/concepts/storage/persistent-volumes/) em um Pod. PersistentVolumeClaims são uma forma de os usuários "solicitarem" armazenamento durável (como um GCE PersistentDisk ou um volume iSCSI) sem conhecerem os detalhes do ambiente de nuvem em particular.
@@ -619,8 +614,6 @@ spec:
 ```
 
 {{< note >}} Certifique-se de ter um PortworxVolume com o nome `pxvol` antes de usá-lo no Pod. {{< /note >}}
-
-Para obter mais detalhes, consulte os exemplos de [volume Portworx](https://github.com/kubernetes/examples/tree/master/staging/volumes/portworx/README.md) .
 
 ### projetado
 
@@ -675,11 +668,11 @@ Um volume `storageos` permite que um volume [StorageOS](https://www.storageos.co
 
 O StorageOS funciona como um contêiner dentro de seu ambiente Kubernetes, tornando o armazenamento local ou anexado acessível a partir de qualquer nó dentro do cluster Kubernetes. Os dados podem ser replicados para a proteção contra falhas do nó. O provisionamento e a compressão podem melhorar a utilização e reduzir os custos.
 
-Em sua essência, o StorageOS fornece armazenamento em bloco para containers, acessível a partir de um sistema de arquivo.
+Em sua essência, o StorageOS fornece armazenamento em bloco para contêineres, acessível a partir de um sistema de arquivo.
 
 O Conteiner StorageOS requer Linux de 64 bits e não possui dependências adicionais. Uma licença para desenvolvedores está disponível gratuitamente.
 
-{{< caution >}} Você deve executar o container StorageOS em cada nó que deseja acessar os volumes do StorageOS ou que contribuirá com a capacidade de armazenamento para o pool. Para obter instruções de instalação, consulte a [documentação do StorageOS](https://docs.storageos.com). {{< /caution >}}
+{{< caution >}} Você deve executar o contêiner StorageOS em cada nó que deseja acessar os volumes do StorageOS ou que contribuirá com a capacidade de armazenamento para o pool. Para obter instruções de instalação, consulte a [documentação do StorageOS](https://docs.storageos.com). {{< /caution >}}
 
 O exemplo a seguir é uma configuração do Pod com StorageOS:
 
@@ -807,7 +800,7 @@ O recurso `CSIMigration` para Portworx foi adicionado, mas desativado por padrã
 
 ## Utilizando subPath {#using-subpath}
 
-Às vezes, é útil compartilhar um volume para múltiplos usos em um único pod. A propriedade `volumeMounts.subPath` especifica um sub caminho dentro do volume referenciado em vez de sua raiz.
+Às vezes, é útil compartilhar um volume para múltiplos usos em um único pod. A propriedade `volumeMounts[*].subPath` especifica um sub caminho dentro do volume referenciado em vez de sua raiz.
 
 O exemplo a seguir mostra como configurar um Pod com um ambiente LAMP (Linux, Apache, MySQL e PHP) usando um único volume compartilhado. Esta exemplo de configuração `subPath` não é recomendada para uso em produção.
 
@@ -971,7 +964,7 @@ Os mantenedores do driver FlexVolume devem implementar um driver CSI e ajudar a 
 
 A propagação de montagem permite compartilhar volumes montados por um contêiner para outros contêineres no mesmo pod, ou mesmo para outros pods no mesmo nó.
 
-A propagação de montagem de um volume é controlada pelo campo `mountPropagation` na propriedade `Container.volumeMounts`. Os seus valores são:
+A propagação de montagem de um volume é controlada pelo campo `mountPropagation` na propriedade `containers[*].volumeMounts`. Os seus valores são:
 
 * `None` - Este volume de montagem não receberá do host nenhuma montagem posterior que seja montada para este volume ou qualquer um de seus subdiretórios. De forma semelhante, nenhum ponto de montagem criado pelo contêiner será visível no host. Este é o modo padrão.
   
@@ -979,7 +972,7 @@ A propagação de montagem de um volume é controlada pelo campo `mountPropagati
 
 * `HostToContainer` - Este volume de montagem receberá todas as montagens posteriores que forem montadas para este volume ou qualquer um de seus subdiretórios.
   
-  Em outras palavras, se o host montar qualquer coisa dentro do volume de montagem, o container o visualizará montado ali.
+  Em outras palavras, se o host montar qualquer coisa dentro do volume de montagem, o contêiner o visualizará montado ali.
   
   Da mesma forma, se qualquer Pod com propagação de montagem `Bidirectional` para o mesmo volume montar qualquer coisa lá, o contêiner com propagação de montagem `HostToContainer` o reconhecerá.
   

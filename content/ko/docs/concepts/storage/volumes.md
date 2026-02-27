@@ -388,8 +388,6 @@ targetWWN은 해당 WWN이 다중 경로 연결에서 온 것으로 예상한다
 쿠버네티스 호스트가 해당 LUN에 접근할 수 있다.
 {{< /note >}}
 
-더 자세한 내용은 [파이버 채널 예시](https://github.com/kubernetes/examples/tree/master/staging/volumes/fibre_channel)를 참고한다.
-
 ### gcePersistentDisk (사용 중단됨) {#gcepersistentdisk}
 
 {{< feature-state for_k8s_version="v1.17" state="deprecated" >}}
@@ -678,8 +676,6 @@ iSCSI 특징은 여러 고객이 읽기 전용으로 마운트할 수
 iSCSI 볼륨은 읽기-쓰기 모드에서는 단일 고객만 마운트할 수 있다.
 동시 쓰기는 허용되지 않는다.
 
-더 자세한 내용은 [iSCSI 예시](https://github.com/kubernetes/examples/tree/master/volumes/iscsi)를 본다.
-
 ### local
 
 `local` 볼륨은 디스크, 파티션 또는 디렉터리 같은 마운트된 로컬 스토리지
@@ -788,8 +784,6 @@ spec:
 또한 파드 스펙에 NFS 마운트 옵션을 명시할 수 없음을 기억하라. 마운트 옵션을 서버에서 설정하거나, [/etc/nfsmount.conf](https://man7.org/linux/man-pages/man5/nfsmount.conf.5.html)를 사용해야 한다. 마운트 옵션을 설정할 수 있게 허용하는 퍼시스턴트볼륨을 통해 NFS 볼륨을 마운트할 수도 있다.
 {{< /note >}}
 
-퍼시스턴트볼륨을 사용하여 NFS 볼륨을 마운트하는 예제는 [NFS 예시](https://github.com/kubernetes/examples/tree/master/staging/volumes/nfs)를 본다.
-
 ### persistentVolumeClaim {#persistentvolumeclaim}
 
 `persistentVolumeClaim` 볼륨은
@@ -837,8 +831,6 @@ spec:
 파드에서 사용하기 이전에 먼저 이름이 `pxvol` 인 PortworxVolume이
 있는지 확인한다.
 {{< /note >}}
-
-자세한 내용은 [Portworx 볼륨](https://github.com/kubernetes/examples/tree/master/staging/volumes/portworx/README.md) 예제를 참고한다.
 
 #### Portworx CSI 마이그레이션
 {{< feature-state for_k8s_version="v1.25" state="beta" >}}
@@ -983,7 +975,7 @@ vSphere CSI 드라이버에서 생성된 새 볼륨은 이러한 파라미터를
 ## subPath 사용하기 {#using-subpath}
 
 때로는 단일 파드에서 여러 용도의 한 볼륨을 공유하는 것이 유용하다.
-`volumeMounts.subPath` 속성을 사용해서 root 대신 참조하는 볼륨 내의 하위 경로를
+`volumeMounts[*].subPath` 속성을 사용해서 root 대신 참조하는 볼륨 내의 하위 경로를
 지정할 수 있다.
 
 다음의 예시는 단일 공유 볼륨을 사용하여 LAMP 스택(리눅스 Apache MySQL PHP)이
@@ -1268,7 +1260,7 @@ FlexVolume 사용자는 워크로드가 동등한 CSI 드라이버를 사용하�
 마운트 전파를 통해 컨테이너가 마운트한 볼륨을 동일한 파드의
 다른 컨테이너 또는 동일한 노드의 다른 파드로 공유할 수 있다.
 
-볼륨 마운트 전파는 `Container.volumeMounts` 의 `mountPropagation` 필드에
+볼륨 마운트 전파는 `containers[*].volumeMounts` 의 `mountPropagation` 필드에
 의해 제어된다. 그 값은 다음과 같다.
 
 * `None` - 이 볼륨 마운트는 호스트의 볼륨 또는 해당 서브디렉터리에

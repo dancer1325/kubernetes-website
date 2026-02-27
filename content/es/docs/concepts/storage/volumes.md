@@ -203,7 +203,8 @@ metadata:
 spec:
   containers:
     - name: test
-      image: busybox
+      image: busybox:1.28
+      command: ['sh', '-c', 'echo "The app is running!" && tail -f /dev/null']
       volumeMounts:
         - name: config-vol
           mountPath: /etc/config
@@ -213,11 +214,11 @@ spec:
         name: log-config
         items:
           - key: log_level
-            path: log_level
+            path: log_level.conf
 ```
 
 El ConfigMap `log-config` es montado como un volumen, y todo el contenido almacenado en su entrada `log_level` es
-montado en el Pod en la ruta `/etc/config/log_level`. Ten en cuenta que esta ruta se deriva del `mountPath`del volumen y el `path` cuya clave es `log_level`.
+montado en el Pod en la ruta `/etc/config/log_level.conf`. Ten en cuenta que esta ruta se deriva del `mountPath`del volumen y el `path` cuya clave es `log_level`.
 
 {{< note >}}
 
@@ -291,8 +292,6 @@ Si se especifican varios WWN, targettWWNs esperan que esos WWN sean de conexione
 Debes configurar FC SAN zoning para asignar y enmascarar esos (volúmenes) LUNs para apuntar a los WWNs de destino de antemano
 para que los hosts Kubernetes pueda acceder a ellos.
 {{< /note >}}
-
-Revisa el [ejemplo de canal de fibra](https://github.com/kubernetes/examples/tree/master/staging/volumes/fibre_channel) para más detalles.
 
 ### flocker (deprecado) {#flocker}
 
@@ -560,8 +559,6 @@ Esto significa que puedes pre-poblar un volumen con tu conjunto de datos y servi
 Desafortunadamente, los volúmenes ISCSI solo se pueden montar por un único consumidor en modo lectura-escritura.
 Escritores simultáneos no está permitido.
 
-Mira el [ejemplo iSCSI](https://github.com/kubernetes/examples/tree/master/volumes/iscsi) para más detalles.
-
 ### local
 
 Un volumen `local` representa un dispositivo de almacenamiento local como un disco, una partición o un directorio.
@@ -634,8 +631,6 @@ NFS puede ser montado por múltiples escritores simultáneamente.
 Debes tener tu propio servidor NFS en ejecución con el recurso compartido exportado antes de poder usarlo.
 {{< /note >}}
 
-Mira el [ ejemplo NFS ](https://github.com/kubernetes/examples/tree/master/staging/volumes/nfs) para más información.
-
 ### persistentVolumeClaim {#persistentvolumeclaim}
 
 Un volumen `persistenceVolumeClain` se utiliza para montar un [PersistentVolume](/docs/concepts/storage/persistent-volumes/) en tu Pod. PersistentVolumeClaims son una forma en que el usuario "reclama" almacenamiento duradero (como un PersistentDisk GCE o un volumen ISCSI) sin conocer los detalles del entorno de la nube en particular.
@@ -673,8 +668,6 @@ spec:
 {{< note >}}
 Asegúrate de tener un PortworxVolume con el nombre `pxvol` antes de usarlo en el Pod.
 {{< /note >}}
-
-Para más detalles, mira los ejemplos de [volumen Portworx](https://github.com/kubernetes/examples/tree/master/staging/volumes/portworx/README.md).
 
 ### projected
 
@@ -1021,7 +1014,7 @@ Para apagar el complemento `vsphereVolume` y no cargarlo por el administrador de
 ## Uso de subPath {#using-subpath}
 
 Algunas veces es útil compartir un volumen para múltiples usos en un único Pod.
-La propiedad `volumeMounts.subPath` especifica una sub-ruta dentro del volumen referenciado en lugar de su raíz.
+La propiedad `volumeMounts[*].subPath` especifica una sub-ruta dentro del volumen referenciado en lugar de su raíz.
 
 El siguiente ejemplo muestra cómo configurar un Pod con la pila LAMP (Linux Apache MySQL PHP) usando un único volumen compartido. Esta configuración de ejemplo usando `subPath` no se recomienda para su uso en producción.
 
@@ -1197,7 +1190,7 @@ For more details, see the [FlexVolume](https://github.com/kubernetes/community/b
 
 La propagación del montaje permite compartir volúmenes montados por un contenedor para otros contenedores en el mismo Pod, o aun para otros pods en el mismo nodo.
 
-La propagación del montaje de un volumen es controlada por el campo `mountPropagation` en `Container.volumeMounts`. Sus valores son:
+La propagación del montaje de un volumen es controlada por el campo `mountPropagation` en `containers[*].volumeMounts`. Sus valores son:
 
 - `None` - Este montaje de volumen no recibirá ningún montaje posterior que el host haya montado en este volumen o en cualquiera de sus subdirectorios. De manera similar, los montajes creados por el contenedor no serán visibles en el host. Este es el modo por defecto.
 

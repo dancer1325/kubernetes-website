@@ -3,9 +3,8 @@ approvers:
 - chenopis
 title: Kubernetes Documentation
 noedit: true
-cid: docsHome
 layout: docsportal_home
-class: gridPage gridPageHome
+body_class: docs-portal
 linkTitle: "Documentation"
 main_menu: true
 weight: 10
@@ -13,9 +12,7 @@ hide_feedback: true
 menu:
   main:
     title: "Documentation"
-    weight: 20
-    post: >
-      <p>Learn how to use Kubernetes with conceptual, tutorial, and reference documentation. You can even <a href="/editdocs/" data-auto-burger-exclude data-proofer-ignore>help contribute to the docs</a>!</p>
+    weight: 10
 description: >
   Kubernetes is an open source container orchestration engine for automating deployment, scaling, and management of containerized applications. The open source project is hosted by the Cloud Native Computing Foundation.
 overview: >
@@ -48,9 +45,9 @@ cards:
   button_path: /docs/reference
 - name: contribute
   title: Contribute to Kubernetes
-  description: Anyone can contribute, whether you're new to the project or you've been around a long time.
-  button: Find out how to help
-  button_path: /docs/contribute
+  description: Find out how you can help make Kubernetes better.
+  button: See Ways to Contribute
+  button_path: "/docs/contribute"
 - name: training
   title: "Training"
   description: "Get certified in Kubernetes and make your cloud native projects successful!"
@@ -64,4 +61,6 @@ cards:
 - name: about
   title: About the documentation
   description: This website contains documentation for the current and previous 4 versions of Kubernetes.
+  button: "See available versions"
+  button_path: "/docs/home/supported-doc-versions"
 ---

@@ -1,14 +1,14 @@
 ---
 title: Quantity
 id: quantity
-date: 2018-08-07
 full_link:
 short_description: >
   A whole-number representation of small or large numbers using SI suffixes.
 
 aka: 
 tags:
-- core-object
+- fundamental
+
 ---
  A whole-number representation of small or large numbers using [SI](https://en.wikipedia.org/wiki/International_System_of_Units) suffixes.
 

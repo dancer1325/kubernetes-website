@@ -3,7 +3,6 @@ title: 投射卷
 content_type: concept
 weight: 21 # 跟在持久卷之后
 ---
-
 <!--
 reviewers:
 - marosset
@@ -19,7 +18,7 @@ weight: 21 # just after persistent volumes
 <!--
 This document describes _projected volumes_ in Kubernetes. Familiarity with [volumes](/docs/concepts/storage/volumes/) is suggested.
 -->
-本文档描述 Kubernetes 中的**投射卷（Projected Volumes）**。
+本文档描述 Kubernetes 中的**投射卷（Projected Volume）**。
 建议先熟悉[卷](/zh-cn/docs/concepts/storage/volumes/)概念。
 
 <!-- body -->
@@ -35,6 +34,8 @@ Currently, the following types of volume sources can be projected:
 * [`downwardAPI`](/docs/concepts/storage/volumes/#downwardapi)
 * [`configMap`](/docs/concepts/storage/volumes/#configmap)
 * [`serviceAccountToken`](#serviceaccounttoken)
+* [`clusterTrustBundle`](#clustertrustbundle)
+* [`podCertificate`](#podcertificate)
 -->
 ## 介绍    {#introduction}
 
@@ -46,6 +47,8 @@ Currently, the following types of volume sources can be projected:
 * [`downwardAPI`](/zh-cn/docs/concepts/storage/volumes/#downwardapi)
 * [`configMap`](/zh-cn/docs/concepts/storage/volumes/#configmap)
 * [`serviceAccountToken`](#serviceaccounttoken)
+* [`clusterTrustBundle`](#clustertrustbundle)
+* [`podCertificate`](#podcertificate)
 
 <!--
 All sources are required to be in the same namespace as the Pod. For more details,
@@ -59,14 +62,14 @@ see the [all-in-one volume](https://git.k8s.io/design-proposals-archive/node/all
 -->
 ### 带有 Secret、DownwardAPI 和 ConfigMap 的配置示例 {#example-configuration-secret-downwardapi-configmap}
 
-{{< codenew file="pods/storage/projected-secret-downwardapi-configmap.yaml" >}}
+{{% code_sample file="pods/storage/projected-secret-downwardapi-configmap.yaml" %}}
 
 <!--
 ### Example configuration: secrets with a non-default permission mode set {#example-configuration-secrets-nondefault-permission-mode}
 -->
 ### 带有非默认权限模式设置的 Secret 的配置示例 {#example-configuration-secrets-nondefault-permission-mode}
 
-{{< codenew file="pods/storage/projected-secrets-nondefault-permission-mode.yaml" >}}
+{{% code_sample file="pods/storage/projected-secrets-nondefault-permission-mode.yaml" %}}
 
 <!--
 Each projected volume source is listed in the spec under `sources`. The
@@ -94,7 +97,7 @@ into a Pod at a specified path. For example:
 你可以将当前[服务账号](/zh-cn/docs/reference/access-authn-authz/authentication/#service-account-tokens)的令牌注入到
 Pod 中特定路径下。例如：
 
-{{< codenew file="pods/storage/projected-service-account-token.yaml" >}}
+{{% code_sample file="pods/storage/projected-service-account-token.yaml" %}}
 
 <!--
 The example Pod has a projected volume containing the injected service account
@@ -106,7 +109,7 @@ in the audience of the token, and otherwise should reject the token. This field
 is optional and it defaults to the identifier of the API server.
 -->
 示例 Pod 中包含一个投射卷，其中包含注入的服务账号令牌。
-此 Pod 中的容器可以使用该令牌访问 Kubernetes API 服务器， 使用
+此 Pod 中的容器可以使用该令牌访问 Kubernetes API 服务器，使用
 [Pod 的 ServiceAccount](/zh-cn/docs/tasks/configure-pod-container/configure-service-account/)
 进行身份验证。`audience` 字段包含令牌所针对的受众。
 收到令牌的主体必须使用令牌受众中所指定的某个标识符来标识自身，否则应该拒绝该令牌。
@@ -132,6 +135,177 @@ volume mount will not receive updates for those volume sources.
 以 [`subPath`](/zh-cn/docs/concepts/storage/volumes/#using-subpath)
 形式使用投射卷源的容器无法收到对应卷源的更新。
 {{< /note >}}
+
+<!--
+## clusterTrustBundle projected volumes {#clustertrustbundle}
+-->
+## clusterTrustBundle 投射卷    {#clustertrustbundle}
+
+{{< feature-state feature_gate_name="ClusterTrustBundleProjection" >}}
+
+{{< note >}}
+<!--
+To use this feature in Kubernetes {{< skew currentVersion >}}, you must enable support for ClusterTrustBundle objects with the `ClusterTrustBundle` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/) and `--runtime-config=certificates.k8s.io/v1beta1/clustertrustbundles=true` kube-apiserver flag, then enable the `ClusterTrustBundleProjection` feature gate.
+-->
+要在 Kubernetes {{< skew currentVersion >}} 中使用此特性，你必须通过 `ClusterTrustBundle`
+[特性门控](/zh-cn/docs/reference/command-line-tools-reference/feature-gates/)和
+`--runtime-config=certificates.k8s.io/v1beta1/clustertrustbundles=true` kube-apiserver
+标志启用对 ClusterTrustBundle 对象的支持，然后才能启用 `ClusterTrustBundleProjection` 特性门控。
+{{< /note >}}
+
+<!--
+The `clusterTrustBundle` projected volume source injects the contents of one or more [ClusterTrustBundle](/docs/reference/access-authn-authz/certificate-signing-requests#cluster-trust-bundles) objects as an automatically-updating file in the container filesystem.
+-->
+`clusterTrustBundle` 投射卷源将一个或多个
+[ClusterTrustBundle](/zh-cn/docs/reference/access-authn-authz/certificate-signing-requests#cluster-trust-bundles)
+对象的内容作为一个自动更新的文件注入到容器文件系统中。
+
+<!--
+ClusterTrustBundles can be selected either by [name](/docs/reference/access-authn-authz/certificate-signing-requests#ctb-signer-unlinked) or by [signer name](/docs/reference/access-authn-authz/certificate-signing-requests#ctb-signer-linked).
+-->
+ClusterTrustBundle 可以通过[名称](/zh-cn/docs/reference/access-authn-authz/certificate-signing-requests#ctb-signer-unlinked)
+或[签名者名称](/zh-cn/docs/reference/access-authn-authz/certificate-signing-requests#ctb-signer-linked)被选中。
+
+<!--
+To select by name, use the `name` field to designate a single ClusterTrustBundle object.
+
+To select by signer name, use the `signerName` field (and optionally the
+`labelSelector` field) to designate a set of ClusterTrustBundle objects that use
+the given signer name. If `labelSelector` is not present, then all
+ClusterTrustBundles for that signer are selected.
+-->
+要按名称选择，可以使用 `name` 字段指定单个 ClusterTrustBundle 对象。
+
+要按签名者名称选择，可以使用 `signerName` 字段（也可选用 `labelSelector` 字段）
+指定一组使用给定签名者名称的 ClusterTrustBundle 对象。
+如果 `labelSelector` 不存在，则针对该签名者的所有 ClusterTrustBundle 将被选中。
+
+<!--
+The kubelet deduplicates the certificates in the selected ClusterTrustBundle objects, normalizes the PEM representations (discarding comments and headers), reorders the certificates, and writes them into the file named by `path`. As the set of selected ClusterTrustBundles or their content changes, kubelet keeps the file up-to-date.
+-->
+kubelet 会对所选 ClusterTrustBundle 对象中的证书进行去重，规范化 PEM 表示（丢弃注释和头部），
+重新排序证书，并将这些证书写入由 `path` 指定的文件中。
+随着所选 ClusterTrustBundle 的集合或其内容发生变化，kubelet 会保持更新此文件。
+
+<!--
+By default, the kubelet will prevent the pod from starting if the named ClusterTrustBundle is not found, or if `signerName` / `labelSelector` do not match any ClusterTrustBundles.  If this behavior is not what you want, then set the `optional` field to `true`, and the pod will start up with an empty file at `path`.
+-->
+默认情况下，如果找不到指定的 ClusterTrustBundle，或者 `signerName` / `labelSelector`
+与所有 ClusterTrustBundle 都不匹配，kubelet 将阻止 Pod 启动。如果这不是你想要的行为，
+可以将 `optional` 字段设置为 `true`，Pod 将使用 `path` 处的空白文件启动。
+
+{{% code_sample file="pods/storage/projected-clustertrustbundle.yaml" %}}
+
+<!--
+## podCertificate projected volumes {#podcertificate}
+-->
+## podCertificate 投射卷    {#podcertificate}
+
+{{< feature-state feature_gate_name="PodCertificateRequest" >}}
+
+{{< note >}}
+<!--
+In Kubernetes {{< skew currentVersion >}}, you must enable support for Pod
+Certificates using the `PodCertificateRequest` [feature
+gate](/docs/reference/command-line-tools-reference/feature-gates/) and the
+`--runtime-config=certificates.k8s.io/v1beta1/podcertificaterequests=true`
+kube-apiserver flag.
+-->
+在 Kubernetes {{< skew currentVersion >}} 中，你必须使用 `PodCertificateRequest`
+**特性门控**和 `--runtime-config=certificates.k8s.io/v1beta1/podcertificaterequests=true`
+kube-apiserver 标志来启用对 Pod 证书的支持。
+{{< /note >}}
+
+<!--
+The `podCertificate` projected volumes source securely provisions a private key
+and X.509 certificate chain for pod to use as client or server credentials.
+Kubelet will then handle refreshing the private key and certificate chain when
+they get close to expiration.  The application just has to make sure that it
+reloads the file promptly when it changes, with a mechanism like `inotify` or
+polling.
+-->
+`podCertificate` 投射卷源为 Pod 安全地提供一个私钥和 X.509 证书链，用作客户端或服务器凭据。
+当私钥和证书链接近过期时，kubelet 将处理刷新它们。应用程序只需确保在文件发生变化时，
+及时通过类似 `inotify` 或轮询的机制重新加载文件。
+
+<!--
+Each `podCertificate` projection supports the following configuration fields:
+* `signerName`: The
+  [signer](/docs/reference/access-authn-authz/certificate-signing-requests#signers)
+  you want to issue the certificate.  Note that signers may have their own
+  access requirements, and may refuse to issue certificates to your pod.
+* `keyType`: The type of private key that should be generated.  Valid values are
+  `ED25519`, `ECDSAP256`, `ECDSAP384`, `ECDSAP521`, `RSA3072`, and `RSA4096`.
+* `maxExpirationSeconds`: The maximum lifetime you will accept for the
+  certificate issued to the pod.  If not set, will be defaulted to `86400` (24
+  hours).  Must be at least `3600` (1 hour), and at most `7862400` (91 days).
+  Kubernetes built-in signers are restricted to a max lifetime of `86400` (1
+  day). The signer is allowed to issue a certificate with a lifetime shorter
+  than what you've specified.
+* `credentialBundlePath`: Relative path within the projection where the
+  credential bundle should be written.  The credential bundle is a PEM-formatted
+  file, where the first block is a "PRIVATE KEY" block that contains a
+  PKCS#8-serialized private key, and the remaining blocks are "CERTIFICATE"
+  blocks that comprise the certificate chain (leaf certificate and any
+  intermediates).
+* `keyPath` and `certificateChainPath`: Separate paths where Kubelet should
+  write *just* the private key or certificate chain.
+-->
+每个 `podCertificate` 投射支持以下配置字段：
+
+* `signerName`：你希望签发证书的
+  [签名者](/zh-cn/docs/reference/access-authn-authz/certificate-signing-requests#signers)。
+  注意，签名者可能有自己的访问要求，并可能拒绝为你的 Pod 签发证书。
+* `keyType`：应生成的私钥类型。有效值为
+  `ED25519`、`ECDSAP256`、`ECDSAP384`、`ECDSAP521`、`RSA3072` 和 `RSA4096`。
+* `maxExpirationSeconds`：你将接受的颁发给 Pod 的证书的最大生命周期。
+  如果未设置，默认为 `86400`（24 小时）。必须至少为 `3600`（1 小时），最多为 `7862400`（91 天）。
+  Kubernetes 内置签名者的最大生命周期限制为 `86400`（1 天）。签名者允许颁发比指定时间更短生命周期的证书。
+* `credentialBundlePath`：投射内凭证包应写入的相对路径。凭证包是一个 PEM 格式的文件，
+  其中第一个块是包含 PKCS#8 序列化私钥的 "PRIVATE KEY" 块，其余块是组成证书链（叶证书和任何中间证书）的 "CERTIFICATE" 块。
+* `keyPath` 和 `certificateChainPath`：kubelet 应单独写入**仅**私钥或证书链的路径。
+<!--
+* `userAnnotations`: a map that allows you to pass additional information to
+  the signer implementation. It is copied verbatim into the
+  `spec.unverifiedUserAnnotations` field of the [PodCertificateRequest](docs/reference/access-authn-authz/certificate-signing-requests#pod-certificate-requests) objects
+  that Kubelet creates. Entries are subject to the same validation as object
+  metadata annotations, with the addition that all keys must be domain-prefixed.
+  No restrictions are placed on values, except an overall size limitation on the
+  entire field. Other than these basic validations, the API server does not
+  conduct any extra validations. The signer implementations should be very
+  careful when consuming this data. Signers must not inherently trust this data
+  without first performing the appropriate verification steps. Signers should
+  document the keys and values they support. Signers should deny requests that
+  contain keys they do not recognize.
+-->
+* `userAnnotations`：一个映射，允许你向签名器实现传递附加信息。
+  它会被原封不动地复制到 kubelet 创建的
+  [PodCertificateRequest](/zh-cn/docs/reference/access-authn-authz/certificate-signing-requests#pod-certificate-requests)
+  对象的 `spec.unverifiedUserAnnotations` 字段中。
+  条目的验证方式与对象元数据注解相同，但所有键都必须带有域名前缀。
+  除了整个字段的大小限制外，值本身没有其他限制。
+  除了这些基本验证之外，API 服务器不会执行任何其他验证。
+  签名器实现在使用这些数据时应格外谨慎。
+  签名器不应在未执行适当的验证步骤之前就完全信任这些数据。 
+  签名器应记录其支持的键和值。签名器应拒绝包含其无法识别的键的请求。
+
+{{< note >}}
+<!--
+Most applications should prefer using `credentialBundlePath` unless they need
+the key and certificates in separate files for compatibility reasons. Kubelet
+uses an atomic writing strategy based on symlinks to make sure that when you
+open the files it projects, you read either the old content or the new content.
+However, if you read the key and certificate chain from separate files, Kubelet
+may rotate the credentials after your first read and before your second read,
+resulting in your application loading a mismatched key and certificate.
+-->
+除非应用程序因兼容性原因需要将密钥和证书存储在单独的文件中，否则应优先使用 `credentialBundlePath`。
+kubelet 使用基于符号链接的原子写入策略，确保在你打开它投射的文件时，读取的要么是旧内容，要么是新内容。
+然而，如果你从单独的文件中读取密钥和证书链，在第一次读取后和第二次读取前，kubelet 可能会轮换凭证，
+这将导致你的应用程序加载不匹配的密钥和证书。
+{{< /note >}}
+
+{{% code_sample file="pods/storage/projected-podcertificate.yaml" %}}
 
 <!--
 ## SecurityContext interactions
@@ -257,4 +431,3 @@ the Linux only `RunAsUser` option with Windows Pods.
 Pod 会一直阻塞在 `ContainerCreating` 状态。因此，建议不要在 Windows
 节点上使用仅针对 Linux 的 `RunAsUser` 选项。
 {{< /note >}}
-

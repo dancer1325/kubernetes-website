@@ -1,8 +1,7 @@
 ---
 title: Serwer API
 id: kube-apiserver
-date: 2018-04-12
-full_link: /docs/concepts/overview/components/#kube-apiserver
+full_link: /docs/concepts/architecture/#kube-apiserver
 short_description: >
   Składnik warstwy sterowania udostępniający API Kubernetesa.
 
@@ -14,7 +13,7 @@ tags:
 ---
 Serwer API jest składnikiem
 {{< glossary_tooltip text="warstwy sterowania" term_id="control-plane" >}} Kubernetesa, który udostępnia API.
-Server API służy jako front-end warstwy sterowania Kubernetes.
+Server API służy jako front-end warstwy sterowania Kubernetesa.
 
 <!--more-->
 

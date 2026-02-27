@@ -1,156 +1,135 @@
+# Use "schedule-builder" to maintain this file:
+# https://github.com/kubernetes/release/tree/master/cmd/schedule-builder
+# For example by running:
+# schedule-builder -uc data/releases/schedule.yaml -e data/releases/eol.yaml
 ---
-# This file helps to populate the /releases page, and is also parsed to find out the
-# latest patch version for a minor release.
 schedules:
-- release: 1.28
-  releaseDate: 2023-08-15
+- endOfLifeDate: "2027-02-28"
+  maintenanceModeStartDate: "2026-12-28"
   next:
-    release: 1.28.3
-    cherryPickDeadline: 2023-10-13
-    targetDate: 2023-10-18
-  maintenanceModeStartDate: 2024-08-28
-  endOfLifeDate: 2024-10-28
+    cherryPickDeadline: "2026-03-06"
+    release: 1.35.2
+    targetDate: "2026-03-10"
   previousPatches:
-    - release: 1.28.2
-      cherryPickDeadline: 2023-09-08
-      targetDate: 2023-09-13      
-    - release: 1.28.1
-      cherryPickDeadline: N/A
-      targetDate: 2023-08-23
-      note: >-
-        Unplanned release to include CVE fixes
-    - release: 1.28.0
-      targetDate: 2023-08-15
-- release: 1.27
-  releaseDate: 2023-04-11
-  maintenanceModeStartDate: 2024-04-28
-  endOfLifeDate: 2024-06-28
+  - cherryPickDeadline: "2026-02-06"
+    note: January 2026 patches consolidated with February
+    release: 1.35.1
+    targetDate: "2026-02-10"
+  release: "1.35"
+  releaseDate: "2025-12-17"
+- endOfLifeDate: "2026-10-27"
+  maintenanceModeStartDate: "2026-08-27"
   next:
-    release: 1.27.7
-    cherryPickDeadline: 2023-10-13
-    targetDate: 2023-10-18
+    cherryPickDeadline: "2026-03-06"
+    release: 1.34.5
+    targetDate: "2026-03-10"
   previousPatches:
-    - release: 1.27.6
-      cherryPickDeadline: 2023-09-08
-      targetDate: 2023-09-13
-    - release: 1.27.5
-      cherryPickDeadline: 2023-08-04
-      targetDate: 2023-08-23
-    - release: 1.27.4
-      cherryPickDeadline: 2023-07-14
-      targetDate: 2023-07-19
-    - release: 1.27.3
-      cherryPickDeadline: 2023-06-09
-      targetDate: 2023-06-14
-    - release: 1.27.2
-      cherryPickDeadline: 2023-05-12
-      targetDate: 2023-05-17
-    - release: 1.27.1
-      cherryPickDeadline: ""
-      targetDate: 2023-04-14
-      note: >-
-        [Regression](https://groups.google.com/g/kubernetes-announce/c/9FTKjmIFOTw/m/TH6cJT64AAAJ)
-    - release: 1.27.0
-      cherryPickDeadline: ""
-      targetDate: 2023-04-11
-- release: 1.26
-  releaseDate: 2022-12-09
-  maintenanceModeStartDate: 2023-12-28
-  endOfLifeDate: 2024-02-28
+  - cherryPickDeadline: "2026-02-06"
+    note: January 2026 patches consolidated with February
+    release: 1.34.4
+    targetDate: "2026-02-10"
+  - cherryPickDeadline: "2025-12-05"
+    release: 1.34.3
+    targetDate: "2025-12-09"
+  - cherryPickDeadline: "2025-11-07"
+    note: October 2025 patches consolidated with November
+    release: 1.34.2
+    targetDate: "2025-11-11"
+  - cherryPickDeadline: "2025-09-05"
+    release: 1.34.1
+    targetDate: "2025-09-09"
+  - release: 1.34.0
+    targetDate: "2025-08-27"
+  release: "1.34"
+  releaseDate: "2025-08-27"
+- endOfLifeDate: "2026-06-28"
+  maintenanceModeStartDate: "2026-04-28"
   next:
-    release: 1.26.10
-    cherryPickDeadline: 2023-10-13
-    targetDate: 2023-10-18
+    cherryPickDeadline: "2026-03-06"
+    release: 1.33.9
+    targetDate: "2026-03-10"
   previousPatches:
-    - release: 1.26.9
-      cherryPickDeadline: 2023-09-08
-      targetDate: 2023-09-13
-    - release: 1.26.8
-      cherryPickDeadline: 2023-08-04
-      targetDate: 2023-08-23
-    - release: 1.26.7
-      cherryPickDeadline: 2023-07-14
-      targetDate: 2023-07-19
-    - release: 1.26.6
-      cherryPickDeadline: 2023-06-09
-      targetDate: 2023-06-14
-    - release: 1.26.5
-      cherryPickDeadline: 2023-05-12
-      targetDate: 2023-05-17
-    - release: 1.26.4
-      cherryPickDeadline: 2023-04-07
-      targetDate: 2023-04-12
-    - release: 1.26.3
-      cherryPickDeadline: 2023-03-10
-      targetDate: 2023-03-15
-    - release: 1.26.2
-      cherryPickDeadline: 2023-02-10
-      targetDate: 2023-02-15
-      note: >-
-        [Some container images might be **unsigned** due to a temporary issue with the promotion process](https://groups.google.com/a/kubernetes.io/g/dev/c/MwSx761slM0/m/4ajkeUl0AQAJ)
-    - release: 1.26.1
-      cherryPickDeadline: 2023-01-13
-      targetDate: 2023-01-18
-    - release: 1.26.0
-      cherryPickDeadline: ""
-      targetDate: 2022-12-09
-- release: 1.25
-  releaseDate: 2022-08-23
-  maintenanceModeStartDate: 2023-08-28
-  endOfLifeDate: 2023-10-28
+  - cherryPickDeadline: "2026-02-06"
+    note: January 2026 patches consolidated with February
+    release: 1.33.8
+    targetDate: "2026-02-10"
+  - cherryPickDeadline: "2025-12-05"
+    release: 1.33.7
+    targetDate: "2025-12-09"
+  - cherryPickDeadline: "2025-11-07"
+    note: October 2025 patches consolidated with November
+    release: 1.33.6
+    targetDate: "2025-11-11"
+  - cherryPickDeadline: "2025-09-05"
+    release: 1.33.5
+    targetDate: "2025-09-09"
+  - cherryPickDeadline: "2025-08-08"
+    release: 1.33.4
+    targetDate: "2025-08-12"
+  - cherryPickDeadline: "2025-07-11"
+    release: 1.33.3
+    targetDate: "2025-07-15"
+  - cherryPickDeadline: "2025-06-06"
+    release: 1.33.2
+    targetDate: "2025-06-17"
+  - cherryPickDeadline: "2025-05-09"
+    release: 1.33.1
+    targetDate: "2025-05-15"
+  release: "1.33"
+  releaseDate: "2025-04-23"
+- endOfLifeDate: "2026-02-28"
+  maintenanceModeStartDate: "2025-12-28"
   next:
-    release: 1.25.15
-    cherryPickDeadline: 2023-10-13
-    targetDate: 2023-10-18
+    cherryPickDeadline: "2026-03-06"
+    release: 1.32.13
+    targetDate: "2026-03-10"
   previousPatches:
-    - release: 1.25.14
-      cherryPickDeadline: 2023-09-08
-      targetDate: 2023-09-13
-    - release: 1.25.13
-      cherryPickDeadline: 2023-08-04
-      targetDate: 2023-08-23
-    - release: 1.25.12
-      cherryPickDeadline: 2023-07-14
-      targetDate: 2023-07-19
-    - release: 1.25.11
-      cherryPickDeadline: 2023-06-09
-      targetDate: 2023-06-14
-    - release: 1.25.10
-      cherryPickDeadline: 2023-05-12
-      targetDate: 2023-05-17
-    - release: 1.25.9
-      cherryPickDeadline: 2023-04-07
-      targetDate: 2023-04-12
-    - release: 1.25.8
-      cherryPickDeadline: 2023-03-10
-      targetDate: 2023-03-15
-    - release: 1.25.7
-      cherryPickDeadline: 2023-02-10
-      targetDate: 2023-02-15
-      note: >-
-        [Some container images might be **unsigned** due to a temporary issue with the promotion process](https://groups.google.com/a/kubernetes.io/g/dev/c/MwSx761slM0/m/4ajkeUl0AQAJ)
-    - release: 1.25.6
-      cherryPickDeadline: 2023-01-13
-      targetDate: 2023-01-18
-    - release: 1.25.5
-      cherryPickDeadline: 2022-12-02
-      targetDate: 2022-12-08
-    - release: 1.25.4
-      cherryPickDeadline: 2022-11-04
-      targetDate: 2022-11-09
-    - release: 1.25.3
-      cherryPickDeadline: 2022-10-07
-      targetDate: 2022-10-12
-    - release: 1.25.2
-      cherryPickDeadline: 2022-09-20
-      targetDate: 2022-09-21
-      note: >-
-        [Out-of-Band release to fix the regression introduced in 1.25.1](https://groups.google.com/a/kubernetes.io/g/dev/c/tA6LNOQTR4Q/m/zL73maPTAQAJ)
-    - release: 1.25.1
-      cherryPickDeadline: 2022-09-09
-      targetDate: 2022-09-14
-      note: >-
-        [Regression](https://groups.google.com/a/kubernetes.io/g/dev/c/tA6LNOQTR4Q/m/zL73maPTAQAJ)
-    - release: 1.25.0
-      cherryPickDeadline: ""
-      targetDate: 2022-08-23
+  - cherryPickDeadline: "2026-02-06"
+    note: January 2026 patches consolidated with February
+    release: 1.32.12
+    targetDate: "2026-02-10"
+  - cherryPickDeadline: "2025-12-05"
+    release: 1.32.11
+    targetDate: "2025-12-09"
+  - cherryPickDeadline: "2025-11-07"
+    note: October 2025 patches consolidated with November
+    release: 1.32.10
+    targetDate: "2025-11-11"
+  - cherryPickDeadline: "2025-09-05"
+    release: 1.32.9
+    targetDate: "2025-09-09"
+  - cherryPickDeadline: "2025-08-08"
+    release: 1.32.8
+    targetDate: "2025-08-12"
+  - cherryPickDeadline: "2025-07-11"
+    release: 1.32.7
+    targetDate: "2025-07-15"
+  - cherryPickDeadline: "2025-06-06"
+    release: 1.32.6
+    targetDate: "2025-06-17"
+  - cherryPickDeadline: "2025-05-09"
+    release: 1.32.5
+    targetDate: "2025-05-15"
+  - cherryPickDeadline: "2025-04-11"
+    release: 1.32.4
+    targetDate: "2025-04-22"
+  - cherryPickDeadline: "2025-03-07"
+    release: 1.32.3
+    targetDate: "2025-03-11"
+  - cherryPickDeadline: "2025-02-07"
+    release: 1.32.2
+    targetDate: "2025-02-11"
+  - cherryPickDeadline: "2025-01-10"
+    release: 1.32.1
+    targetDate: "2025-01-14"
+  - release: 1.32.0
+    targetDate: "2024-12-11"
+  release: "1.32"
+  releaseDate: "2024-12-11"
+upcoming_releases:
+- cherryPickDeadline: "2026-03-06"
+  targetDate: "2026-03-10"
+- cherryPickDeadline: "2026-04-10"
+  targetDate: "2026-04-14"
+- cherryPickDeadline: "2026-05-08"
+  targetDate: "2026-05-12"

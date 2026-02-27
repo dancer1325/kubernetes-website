@@ -64,6 +64,19 @@ In cases when objects represent a physical entity, like a Node representing a ph
 {{< /note >}}
 
 <!--
+The server may generate a name when `generateName` is provided instead of `name` in a resource create request.
+When `generateName` is used, the provided value is used as a name prefix, which server appends a generated suffix
+to. Even though the name is generated, it may conflict with existing names resulting in an HTTP 409 response. This
+became far less likely to happen in Kubernetes v1.31 and later, since the server will make up to 8 attempts to generate a
+unique name before returning an HTTP 409 response.
+-->
+当在资源创建请求中提供 `generateName` 而不是 `name` 时，服务器可能会生成一个名称。
+使用 `generateName` 时，所提供的值将作为名称前缀，服务器会在其后附加一个生成的后缀。
+即使名称是自动生成的，它仍可能与现有名称冲突，从而导致 HTTP 409 响应。
+从 Kubernetes v1.31 及更高版本开始，这种情况发生的概率大大降低，
+因为服务器会尝试最多 8 次生成唯一名称，然后才返回 HTTP 409 响应。
+
+<!--
 Below are four types of commonly used name constraints for resources.
 -->
 以下是比较常见的四种资源命名约束。
@@ -77,7 +90,7 @@ This means the name must:
 
 - contain no more than 253 characters
 - contain only lowercase alphanumeric characters, '-' or '.'
-- start with an alphanumeric character
+- start with an alphabetic character
 - end with an alphanumeric character
 -->
 ### DNS 子域名  {#dns-subdomain-names}
@@ -88,8 +101,17 @@ DNS 子域名的定义可参见 [RFC 1123](https://tools.ietf.org/html/rfc1123)�
 
 - 不能超过 253 个字符
 - 只能包含小写字母、数字，以及 '-' 和 '.'
-- 必须以字母数字开头
+- 必须以字母开头
 - 必须以字母数字结尾
+
+{{< note >}}
+<!--
+When the `RelaxedServiceNameValidation` feature gate is enabled,
+Service object names are allowed to start with a digit.
+-->
+当启用 `RelaxedServiceNameValidation` 特性门控时，
+Service 对象名称可以以数字开头。
+{{< /note >}}
 
 <!--
 ### RFC 1123 Label Names {#dns-label-names}
@@ -113,7 +135,6 @@ This means the name must:
 - 必须以字母数字开头
 - 必须以字母数字结尾
 
-
 <!--
 ### RFC 1035 Label Names
 
@@ -135,6 +156,18 @@ This means the name must:
 - 只能包含小写字母、数字，以及 '-'
 - 必须以字母开头
 - 必须以字母数字结尾
+
+{{< note >}}
+<!--
+While RFC 1123 technically allows labels to start with digits, the current
+Kubernetes implementation requires both RFC 1035 and RFC 1123 labels to start
+with an alphabetic character. The exception is when the `RelaxedServiceNameValidation`
+feature gate is enabled for Service objects, which allows Service names to start with digits.
+-->
+尽管 RFC 1123 在技术上允许标签以数字开头，当前的 Kubernetes 实现要求
+RFC 1035 和 RFC 1123 标签都以字母字符开头。例外情况是当为 Service 对象启用了
+`RelaxedServiceNameValidation` 特性门控时，这允许 Service 名称以数字开头。
+{{< /note >}}
 
 <!--
 ### Path Segment Names
@@ -191,4 +224,4 @@ UUID 是标准化的，见 ISO/IEC 9834-8 和 ITU-T X.667。
 * See the [Identifiers and Names in Kubernetes](https://git.k8s.io/design-proposals-archive/architecture/identifiers.md) design document.
 -->
 * 进一步了解 Kubernetes [标签](/zh-cn/docs/concepts/overview/working-with-objects/labels/)和[注解](/zh-cn/docs/concepts/overview/working-with-objects/annotations/)。
-* 参阅 [Kubernetes 标识符和名称](https://git.k8s.io/design-proposals-archive/architecture/identifiers.md)的设计文档
+* 参阅 [Kubernetes 标识符和名称](https://git.k8s.io/design-proposals-archive/architecture/identifiers.md)的设计文档。

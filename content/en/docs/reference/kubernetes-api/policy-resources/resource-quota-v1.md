@@ -6,7 +6,7 @@ api_metadata:
 content_type: "api_reference"
 description: "ResourceQuota sets aggregate quota restrictions enforced per namespace."
 title: "ResourceQuota"
-weight: 2
+weight: 3
 auto_generated: true
 ---
 
@@ -73,6 +73,8 @@ ResourceQuotaSpec defines the desired hard limits to enforce for Quota.
 
   - **scopeSelector.matchExpressions** ([]ScopedResourceSelectorRequirement)
 
+    *Atomic: will be replaced during a merge*
+    
     A list of scope selector requirements by scope of the resources.
 
     <a name="ScopedResourceSelectorRequirement"></a>
@@ -81,17 +83,36 @@ ResourceQuotaSpec defines the desired hard limits to enforce for Quota.
     - **scopeSelector.matchExpressions.operator** (string), required
 
       Represents a scope's relationship to a set of values. Valid operators are In, NotIn, Exists, DoesNotExist.
+      
+      Possible enum values:
+       - `"DoesNotExist"`
+       - `"Exists"`
+       - `"In"`
+       - `"NotIn"`
 
     - **scopeSelector.matchExpressions.scopeName** (string), required
 
       The name of the scope that the selector applies to.
+      
+      Possible enum values:
+       - `"BestEffort"` Match all pod objects that have best effort quality of service
+       - `"CrossNamespacePodAffinity"` Match all pod objects that have cross-namespace pod (anti)affinity mentioned.
+       - `"NotBestEffort"` Match all pod objects that do not have best effort quality of service
+       - `"NotTerminating"` Match all pod objects where spec.activeDeadlineSeconds is nil
+       - `"PriorityClass"` Match all pod objects that have priority class mentioned
+       - `"Terminating"` Match all pod objects where spec.activeDeadlineSeconds >=0
+       - `"VolumeAttributesClass"` Match all pvc objects that have volume attributes class mentioned.
 
     - **scopeSelector.matchExpressions.values** ([]string)
 
+      *Atomic: will be replaced during a merge*
+      
       An array of string values. If the operator is In or NotIn, the values array must be non-empty. If the operator is Exists or DoesNotExist, the values array must be empty. This array is replaced during a strategic merge patch.
 
 - **scopes** ([]string)
 
+  *Atomic: will be replaced during a merge*
+  
   A collection of filters that must match each object tracked by a quota. If not specified, the quota matches all objects.
 
 
@@ -684,6 +705,11 @@ DELETE /api/v1/namespaces/{namespace}/resourcequotas/{name}
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
 
 
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
+
+
 - **pretty** (*in query*): string
 
   <a href="{{< ref "../common-parameters/common-parameters#pretty" >}}">pretty</a>
@@ -742,6 +768,11 @@ DELETE /api/v1/namespaces/{namespace}/resourcequotas
 - **gracePeriodSeconds** (*in query*): integer
 
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
+
+
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
 
 
 - **labelSelector** (*in query*): string

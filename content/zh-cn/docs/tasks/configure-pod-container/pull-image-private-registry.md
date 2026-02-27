@@ -13,8 +13,8 @@ weight: 130
 
 <!--
 This page shows how to create a Pod that uses a
-{{< glossary_tooltip text="Secret" term_id="secret" >}} to pull an image 
-from a private container image registry or repository. There are many private 
+{{< glossary_tooltip text="Secret" term_id="secret" >}} to pull an image
+from a private container image registry or repository. There are many private
 registries in use. This task uses [Docker Hub](https://www.docker.com/products/docker-hub)
 as an example registry.
 -->
@@ -32,8 +32,8 @@ as an example registry.
 <!--
 * To do this exercise, you need the `docker` command line tool, and a
   [Docker ID](https://docs.docker.com/docker-id/) for which you know the password.
-* If you are using a different private container registry, you need the command 
-  line tool for that registry and any login information for the registry. 
+* If you are using a different private container registry, you need the command
+  line tool for that registry and any login information for the registry.
 -->
 * 要进行此练习，你需要 `docker` 命令行工具和一个知道密码的
   [Docker ID](https://docs.docker.com/docker-id/)。
@@ -66,7 +66,8 @@ docker login
 When prompted, enter your Docker ID, and then the credential you want to use (access token,
 or the password for your Docker ID).
 
-The login process creates or updates a `config.json` file that holds an authorization token. Review [how Kubernetes interprets this file](/docs/concepts/containers/images#config-json). 
+The login process creates or updates a `config.json` file that holds an authorization token.
+Review [how Kubernetes interprets this file](/docs/concepts/containers/images#config-json).
 
 View the `config.json` file:
 -->
@@ -99,7 +100,9 @@ The output contains a section similar to this:
 {{< note >}}
 <!--
 If you use a Docker credentials store, you won't see that `auth` entry but a `credsStore` entry with the name of the store as value.
-In that case, you can create a secret directly. See [Create a Secret by providing credentials on the command line](#create-a-secret-by-providing-credentials-on-the-command-line).
+In that case, you can create a secret directly. 
+See [Create a Secret by providing credentials on the command line](#create-a-secret-by-providing-credentials-on-the-command-line).
+
 -->
 如果使用 Docker 凭据仓库，则不会看到 `auth` 条目，看到的将是以仓库名称作为值的 `credsStore` 条目。
 在这种情况下，你可以直接创建一个 Secret。
@@ -353,9 +356,20 @@ kubectl get pod private-reg
 
 {{< note >}}
 <!--
-In case the Pod fails to start with the status `ImagePullBackOff`, view the Pod events:
+To use image pull secrets for a Pod (or a Deployment, or other object that
+has a pod template that you are using), you need to make sure that the appropriate
+Secret does exist in the right namespace. The namespace to use is the same
+namespace where you defined the Pod.
 -->
-如果 Pod 以状态 `ImagePullBackOff` 启动失败，查看 Pod 事件：
+要为 Pod（或 Deployment，或其他有 Pod 模板的对象）使用镜像拉取 Secret，
+你需要确保合适的 Secret 确实存在于正确的名字空间中。
+要使用的是你定义 Pod 时所用的名字空间。
+{{< /note >}}
+
+<!--
+Also, in case the Pod fails to start with the status `ImagePullBackOff`, view the Pod events:
+-->
+此外，如果 Pod 启动失败，状态为 `ImagePullBackOff`，查看 Pod 事件：
 
 ```shell
 kubectl describe pod private-reg
@@ -364,12 +378,9 @@ kubectl describe pod private-reg
 <!--
 If you then see an event with the reason set to `FailedToRetrieveImagePullSecret`,
 Kubernetes can't find a Secret with name (`regcred`, in this example).
-If you specify that a Pod needs image pull credentials, the kubelet checks that it can
-access that Secret before attempting to pull the image.
 -->
 如果你看到一个原因设为 `FailedToRetrieveImagePullSecret` 的事件，
 那么 Kubernetes 找不到指定名称（此例中为 `regcred`）的 Secret。
-如果你指定 Pod 需要拉取镜像凭据，kubelet 在尝试拉取镜像之前会检查是否可以访问该 Secret。
 
 <!--
 Make sure that the Secret you have specified exists, and that its name is spelled properly.
@@ -383,7 +394,23 @@ Events:
   ...  FailedToRetrieveImagePullSecret  ...  Unable to retrieve some image pull secrets (<regcred>); attempting to pull the image may not succeed.
 ```
 
-{{< /note >}}
+<!--
+## Using images from multiple registries
+
+A pod can have multiple containers, each container image can be from a different registry.
+You can use multiple `imagePullSecrets` with one pod, and each can contain multiple credentials.
+-->
+## 使用来自多个仓库的镜像
+
+一个 Pod 可以包含多个容器，每个容器的镜像可以来自不同的仓库。
+你可以在一个 Pod 中使用多个 `imagePullSecrets`，每个 `imagePullSecrets` 可以包含多个凭证。
+
+<!--
+The image pull will be attempted using each credential that matches the registry.
+If no credentials match the registry, the image pull will be attempted without authorization or using custom runtime specific configuration.
+-->
+kubelet 将使用与仓库匹配的每个凭证尝试拉取镜像。
+如果没有凭证匹配仓库，则 kubelet 将尝试在没有授权的情况下拉取镜像，或者使用特定运行时的自定义配置。
 
 ## {{% heading "whatsnext" %}}
 

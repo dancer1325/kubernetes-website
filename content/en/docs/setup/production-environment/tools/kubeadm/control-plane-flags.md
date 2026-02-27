@@ -14,15 +14,7 @@ and kube-proxy you can use `KubeletConfiguration` and `KubeProxyConfiguration`, 
 
 All of these options are possible via the kubeadm configuration API.
 For more details on each field in the configuration you can navigate to our
-[API reference pages](/docs/reference/config-api/kubeadm-config.v1beta3/).
-
-{{< note >}}
-Customizing the CoreDNS deployment of kubeadm is currently not supported. You must manually
-patch the `kube-system/coredns` {{< glossary_tooltip text="ConfigMap" term_id="configmap" >}}
-and recreate the CoreDNS {{< glossary_tooltip text="Pods" term_id="pod" >}} after that. Alternatively,
-you can skip the default CoreDNS deployment and deploy your own variant.
-For more details on that see [Using init phases with kubeadm](/docs/reference/setup-tools/kubeadm/kubeadm-init/#init-phases).
-{{< /note >}}
+[API reference pages](/docs/reference/config-api/kubeadm-config.v1beta4/).
 
 {{< note >}}
 To reconfigure a cluster that has already been created see
@@ -42,7 +34,7 @@ The components are defined using the following structures:
 - `scheduler`
 - `etcd`
 
-These structures contain a common `extraArgs` field, that consists of `key: value` pairs.
+These structures contain a common `extraArgs` field, that consists of `name` / `value` pairs.
 To override a flag for a control plane component:
 
 1.  Add the appropriate `extraArgs` to your configuration.
@@ -72,14 +64,15 @@ For details, see the [reference documentation for kube-apiserver](/docs/referenc
 Example usage:
 
 ```yaml
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
 kubernetesVersion: v1.16.0
 apiServer:
   extraArgs:
-    anonymous-auth: "false"
-    enable-admission-plugins: AlwaysPullImages,DefaultStorageClass
-    audit-log-path: /home/johndoe/audit.log
+  - name: "enable-admission-plugins"
+    value: "AlwaysPullImages,DefaultStorageClass"
+  - name: "audit-log-path"
+    value: "/home/johndoe/audit.log"
 ```
 
 ### ControllerManager flags
@@ -89,13 +82,15 @@ For details, see the [reference documentation for kube-controller-manager](/docs
 Example usage:
 
 ```yaml
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
 kubernetesVersion: v1.16.0
 controllerManager:
   extraArgs:
-    cluster-signing-key-file: /home/johndoe/keys/ca.key
-    deployment-controller-sync-period: "50"
+  - name: "cluster-signing-key-file"
+    value: "/home/johndoe/keys/ca.key"
+  - name: "deployment-controller-sync-period"
+    value: "50"
 ```
 
 ### Scheduler flags
@@ -105,12 +100,13 @@ For details, see the [reference documentation for kube-scheduler](/docs/referenc
 Example usage:
 
 ```yaml
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
 kubernetesVersion: v1.16.0
 scheduler:
   extraArgs:
-    config: /etc/kubernetes/scheduler-config.yaml
+  - name: "config"
+    value: "/etc/kubernetes/scheduler-config.yaml"
   extraVolumes:
     - name: schedulerconfig
       hostPath: /home/johndoe/schedconfig.yaml
@@ -126,26 +122,28 @@ For details, see the [etcd server documentation](https://etcd.io/docs/).
 Example usage:
 
 ```yaml
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
 etcd:
   local:
     extraArgs:
-      election-timeout: 1000
+    - name: "election-timeout"
+      value: 1000
 ```
 
 ## Customizing with patches {#patches}
 
 {{< feature-state for_k8s_version="v1.22" state="beta" >}}
 
-Kubeadm allows you to pass a directory with patch files to `InitConfiguration` and `JoinConfiguration`
+Kubeadm allows you to pass a directory with patch files to `InitConfiguration`,
+`JoinConfiguration` and `UpgradeConfiguration`.
 on individual nodes. These patches can be used as the last customization step before component configuration
 is written to disk.
 
 You can pass this file to `kubeadm init` with `--config <YOUR CONFIG YAML>`:
 
 ```yaml
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta4
 kind: InitConfiguration
 patches:
   directory: /home/user/somedir
@@ -159,30 +157,42 @@ separated by `---`.
 You can pass this file to `kubeadm join` with `--config <YOUR CONFIG YAML>`:
 
 ```yaml
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta4
 kind: JoinConfiguration
 patches:
   directory: /home/user/somedir
 ```
 
+If you are using `kubeadm upgrade apply` and `kubeadm upgrade node` to upgrade your kubeadm
+nodes, you must again provide the same patches, so that the customization is preserved after upgrade.
+
+```yaml
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: UpgradeConfiguration
+apply:
+  patches:
+    directory: /home/user/somedir
+```
+
+```yaml
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: UpgradeConfiguration
+node:
+  patches:
+    directory: /home/user/somedir
+```
+
 The directory must contain files named `target[suffix][+patchtype].extension`.
 For example, `kube-apiserver0+merge.yaml` or just `etcd.json`.
 
-- `target` can be one of `kube-apiserver`, `kube-controller-manager`, `kube-scheduler`, `etcd`
-and `kubeletconfiguration`.
+- `target` can be one of `kube-apiserver`, `kube-controller-manager`, `kube-scheduler`, `etcd`,
+`kubeletconfiguration` and `corednsdeployment`.
+- `suffix` is an optional string that can be used to determine which patches are applied first
+alpha-numerically.
 - `patchtype` can be one of `strategic`, `merge` or `json` and these must match the patching formats
 [supported by kubectl](/docs/tasks/manage-kubernetes-objects/update-api-object-kubectl-patch).
 The default `patchtype` is `strategic`.
 - `extension` must be either `json` or `yaml`.
-- `suffix` is an optional string that can be used to determine which patches are applied first
-alpha-numerically.
-
-{{< note >}}
-If you are using `kubeadm upgrade` to upgrade your kubeadm nodes you must again provide the same
-patches, so that the customization is preserved after upgrade. To do that you can use the `--patches`
-flag, which must point to the same directory. `kubeadm upgrade` currently does not support a configuration
-API structure that can be used for the same purpose.
-{{< /note >}}
 
 ## Customizing the kubelet {#kubelet}
 
@@ -206,9 +216,35 @@ For additional details see [Configuring each kubelet in your cluster using kubea
 To customize kube-proxy you can pass a `KubeProxyConfiguration` next your `ClusterConfiguration` or
 `InitConfiguration` to `kubeadm init` separated by `---`.
 
-For more details you can navigate to our [API reference pages](/docs/reference/config-api/kubeadm-config.v1beta3/).
+For more details you can navigate to our [API reference pages](/docs/reference/config-api/kubeadm-config.v1beta4/).
 
 {{< note >}}
 kubeadm deploys kube-proxy as a {{< glossary_tooltip text="DaemonSet" term_id="daemonset" >}}, which means
 that the `KubeProxyConfiguration` would apply to all instances of kube-proxy in the cluster.
 {{< /note >}}
+
+## Customizing CoreDNS
+
+kubeadm allows you to customize the CoreDNS Deployment with patches against the
+[`corednsdeployment` patch target](#patches).
+
+Patches for other CoreDNS related API objects like the `kube-system/coredns`
+{{< glossary_tooltip text="ConfigMap" term_id="configmap" >}} are currently not supported.
+You must manually patch any of these objects using kubectl and recreate the CoreDNS
+{{< glossary_tooltip text="Pods" term_id="pod" >}} after that.
+
+Alternatively, you can disable the kubeadm CoreDNS deployment by including the following
+option in your `ClusterConfiguration`:
+
+```yaml
+dns:
+  disabled: true
+```
+
+Also, by executing the following command:
+
+```shell
+kubeadm init phase addon coredns --print-manifest --config my-config.yaml`
+```
+
+you can obtain the manifest file kubeadm would create for CoreDNS on your setup.

@@ -260,7 +260,8 @@ You should use the [local](/docs/contribute/new-content/open-a-pr/#preview-local
 and Netlify previews to verify the diagram is properly rendered. 
 
 {{< caution >}}
-The Mermaid live editor feature set may not support the K8s/website Mermaid feature set. 
+The Mermaid live editor feature set may not support the [kubernetes/website](https://github.com/kubernetes/website) Mermaid feature set.  
+And please, note that contributors can mention `kubernetes/website` as `k/website`.
 You might see a syntax error or a blank screen after the Hugo build.
 If that is the case, consider using the Mermaid+SVG method. 
 {{< /caution >}}
@@ -324,7 +325,7 @@ the `.svg` image file and add a caption.
 For more details on diagram captions, see [How to use captions](#how-to-use-captions).
 
 {{< note >}}
-The `{{</* figure */>}}` shortcode is the preferred method for adding `.svg` image files
+The figure shortcode is the preferred method for adding `.svg` image files
 to your documentation. You can also use the standard markdown image syntax like so:
 `![my boxnet diagram](static/images/boxnet.svg)`.
 And you will need to add a caption below the diagram. 
@@ -342,7 +343,7 @@ The following lists advantages of the Mermaid+SVG method:
 
 * Live editor tool.
 * Live editor tool supports the most current Mermaid feature set.  
-* Employ existing K8s/website methods for handling `.svg` image files.
+* Employ existing [kubernetes/website](https://github.com/kubernetes/website) methods for handling `.svg` image files.
 * Environment doesn't require Mermaid support.
 
 Be sure to check that your diagram renders properly using the
@@ -472,7 +473,7 @@ Figure 6. Pod Topology Spread Constraints.
 
 Code block:
 
-``` 
+```text
 graph TB
    subgraph "zoneB"
        n3(Node3)
@@ -527,7 +528,7 @@ Figure 7. Ingress
 
 Code block:
 
-```mermaid
+```text
 graph LR;
  client([client])-. Ingress-managed <br> load balancer .->ingress[Ingress];
  ingress-->|routing rule|service[Service];
@@ -555,7 +556,7 @@ K8s components to start a container.
 
 Code block:
 
-```
+```text
 %%{init:{"theme":"neutral"}}%%
 sequenceDiagram
     actor me
@@ -591,7 +592,7 @@ In the code for
 [figure 7](https://mermaid-js.github.io/mermaid-live-editor/edit/#eyJjb2RlIjoiZ3JhcGggIExSXG4gIGNsaWVudChbY2xpZW50XSktLiBJbmdyZXNzLW1hbmFnZWQgPGJyPiBsb2FkIGJhbGFuY2VyIC4tPmluZ3Jlc3NbSW5ncmVzc107XG4gIGluZ3Jlc3MtLT58cm91dGluZyBydWxlfHNlcnZpY2VbU2VydmljZV07XG4gIHN1YmdyYXBoIGNsdXN0ZXJcbiAgaW5ncmVzcztcbiAgc2VydmljZS0tPnBvZDFbUG9kXTtcbiAgc2VydmljZS0tPnBvZDJbUG9kXTtcbiAgZW5kXG4gIGNsYXNzRGVmIHBsYWluIGZpbGw6I2RkZCxzdHJva2U6I2ZmZixzdHJva2Utd2lkdGg6NHB4LGNvbG9yOiMwMDA7XG4gIGNsYXNzRGVmIGs4cyBmaWxsOiMzMjZjZTUsc3Ryb2tlOiNmZmYsc3Ryb2tlLXdpZHRoOjRweCxjb2xvcjojZmZmO1xuICBjbGFzc0RlZiBjbHVzdGVyIGZpbGw6I2ZmZixzdHJva2U6I2JiYixzdHJva2Utd2lkdGg6MnB4LGNvbG9yOiMzMjZjZTU7XG4gIGNsYXNzIGluZ3Jlc3Msc2VydmljZSxwb2QxLHBvZDIgazhzO1xuICBjbGFzcyBjbGllbnQgcGxhaW47XG4gIGNsYXNzIGNsdXN0ZXIgY2x1c3RlcjtcbiIsIm1lcm1haWQiOiJ7XG4gIFwidGhlbWVcIjogXCJkZWZhdWx0XCJcbn0iLCJ1cGRhdGVFZGl0b3IiOmZhbHNlLCJhdXRvU3luYyI6dHJ1ZSwidXBkYXRlRGlhZ3JhbSI6dHJ1ZX0),
 you can see examples of both.
 
-```
+```text
 classDef k8s fill:#326ce5,stroke:#fff,stroke-width:4px,color:#fff; // defines style for the k8s class
 class ingress,service,pod1,pod2 k8s; // k8s class is applied to elements ingress, service, pod1 and pod2.
 ```
@@ -623,7 +624,7 @@ caption and the diagram referral.
 flowchart
 A[Diagram<br><br>Inline Mermaid or<br>SVG image files]
 B[Diagram Caption<br><br>Add Figure Number. and<br>Caption Text]
-C[Diagram Referral<br><br>Referenence Figure Number<br>in text]
+C[Diagram Referral<br><br>Reference Figure Number<br>in text]
 
     classDef box fill:#fff,stroke:#000,stroke-width:1px,color:#000;
     class A,B,C box
@@ -649,7 +650,7 @@ Here is the `{{</* figure */>}}` shortcode for the diagram defined in an
 `.svg` image file saved to `/images/docs/components-of-kubernetes.svg`:
 
 ```none
-{{</* figure src="/images/docs/components-of-kubernetes.svg" alt="Kubernetes pod running inside a cluster" class="diagram-large" caption="Figure 4. Kubernetes Architecture Components */>}}
+{{</* figure src="/images/docs/components-of-kubernetes.svg" alt="Kubernetes pod running inside a cluster" class="diagram-large" caption="Figure 4. Kubernetes Architecture Components" */>}}
 ```
 
 You should pass the `src`, `alt`, `class` and `caption` values into the
@@ -657,7 +658,7 @@ You should pass the `src`, `alt`, `class` and `caption` values into the
 `diagram-large`, `diagram-medium` and `diagram-small` classes.  
 
 {{< note >}}
-Diagrams created using the `Inline` method don't use the `{{</* figure */>}}`
+Diagrams created using the `Inline` method don't use the figure
 shortcode. The Mermaid code defines how the diagram will render on your page.
 {{< /note >}}
 

@@ -6,6 +6,9 @@ reviewers:
 - janetkuo
 - kow3ns
 title: DaemonSet
+api_metadata:
+- apiVersion: "apps/v1"
+  kind: "DaemonSet"
 description: >-
  A DaemonSet defines Pods that provide node-local facilities. These might be fundamental to the operation of your cluster, such as a networking helper tool, or be part of an add-on.
 content_type: concept
@@ -108,8 +111,8 @@ If you do not specify either, then the DaemonSet controller will create Pods on 
 
 ## How Daemon Pods are scheduled
 
-A DaemonSet ensures that all eligible nodes run a copy of a Pod. The DaemonSet
-controller creates a Pod for each eligible node and adds the
+A DaemonSet can be used to ensure that all eligible nodes run a copy of a Pod.
+The DaemonSet controller creates a Pod for each eligible node and adds the
 `spec.affinity.nodeAffinity` field of the Pod to match the target host. After
 the Pod is created, the default scheduler typically takes over and then binds
 the Pod to the target host by setting the `.spec.nodeName` field.  If the new
@@ -117,6 +120,13 @@ Pod cannot fit on the node, the default scheduler may preempt (evict) some of
 the existing Pods based on the
 [priority](/docs/concepts/scheduling-eviction/pod-priority-preemption/#pod-priority)
 of the new Pod.
+
+{{< note >}}
+If it's important that the DaemonSet pod run on each node, it's often desirable
+to set the `.spec.template.spec.priorityClassName` of the DaemonSet to a
+[PriorityClass](/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass)
+with a higher priority to ensure that this eviction occurs.
+{{< /note >}}
 
 The user can specify a different scheduler for the Pods of the DaemonSet, by
 setting the `.spec.template.spec.schedulerName` field of the DaemonSet.
@@ -186,7 +196,8 @@ Some possible patterns for communicating with Pods in a DaemonSet are:
   with the same pod selector, and then discover DaemonSets using the `endpoints`
   resource or retrieve multiple A records from DNS.
 - **Service**: Create a service with the same Pod selector, and use the service to reach a
-  daemon on a random node. (No way to reach specific node.)
+  daemon on a random node. Use [Service Internal Traffic Policy](/docs/concepts/services-networking/service-traffic-policy/)
+  to limit to pods on the same node.
 
 ## Updating a DaemonSet
 
@@ -248,11 +259,11 @@ For example, [network plugins](/docs/concepts/extend-kubernetes/compute-storage-
 
 ## {{% heading "whatsnext" %}}
 
-* Learn about [Pods](/docs/concepts/workloads/pods).
-  * Learn about [static Pods](#static-pods), which are useful for running Kubernetes
+* Learn about [Pods](/docs/concepts/workloads/pods):
+  * Learn about [static Pods](/docs/tasks/configure-pod-container/static-pod/), which are useful for running Kubernetes
     {{< glossary_tooltip text="control plane" term_id="control-plane" >}} components.
-* Find out how to use DaemonSets
-  * [Perform a rolling update on a DaemonSet](/docs/tasks/manage-daemon/update-daemon-set/)
+* Find out how to use DaemonSets:
+  * [Perform a rolling update on a DaemonSet](/docs/tasks/manage-daemon/update-daemon-set/).
   * [Perform a rollback on a DaemonSet](/docs/tasks/manage-daemon/rollback-daemon-set/)
     (for example, if a roll out didn't work how you expected).
 * Understand [how Kubernetes assigns Pods to Nodes](/docs/concepts/scheduling-eviction/assign-pod-node/).

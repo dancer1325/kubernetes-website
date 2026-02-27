@@ -1,7 +1,6 @@
 ---
 title: 集群操作者（Cluster Operator）
 id: cluster-operator
-date: 2018-04-12
 full_link: 
 short_description: >
   配置、控制、监控集群的人。
@@ -13,7 +12,6 @@ tags:
 <!--
 title: Cluster Operator
 id: cluster-operator
-date: 2018-04-12
 full_link: 
 short_description: >
   A person who configures, controls, and monitors clusters.
@@ -26,7 +24,7 @@ tags:
 <!--
  A person who configures, controls, and monitors clusters.
 -->
- 配置、控制、监控集群的人。
+配置、控制、监控集群的人。
 
 <!--more--> 
 
@@ -37,7 +35,7 @@ Their primary responsibility is keeping a cluster up and running, which may invo
 
 {{< note >}}
 <!--			
-**NOTE:** Cluster operators are different from the [Operator pattern](https://www.openshift.com/learn/topics/operators) that extends the Kubernetes API.
+**NOTE:** Cluster operators are different from the [Operator pattern](/docs/concepts/extend-kubernetes/operator/) that extends the Kubernetes API.
 -->
-**注意：** 集群操作者不同于[操作者模式（Operator Pattern）](https://www.openshift.com/learn/topics/operators)，操作者模式是用来扩展 Kubernetes API 的。
+**注意：** 集群操作者不同于[操作者模式（Operator Pattern）](/zh-cn/docs/concepts/extend-kubernetes/operator/)，操作者模式是用来扩展 Kubernetes API 的。
 {{< /note >}}

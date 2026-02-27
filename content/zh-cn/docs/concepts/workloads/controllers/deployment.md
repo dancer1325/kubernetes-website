@@ -1,5 +1,8 @@
 ---
 title: Deployments
+api_metadata:
+- apiVersion: "apps/v1"
+  kind: "Deployment"
 feature:
   title: 自动化上线和回滚
   description: >
@@ -14,6 +17,9 @@ hide_summary: true # 在章节索引中单独列出
 reviewers:
 - janetkuo
 title: Deployments
+api_metadata:
+- apiVersion: "apps/v1"
+  kind: "Deployment"
 feature:
   title: Automated rollouts and rollbacks
   description: >
@@ -58,18 +64,19 @@ Do not manage ReplicaSets owned by a Deployment. Consider opening an issue in th
 
 The following are typical use cases for Deployments:
 -->
-## 用例
+## 用例   {#use-case}
 
-以下是 Deployments 的典型用例：
+以下是 Deployment 的典型用例：
 
 <!--
 * [Create a Deployment to rollout a ReplicaSet](#creating-a-deployment). The ReplicaSet creates Pods in the background. Check the status of the rollout to see if it succeeds or not.
-* [Declare the new state of the Pods](#updating-a-deployment) by updating the PodTemplateSpec of the Deployment. A new ReplicaSet is created and the Deployment manages moving the Pods from the old ReplicaSet to the new one at a controlled rate. Each new ReplicaSet updates the revision of the Deployment.
+* [Declare the new state of the Pods](#updating-a-deployment) by updating the PodTemplateSpec of the Deployment. A new ReplicaSet is created, and the Deployment gradually scales it up while scaling down the old ReplicaSet, ensuring Pods are replaced at a controlled rate. Each new ReplicaSet updates the revision of the Deployment.
 -->
 * [创建 Deployment 以将 ReplicaSet 上线](#creating-a-deployment)。ReplicaSet 在后台创建 Pod。
   检查 ReplicaSet 的上线状态，查看其是否成功。
-* 通过更新 Deployment 的 PodTemplateSpec，[声明 Pod 的新状态](#updating-a-deployment) 。
-  新的 ReplicaSet 会被创建，Deployment 以受控速率将 Pod 从旧 ReplicaSet 迁移到新 ReplicaSet。
+* 通过更新 Deployment 的 PodTemplateSpec，[声明 Pod 的新状态](#updating-a-deployment)。
+  新的 ReplicaSet 会被创建，同时 Deployment 会逐渐增加它的规模，
+  而减少旧的 ReplicaSet 的规模，确保以受控速率替换 Pod。
   每个新的 ReplicaSet 都会更新 Deployment 的修订版本。
 <!--
 * [Rollback to an earlier Deployment revision](#rolling-back-a-deployment) if the current state of the Deployment is not stable. Each rollback updates the revision of the Deployment.
@@ -81,10 +88,10 @@ The following are typical use cases for Deployments:
 * 如果 Deployment 的当前状态不稳定，[回滚到较早的 Deployment 版本](#rolling-back-a-deployment)。
   每次回滚都会更新 Deployment 的修订版本。
 * [扩大 Deployment 规模以承担更多负载](#scaling-a-deployment)。
-* [暂停 Deployment 的上线](#pausing-and-resuming-a-deployment) 以应用对 PodTemplateSpec 所作的多项修改，
+* [暂停 Deployment 的上线](#pausing-and-resuming-a-deployment)以应用对 PodTemplateSpec 所作的多项修改，
   然后恢复其执行以启动新的上线版本。
 * [使用 Deployment 状态](#deployment-status)来判定上线过程是否出现停滞。
-* [清理较旧的不再需要的 ReplicaSet](#clean-up-policy) 。
+* [清理较旧的不再需要的 ReplicaSet](#clean-up-policy)。
 
 <!--
 The following is an example of a Deployment. It creates a ReplicaSet to bring up three `nginx` Pods:
@@ -131,30 +138,30 @@ In this example:
   {{< /note >}}
 
 <!--
-* The `template` field contains the following sub-fields:
+* The `.spec.template` field contains the following sub-fields:
   * The Pods are labeled `app: nginx`using the `.metadata.labels` field.
-  * The Pod template's specification, or `.template.spec` field, indicates that
+  * The Pod template's specification, or `.spec` field, indicates that
     the Pods run one container, `nginx`, which runs the `nginx`
     [Docker Hub](https://hub.docker.com/) image at version 1.14.2.
-  * Create one container and name it `nginx` using the `.spec.template.spec.containers[0].name` field.
+  * Create one container and name it `nginx` using the `.spec.containers[0].name` field.
 -->
-* `template` 字段包含以下子字段：
+* `.spec.template` 字段包含以下子字段：
   * Pod 被使用 `.metadata.labels` 字段打上 `app: nginx` 标签。
-  * Pod 模板规约（即 `.template.spec` 字段）指示 Pod 运行一个 `nginx` 容器，
+  * Pod 模板规约（即 `.spec` 字段）指示 Pod 运行一个 `nginx` 容器，
     该容器运行版本为 1.14.2 的 `nginx` [Docker Hub](https://hub.docker.com/) 镜像。
-  * 创建一个容器并使用 `.spec.template.spec.containers[0].name` 字段将其命名为 `nginx`。
+  * 创建一个容器并使用 `.spec.containers[0].name` 字段将其命名为 `nginx`。
 
 <!--
 Before you begin, make sure your Kubernetes cluster is up and running.
 Follow the steps given below to create the above Deployment:
 -->
 开始之前，请确保的 Kubernetes 集群已启动并运行。
-按照以下步骤创建上述 Deployment ：
+按照以下步骤创建上述 Deployment：
 
 <!--
 1. Create the Deployment by running the following command:
 -->
-1. 通过运行以下命令创建 Deployment ：
+1. 通过运行以下命令创建 Deployment：
 
    ```shell
    kubectl apply -f https://k8s.io/examples/controllers/nginx-deployment.yaml
@@ -249,11 +256,11 @@ Follow the steps given below to create the above Deployment:
    -->
    ReplicaSet 输出中包含以下字段：
 
-   * `NAME` 列出名字空间中 ReplicaSet 的名称；
+   * `NAME` 列出名字空间中 ReplicaSet 的名称。
    * `DESIRED` 显示应用的期望副本个数，即在创建 Deployment 时所定义的值。
-     此为期望状态；
-   * `CURRENT` 显示当前运行状态中的副本个数；
-   * `READY` 显示应用中有多少副本可以为用户提供服务；
+     此为**期望状态**。
+   * `CURRENT` 显示当前运行状态中的副本个数。
+   * `READY` 显示应用中有多少副本可以为用户提供服务。
    * `AGE` 显示应用已经运行的时间长度。
 
    <!--
@@ -293,6 +300,7 @@ You must specify an appropriate selector and Pod template labels in a Deployment
 Do not overlap labels or selectors with other controllers (including other Deployments and StatefulSets). Kubernetes doesn't stop you from overlapping, and if multiple controllers have overlapping selectors those controllers might conflict and behave unexpectedly.
 -->
 你必须在 Deployment 中指定适当的选择算符和 Pod 模板标签（在本例中为 `app: nginx`）。
+
 标签或者选择算符不要与其他控制器（包括其他 Deployment 和 StatefulSet）重叠。
 Kubernetes 不会阻止你这样做，但是如果多个控制器具有重叠的选择算符，
 它们可能会发生冲突执行难以预料的操作。
@@ -301,7 +309,7 @@ Kubernetes 不会阻止你这样做，但是如果多个控制器具有重叠的
 <!--
 ### Pod-template-hash label
 -->
-### Pod-template-hash 标签
+### Pod-template-hash 标签   {#pod-template-hash-label}
 
 {{< caution >}}
 <!--
@@ -314,13 +322,13 @@ Do not change this label.
 The `pod-template-hash` label is added by the Deployment controller to every ReplicaSet that a Deployment creates or adopts.
 -->
 Deployment 控制器将 `pod-template-hash` 标签添加到 Deployment
-所创建或收留的每个 ReplicaSet 。
+所创建或收留的每个 ReplicaSet。
 
 <!--
 This label ensures that child ReplicaSets of a Deployment do not overlap. It is generated by hashing the `PodTemplate` of the ReplicaSet and using the resulting hash as the label value that is added to the ReplicaSet selector, Pod template labels,
 and in any existing Pods that the ReplicaSet might have.
 -->
-此标签可确保 Deployment 的子 ReplicaSets 不重叠。
+此标签可确保 Deployment 的子 ReplicaSet 不重叠。
 标签是通过对 ReplicaSet 的 `PodTemplate` 进行哈希处理。
 所生成的哈希值被添加到 ReplicaSet 选择算符、Pod 模板标签，并存在于在 ReplicaSet
 可能拥有的任何现有 Pod 中。
@@ -352,6 +360,7 @@ Follow the steps given below to update your Deployment:
    ```shell
    kubectl set image deployment.v1.apps/nginx-deployment nginx=nginx:1.16.1
    ```
+
    <!--
    or use the following command:
    -->
@@ -414,7 +423,10 @@ Follow the steps given below to update your Deployment:
    ```
    Waiting for rollout to finish: 2 out of 3 new replicas have been updated...
    ```
-   <!-- or -->
+
+   <!--
+   or
+   -->
    或者
 
    ```
@@ -430,10 +442,10 @@ Get more details on your updated Deployment:
 * After the rollout succeeds, you can view the Deployment by running `kubectl get deployments`.
   The output is similar to this:
 -->
-* 在上线成功后，可以通过运行 `kubectl get deployments` 来查看 Deployment：
+* 在上线成功后，可以通过运行 `kubectl get deployments` 来查看 Deployment。
   输出类似于：
 
-  ```ini
+  ```
   NAME               READY   UP-TO-DATE   AVAILABLE   AGE
   nginx-deployment   3/3     3            3           36s
   ```
@@ -572,7 +584,7 @@ up to 3 replicas, as well as scaling down the old ReplicaSet to 0 replicas.
   It then continued scaling up and down the new and the old ReplicaSet, with the same rolling update strategy.
   Finally, you'll have 3 available replicas in the new ReplicaSet, and the old ReplicaSet is scaled down to 0.
   -->
-  可以看到，当第一次创建 Deployment 时，它创建了一个 ReplicaSet（`nginx-deployment-2035384211`）
+  你可以看到，当第一次创建 Deployment 时，它创建了一个 ReplicaSet（`nginx-deployment-2035384211`）
   并将其直接扩容至 3 个副本。更新 Deployment 时，它创建了一个新的 ReplicaSet
   （nginx-deployment-1564180365），并将其扩容为 1，等待其就绪；然后将旧 ReplicaSet 缩容到 2，
   将新的 ReplicaSet 扩容到 2 以便至少有 3 个 Pod 可用且最多创建 4 个 Pod。
@@ -598,15 +610,15 @@ Kubernetes 在计算 `availableReplicas` 数值时不考虑终止过程中的 Po
 
 Each time a new Deployment is observed by the Deployment controller, a ReplicaSet is created to bring up
 the desired Pods. If the Deployment is updated, the existing ReplicaSet that controls Pods whose labels
-match `.spec.selector` but whose template does not match `.spec.template` are scaled down. Eventually, the new
+match `.spec.selector` but whose template does not match `.spec.template` is scaled down. Eventually, the new
 ReplicaSet is scaled to `.spec.replicas` and all old ReplicaSets is scaled to 0.
 -->
-### 翻转（多 Deployment 动态更新）
+### 翻转（多 Deployment 动态更新）   {#rollover-aka-multiple-updates-in-flight}
 
 Deployment 控制器每次注意到新的 Deployment 时，都会创建一个 ReplicaSet 以启动所需的 Pod。
 如果更新了 Deployment，则控制标签匹配 `.spec.selector` 但模板不匹配 `.spec.template` 的 Pod 的现有 ReplicaSet 被缩容。
 最终，新的 ReplicaSet 缩放为 `.spec.replicas` 个副本，
-所有旧 ReplicaSets 缩放为 0 个副本。
+所有旧 ReplicaSet 缩放为 0 个副本。
 
 <!--
 If you update a Deployment while an existing rollout is in progress, the Deployment creates a new ReplicaSet
@@ -614,8 +626,7 @@ as per the update and start scaling that up, and rolls over the ReplicaSet that 
 -- it will add it to its list of old ReplicaSets and start scaling it down.
 -->
 当 Deployment 正在上线时被更新，Deployment 会针对更新创建一个新的 ReplicaSet
-并开始对其扩容，之前正在被扩容的 ReplicaSet 会被翻转，添加到旧 ReplicaSets 列表
-并开始缩容。
+并开始对其扩容，之前正在被扩容的 ReplicaSet 会被翻转，添加到旧 ReplicaSet 列表并开始缩容。
 
 <!--
 For example, suppose you create a Deployment to create 5 replicas of `nginx:1.14.2`,
@@ -625,8 +636,8 @@ killing the 3 `nginx:1.14.2` Pods that it had created, and starts creating
 `nginx:1.16.1` Pods. It does not wait for the 5 replicas of `nginx:1.14.2` to be created
 before changing course.
 -->
-例如，假定你在创建一个 Deployment 以生成 `nginx:1.14.2` 的 5 个副本，但接下来
-更新 Deployment 以创建 5 个 `nginx:1.16.1` 的副本，而此时只有 3 个 `nginx:1.14.2`
+例如，假定你在创建一个 Deployment 以生成 `nginx:1.14.2` 的 5 个副本，但接下来更新
+Deployment 以创建 5 个 `nginx:1.16.1` 的副本，而此时只有 3 个 `nginx:1.14.2`
 副本已创建。在这种情况下，Deployment 会立即开始杀死 3 个 `nginx:1.14.2` Pod，
 并开始创建 `nginx:1.16.1` Pod。它不会等待 `nginx:1.14.2` 的 5
 个副本都创建完成后才开始执行变更动作。
@@ -862,7 +873,7 @@ Deployment 被触发上线时，系统就会创建 Deployment 的新的修订版
 
 Follow the steps given below to check the rollout history:
 -->
-### 检查 Deployment 上线历史
+### 检查 Deployment 上线历史   {#checking-rollout-history-of-a-deployment}
 
 按照如下步骤检查回滚历史：
 
@@ -883,9 +894,9 @@ Follow the steps given below to check the rollout history:
    ```
    deployments "nginx-deployment"
    REVISION    CHANGE-CAUSE
-   1           kubectl apply --filename=https://k8s.io/examples/controllers/nginx-deployment.yaml
-   2           kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
-   3           kubectl set image deployment/nginx-deployment nginx=nginx:1.161
+   1           <none>
+   2           <none>
+   3           <none>
    ```
 
    <!--
@@ -897,10 +908,20 @@ Follow the steps given below to check the rollout history:
    <!--
    * Annotating the Deployment with `kubectl annotate deployment/nginx-deployment kubernetes.io/change-cause="image updated to 1.16.1"`
    * Manually editing the manifest of the resource.
+   * Using tooling that sets the annotation automatically.
    -->
    * 使用 `kubectl annotate deployment/nginx-deployment kubernetes.io/change-cause="image updated to 1.16.1"`
      为 Deployment 添加注解。
    * 手动编辑资源的清单。
+   * 使用可自动设置注解的工具。
+
+   {{< note >}}
+   <!--
+   In older versions of Kubernetes, you could use the `--record` flag with kubectl commands to automatically populate the `CHANGE-CAUSE` field. This flag is deprecated and will be removed in a future release.
+   -->
+   在 Kubernetes 旧版本中，可以使用 kubectl 命令的 `--record` 标志自动填充 `CHANGE-CAUSE` 字段。
+   此标志已弃用，并将在未来的版本中移除。
+   {{< /note >}}
 
 <!--
 2. To see the details of each revision, run:
@@ -920,7 +941,6 @@ Follow the steps given below to check the rollout history:
    deployments "nginx-deployment" revision 2
      Labels:       app=nginx
              pod-template-hash=1159050644
-     Annotations:  kubernetes.io/change-cause=kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
      Containers:
       nginx:
        Image:      nginx:1.16.1
@@ -992,7 +1012,7 @@ Follow the steps given below to rollback the Deployment from the current version
 <!--
 2. Check if the rollback was successful and the Deployment is running as expected, run:
 -->
-2. 检查回滚是否成功以及 Deployment 是否正在运行，运行：
+2. 检查回滚是否成功以及 Deployment 是否正在运行，你可以运行：
 
    ```shell
    kubectl get deployment nginx-deployment
@@ -1028,7 +1048,6 @@ Follow the steps given below to rollback the Deployment from the current version
    CreationTimestamp:      Sun, 02 Sep 2018 18:17:55 -0500
    Labels:                 app=nginx
    Annotations:            deployment.kubernetes.io/revision=4
-                           kubernetes.io/change-cause=kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
    Selector:               app=nginx
    Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
    StrategyType:           RollingUpdate
@@ -1089,11 +1108,11 @@ deployment.apps/nginx-deployment scaled
 ```
 
 <!--
-Assuming [horizontal Pod autoscaling](/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/) is enabled
+Assuming [horizontal Pod autoscaling](/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/) is enabled
 in your cluster, you can set up an autoscaler for your Deployment and choose the minimum and maximum number of
 Pods you want to run based on the CPU utilization of your existing Pods.
 -->
-假设集群启用了[Pod 的水平自动缩放](/zh-cn/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/)，
+假设集群启用了 [Pod 的水平自动缩放](/zh-cn/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/)，
 你可以为 Deployment 设置自动缩放器，并基于现有 Pod 的 CPU 利用率选择要运行的
 Pod 个数下限和上限。
 
@@ -1122,8 +1141,8 @@ ReplicaSets (ReplicaSets with Pods) in order to mitigate risk. This is called *p
 
 RollingUpdate 的 Deployment 支持同时运行应用程序的多个版本。
 当自动缩放器缩放处于上线进程（仍在进行中或暂停）中的 RollingUpdate Deployment 时，
-Deployment 控制器会平衡现有的活跃状态的 ReplicaSets（含 Pod 的 ReplicaSets）中的额外副本，
-以降低风险。这称为 *比例缩放（Proportional Scaling）*。
+Deployment 控制器会平衡现有的活跃状态的 ReplicaSet（含 Pod 的 ReplicaSet）中的额外副本，
+以降低风险。这称为**比例缩放（Proportional Scaling）**。
 
 <!--
 For example, you are running a Deployment with 10 replicas, [maxSurge](#max-surge)=3, and [maxUnavailable](#max-unavailable)=2.
@@ -1139,6 +1158,7 @@ For example, you are running a Deployment with 10 replicas, [maxSurge](#max-surg
   ```shell
   kubectl get deploy
   ```
+
   <!--
   The output is similar to this:
   -->
@@ -1202,7 +1222,7 @@ ReplicaSet with the most replicas. ReplicaSets with zero replicas are not scaled
   都将添加到新的 ReplicaSet 中。使用比例缩放时，可以将额外的副本分布到所有 ReplicaSet。
   较大比例的副本会被添加到拥有最多副本的 ReplicaSet，而较低比例的副本会进入到
   副本较少的 ReplicaSet。所有剩下的副本都会添加到副本最多的 ReplicaSet。
-  具有零副本的 ReplicaSets 不会被扩容。
+  具有零副本的 ReplicaSet 不会被扩容。
 
 <!--
 In our example above, 3 replicas are added to the old ReplicaSet and 2 replicas are added to the
@@ -1401,7 +1421,6 @@ apply multiple fixes in between pausing and resuming without triggering unnecess
   <!--
   The initial state of the Deployment prior to pausing its rollout will continue its function, but new updates to
   the Deployment will not have any effect as long as the Deployment rollout is paused.
-
   -->
   暂停 Deployment 上线之前的初始状态将继续发挥作用，但新的更新在 Deployment
   上线被暂停期间不会产生任何效果。
@@ -1425,12 +1444,12 @@ apply multiple fixes in between pausing and resuming without triggering unnecess
   ```
 
 <!--
-* Watch the status of the rollout until it's done.
+* {{< glossary_tooltip text="Watch" term_id="watch" >}} the status of the rollout until it's done.
 -->
-* 观察上线的状态，直到完成。
+* {{< glossary_tooltip text="监视" term_id="watch" >}}上线的状态，直到完成。
 
   ```shell
-  kubectl get rs -w
+  kubectl get rs --watch
   ```
 
   <!--
@@ -1489,7 +1508,7 @@ You cannot rollback a paused Deployment until you resume it.
 A Deployment enters various states during its lifecycle. It can be [progressing](#progressing-deployment) while
 rolling out a new ReplicaSet, it can be [complete](#complete-deployment), or it can [fail to progress](#failed-deployment).
 -->
-##  Deployment 状态 {#deployment-status}
+## Deployment 状态 {#deployment-status}
 
 Deployment 的生命周期中会有许多状态。上线新的 ReplicaSet 期间可能处于
 [Progressing（进行中）](#progressing-deployment)，可能是
@@ -1503,7 +1522,7 @@ Kubernetes marks a Deployment as _progressing_ when one of the following tasks i
 -->
 ### 进行中的 Deployment  {#progressing-deployment}
 
-执行下面的任务期间，Kubernetes 标记 Deployment 为**进行中**（Progressing）_：
+执行下面的任务期间，Kubernetes 标记 Deployment 为**进行中**（Progressing）：
 
 <!--
 * The Deployment creates a new ReplicaSet.
@@ -1511,9 +1530,9 @@ Kubernetes marks a Deployment as _progressing_ when one of the following tasks i
 * The Deployment is scaling down its older ReplicaSet(s).
 * New Pods become ready or available (ready for at least [MinReadySeconds](#min-ready-seconds)).
 -->
-* Deployment 创建新的 ReplicaSet
-* Deployment 正在为其最新的 ReplicaSet 扩容
-* Deployment 正在为其旧有的 ReplicaSet(s) 缩容
+* Deployment 创建新的 ReplicaSet。
+* Deployment 正在为其最新的 ReplicaSet 扩容。
+* Deployment 正在为其旧有的 ReplicaSet 缩容。
 * 新的 Pod 已经就绪或者可用（就绪至少持续了 [MinReadySeconds](#min-ready-seconds) 秒）。
 
 <!--
@@ -1539,7 +1558,7 @@ Kubernetes marks a Deployment as _complete_ when it has the following characteri
 -->
 ### 完成的 Deployment    {#complete-deployment}
 
-当 Deployment 具有以下特征时，Kubernetes 将其标记为**完成（Complete）**;
+当 Deployment 具有以下特征时，Kubernetes 将其标记为**完成（Complete）**：
 
 <!--
 * All of the replicas associated with the Deployment have been updated to the latest version you've specified, meaning any
@@ -1599,6 +1618,7 @@ and the exit status from `kubectl rollout` is 0 (success):
 ```shell
 echo $?
 ```
+
 ```
 0
 ```
@@ -1645,8 +1665,8 @@ Deployment progress has stalled.
 The following `kubectl` command sets the spec with `progressDeadlineSeconds` to make the controller report
 lack of progress of a rollout for a Deployment after 10 minutes:
 -->
-以下 `kubectl` 命令设置规约中的 `progressDeadlineSeconds`，从而告知控制器
-在 10 分钟后报告 Deployment 的上线没有进展：
+以下 `kubectl` 命令设置规约中的 `progressDeadlineSeconds`，从而告知控制器在
+10 分钟后报告 Deployment 的上线没有进展：
 
 ```shell
 kubectl patch deployment/nginx-deployment -p '{"spec":{"progressDeadlineSeconds":600}}'
@@ -1740,8 +1760,8 @@ Conditions:
 <!--
 If you run `kubectl get deployment nginx-deployment -o yaml`, the Deployment status is similar to this:
 -->
-如果运行 `kubectl get deployment nginx-deployment -o yaml`，Deployment 状态输出
-将类似于这样：
+如果运行 `kubectl get deployment nginx-deployment -o yaml`，
+Deployment 状态输出将类似于这样：
 
 ```
 status:
@@ -1846,6 +1866,7 @@ and the exit status from `kubectl rollout` is 1 (indicating an error):
 ```shell
 echo $?
 ```
+
 ```
 1
 ```
@@ -1884,16 +1905,37 @@ thus that Deployment will not be able to roll back.
 {{< /note >}}
 
 <!--
+The cleanup only starts **after** a Deployment reaches a 
+[complete state](/docs/concepts/workloads/controllers/deployment/#complete-deployment).
+If you set `.spec.revisionHistoryLimit` to 0, any rollout nonetheless triggers creation of a new
+ReplicaSet before Kubernetes removes the old one.
+-->
+清理仅在 Deployment
+达到[完整状态](/zh-cn/docs/concepts/workloads/controllers/deployment/#complete-deployment)**之后**才会开始。  
+如果你将 `.spec.revisionHistoryLimit` 设置为 0，任何上线更新都会触发创建一个新的 ReplicaSet，
+然后 Kubernetes 才会移除旧的 ReplicaSet。
+
+<!--
+Even with a non-zero revision history limit, you can have more ReplicaSets than the limit
+you configure. For example, if pods are crash looping, and there are multiple rolling updates
+events triggered over time, you might end up with more ReplicaSets than the 
+`.spec.revisionHistoryLimit` because the Deployment never reaches a complete state.
+-->
+即使使用非零的修订历史限制，你可以使用的 ReplicaSet 的数量仍可能超过你配置的限制值。
+例如，如果 Pod 反复崩溃，并且在一段时间内触发了多个滚动更新事件，
+你可能会由于 Deployment 从未达到完整状态而导致 ReplicaSet 数量超过 `.spec.revisionHistoryLimit`。
+
+<!--
 ## Canary Deployment
 
 If you want to roll out releases to a subset of users or servers using the Deployment, you
 can create multiple Deployments, one for each release, following the canary pattern described in
-[managing resources](/docs/concepts/cluster-administration/manage-deployment/#canary-deployments).
+[managing resources](/docs/concepts/workloads/management/#canary-deployments).
 -->
 ## 金丝雀部署 {#canary-deployment}
 
 如果要使用 Deployment 向用户子集或服务器子集上线版本，
-则可以遵循[资源管理](/zh-cn/docs/concepts/cluster-administration/manage-deployment/#canary-deployments)所描述的金丝雀模式，
+则可以遵循[资源管理](/zh-cn/docs/concepts/workloads/management/#canary-deployments)所描述的金丝雀模式，
 创建多个 Deployment，每个版本一个。
 
 <!--
@@ -1975,16 +2017,16 @@ deployment --replicas=X`, and then you update that Deployment based on a manifes
 (for example: by running `kubectl apply -f deployment.yaml`),
 then applying that manifest overwrites the manual scaling that you previously did.
 -->
-如果你对某个 Deployment 执行了手动扩缩操作（例如，通过 
+如果你对某个 Deployment 执行了手动扩缩操作（例如，通过
 `kubectl scale deployment deployment --replicas=X`），
 之后基于清单对 Deployment 执行了更新操作（例如通过运行
 `kubectl apply -f deployment.yaml`），那么通过应用清单而完成的更新会覆盖之前手动扩缩所作的变更。
 
 <!--
-If a [HorizontalPodAutoscaler](/docs/tasks/run-application/horizontal-pod-autoscale/) (or any
+If a [HorizontalPodAutoscaler](/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/) (or any
 similar API for horizontal scaling) is managing scaling for a Deployment, don't set `.spec.replicas`.
 -->
-如果一个 [HorizontalPodAutoscaler](/zh-cn/docs/tasks/run-application/horizontal-pod-autoscale/)
+如果一个 [HorizontalPodAutoscaler](/zh-cn/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/)
 （或者其他执行水平扩缩操作的类似 API）在管理 Deployment 的扩缩，
 则不要设置 `.spec.replicas`。
 
@@ -2088,14 +2130,14 @@ replacement will be created immediately (even if the old Pod is still in a Termi
 #### Rolling Update Deployment
 
 The Deployment updates Pods in a rolling update
-fashion when `.spec.strategy.type==RollingUpdate`. You can specify `maxUnavailable` and `maxSurge` to control
+fashion (gradually scale down the old ReplicaSets and scale up the new one) when `.spec.strategy.type==RollingUpdate`. You can specify `maxUnavailable` and `maxSurge` to control
 the rolling update process.
 -->
 #### 滚动更新 Deployment   {#rolling-update-deployment}
 
-Deployment 会在 `.spec.strategy.type==RollingUpdate`时，采取
-滚动更新的方式更新 Pod。你可以指定 `maxUnavailable` 和 `maxSurge` 来控制滚动更新
-过程。
+Deployment 会在 `.spec.strategy.type==RollingUpdate`时，
+采取滚动更新的方式（逐步缩减旧的 ReplicaSet，并扩容新的 ReplicaSet）更新 Pod。
+你可以指定 `maxUnavailable` 和 `maxSurge`来控制滚动更新过程。
 
 <!--
 ##### Max Unavailable
@@ -2108,8 +2150,8 @@ of Pods that can be unavailable during the update process. The value can be an a
 or a percentage of desired Pods (for example, 10%). The absolute number is calculated from percentage by
 rounding down. The value cannot be 0 if `.spec.strategy.rollingUpdate.maxSurge` is 0. The default value is 25%.
 -->
-`.spec.strategy.rollingUpdate.maxUnavailable` 是一个可选字段，用来指定
-更新过程中不可用的 Pod 的个数上限。该值可以是绝对数字（例如，5），也可以是所需
+`.spec.strategy.rollingUpdate.maxUnavailable` 是一个可选字段，
+用来指定更新过程中不可用的 Pod 的个数上限。该值可以是绝对数字（例如，5），也可以是所需
 Pod 的百分比（例如，10%）。百分比值会转换成绝对数并去除小数部分。
 如果 `.spec.strategy.rollingUpdate.maxSurge` 为 0，则此值不能为 0。
 默认值为 25%。
@@ -2120,7 +2162,7 @@ Pods immediately when the rolling update starts. Once new Pods are ready, old Re
 down further, followed by scaling up the new ReplicaSet, ensuring that the total number of Pods available
 at all times during the update is at least 70% of the desired Pods.
 -->
-例如，当此值设置为 30% 时，滚动更新开始时会立即将旧 ReplicaSet 缩容到期望 Pod 个数的70%。
+例如，当此值设置为 30% 时，滚动更新开始时会立即将旧 ReplicaSet 缩容到期望 Pod 个数的 70%。
 新 Pod 准备就绪后，可以继续缩容旧有的 ReplicaSet，然后对新的 ReplicaSet 扩容，
 确保在更新期间可用的 Pod 总数在任何时候都至少为所需的 Pod 个数的 70%。
 
@@ -2129,7 +2171,7 @@ at all times during the update is at least 70% of the desired Pods.
 
 `.spec.strategy.rollingUpdate.maxSurge` is an optional field that specifies the maximum number of Pods
 that can be created over the desired number of Pods. The value can be an absolute number (for example, 5) or a
-percentage of desired Pods (for example, 10%). The value cannot be 0 if `MaxUnavailable` is 0. The absolute number
+percentage of desired Pods (for example, 10%). The value cannot be 0 if `maxUnavailable` is 0. The absolute number
 is calculated from the percentage by rounding up. The default value is 25%.
 -->
 ##### 最大峰值   {#max-surge}
@@ -2144,10 +2186,111 @@ For example, when this value is set to 30%, the new ReplicaSet can be scaled up 
 rolling update starts, such that the total number of old and new Pods does not exceed 130% of desired
 Pods. Once old Pods have been killed, the new ReplicaSet can be scaled up further, ensuring that the
 total number of Pods running at any time during the update is at most 130% of desired Pods.
+
+Here are some Rolling Update Deployment examples that use the `maxUnavailable` and `maxSurge`:
 -->
 例如，当此值为 30% 时，启动滚动更新后，会立即对新的 ReplicaSet 扩容，同时保证新旧 Pod
 的总数不超过所需 Pod 总数的 130%。一旦旧 Pod 被杀死，新的 ReplicaSet 可以进一步扩容，
 同时确保更新期间的任何时候运行中的 Pod 总数最多为所需 Pod 总数的 130%。
+
+以下是一些使用 `maxUnavailable` 和 `maxSurge` 的滚动更新 Deployment 的示例：
+
+{{< tabs name="tab_with_md" >}}
+{{% tab name="最大不可用" %}}
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+```
+
+{{% /tab %}}
+{{% tab name="最大峰值" %}}
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+```
+
+{{% /tab %}}
+{{% tab name="两项混合" %}}
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+```
+
+{{% /tab %}}
+{{< /tabs >}}
 
 <!--
 ### Progress Deadline Seconds
@@ -2160,9 +2303,9 @@ retrying the Deployment. This defaults to 600. In the future, once automatic rol
 controller will roll back a Deployment as soon as it observes such a condition.
 -->
 ### 进度期限秒数    {#progress-deadline-seconds}
- 
+
 `.spec.progressDeadlineSeconds` 是一个可选字段，用于指定系统在报告 Deployment
-[进展失败](#failed-deployment) 之前等待 Deployment 取得进展的秒数。
+[进展失败](#failed-deployment)之前等待 Deployment 取得进展的秒数。
 这类报告会在资源状态中体现为 `type: Progressing`、`status: False`、
 `reason: ProgressDeadlineExceeded`。Deployment 控制器将在默认 600 毫秒内持续重试 Deployment。
 将来，一旦实现了自动回滚，Deployment 控制器将在探测到这样的条件时立即回滚 Deployment。
@@ -2189,13 +2332,39 @@ a Pod is considered ready, see [Container Probes](/docs/concepts/workloads/pods/
 可参考[容器探针](/zh-cn/docs/concepts/workloads/pods/pod-lifecycle/#container-probes)。
 
 <!--
+### Terminating Pods
+
+{{< feature-state feature_gate_name="DeploymentReplicaSetTerminatingReplicas" >}}
+
+You can enable this feature by setting the `DeploymentReplicaSetTerminatingReplicas`
+[feature gate](/docs/reference/command-line-tools-reference/feature-gates/)
+on the [API server](/docs/reference/command-line-tools-reference/kube-apiserver/)
+and on the [kube-controller-manager](/docs/reference/command-line-tools-reference/kube-controller-manager/)
+Pods that become terminating due to deletion or scale down may take a long time to terminate, and may consume
+additional resources during that period. As a result, the total number of all pods can temporarily exceed
+`.spec.replicas`. Terminating pods can be tracked using the `.status.terminatingReplicas` field of the Deployment.
+-->
+### 终止 Pod  {#terminating-pods}
+
+{{< feature-state feature_gate_name="DeploymentReplicaSetTerminatingReplicas" >}}
+
+你可以通过在 [API 服务器](/zh-cn/docs/reference/command-line-tools-reference/kube-apiserver/)
+和 [kube-controller-manager](/zh-cn/docs/reference/command-line-tools-reference/kube-controller-manager/)
+上启用 `DeploymentReplicaSetTerminatingReplicas`
+[特性门控](/zh-cn/docs/reference/command-line-tools-reference/feature-gates/)来开启此功能。
+
+由于删除或缩减副本导致的终止中的 Pod 可能需要较长时间才能完成终止，且在此期间可能会消耗额外资源。
+因此，所有 Pod 的总数可能会暂时超过 `.spec.replicas` 指定的数量。
+可以通过 Deployment 的 `.status.terminatingReplicas` 字段来跟踪终止中的 Pod。
+
+<!--
 ### Revision History Limit
 
 A Deployment's revision history is stored in the ReplicaSets it controls.
 -->
-### 修订历史限制
+### 修订历史限制   {#revision-history-limit}
 
-Deployment 的修订历史记录存储在它所控制的 ReplicaSets 中。
+Deployment 的修订历史记录存储在它所控制的 ReplicaSet 中。
 
 <!--
 `.spec.revisionHistoryLimit` is an optional field that specifies the number of old ReplicaSets to retain
@@ -2206,7 +2375,7 @@ however its ideal value depends on the frequency and stability of new Deployment
 -->
 `.spec.revisionHistoryLimit` 是一个可选字段，用来设定出于回滚目的所要保留的旧 ReplicaSet 数量。
 这些旧 ReplicaSet 会消耗 etcd 中的资源，并占用 `kubectl get rs` 的输出。
-每个 Deployment 修订版本的配置都存储在其 ReplicaSets 中；因此，一旦删除了旧的 ReplicaSet，
+每个 Deployment 修订版本的配置都存储在其 ReplicaSet 中；因此，一旦删除了旧的 ReplicaSet，
 将失去回滚到 Deployment 的对应修订版本的能力。
 默认情况下，系统保留 10 个旧 ReplicaSet，但其理想值取决于新 Deployment 的频率和稳定性。
 

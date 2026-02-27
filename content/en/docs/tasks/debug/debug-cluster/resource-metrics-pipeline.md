@@ -15,8 +15,8 @@ including metrics for CPU and memory.  If you deploy the Metrics API into your c
 the Kubernetes API can then query for this information, and you can use Kubernetes' access control
 mechanisms to manage permissions to do so.
 
-The [HorizontalPodAutoscaler](/docs/tasks/run-application/horizontal-pod-autoscale/)  (HPA) and
-[VerticalPodAutoscaler](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler#readme) (VPA)
+The [HorizontalPodAutoscaler](/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/)  (HPA) and
+[VerticalPodAutoscaler](/docs/concepts/workloads/autoscaling/vertical-pod-autoscale/) (VPA)
 use data from the metrics API to adjust workload replicas and resources to meet customer demand.
 
 You can also view the resource metrics using the
@@ -67,7 +67,7 @@ The architecture components, from right to left in the figure, consist of the fo
 
 * [cAdvisor](https://github.com/google/cadvisor): Daemon for collecting, aggregating and exposing
   container metrics included in Kubelet.
-* [kubelet](/docs/concepts/overview/components/#kubelet): Node agent for managing container
+* [kubelet](/docs/concepts/architecture/#kubelet): Node agent for managing container
   resources. Resource metrics are accessible using the `/metrics/resource` and `/stats` kubelet
   API endpoints.
 * [node level resource metrics](/docs/reference/instrumentation/node-metrics): API provided by the kubelet for discovering and retrieving

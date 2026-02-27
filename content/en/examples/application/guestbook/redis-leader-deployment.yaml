@@ -22,7 +22,8 @@ spec:
     spec:
       containers:
       - name: leader
-        image: "docker.io/redis:6.0.5"
+        image: "registry.k8s.io/redis@sha256:cb111d1bd870a6a471385a4a69ad17469d326e9dd91e0e455350cacf36e1b3ee"
+        #image: "docker.io/redis:6.0.5"
         # https://hub.docker.com/layers/library/redis/6.0.5/images/sha256-247208e594f3b0efb5d0974a5f064f15a21456d509d006268428baafbb0fa502?context=explore
         resources:
           requests:

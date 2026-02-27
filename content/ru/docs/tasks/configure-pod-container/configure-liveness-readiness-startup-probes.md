@@ -1,7 +1,7 @@
 ---
 title: Настройка Liveness, Readiness и Startup проб
 content_type: task
-weight: 110
+weight: 140
 ---
 
 <!-- overview -->
@@ -124,7 +124,7 @@ liveness-exec   1/1       Running   1          1m
 
 ## Определение liveness HTTP запроса
 
-Другой вид liveness пробы использует запрос HTTP GET. Ниже представлен файл конфигурации для Pod, который запускает контейнер, основанный на образе `registry.k8s.io/liveness`.
+Другой вид liveness пробы использует запрос HTTP GET. Ниже представлен файл конфигурации для Pod, который запускает контейнер, основанный на образе `registry.k8s.io/e2e-test-images/agnhost`.
 
 {{% codenew file="pods/probe/http-liveness.yaml" %}}
 
@@ -213,7 +213,6 @@ kubectl describe pod goproxy
 ports:
 - name: liveness-port
   containerPort: 8080
-  hostPort: 8080
 
 livenessProbe:
   httpGet:
@@ -234,8 +233,7 @@ livenessProbe:
 ports:
 - name: liveness-port
   containerPort: 8080
-  hostPort: 8080
-
+  
 livenessProbe:
   httpGet:
     path: /healthz
@@ -298,7 +296,7 @@ Eventually, some of this section could be moved to a concept topic.
 вы можете использовать для более точного контроля поведения
 liveness и readiness проверок:
 
-* `initialDelaySeconds`: Количество секунд от старта контейнера до начала liveness или readiness проб. По умолчанию 0 секунд. Минимальное значение 0.
+* `initialDelaySeconds`: Количество секунд от старта контейнера до инициации startup-, liveness- или readiness-проб. Если определена startup-проба, задержки от liveness- и readiness-проб не вступают в силу, пока startup-проба не завершилась с успехом. Если значение periodSeconds выше initialDelaySeconds, то initialDelaySeconds игнорируется. По умолчанию 0 секунд. Минимальное значение 0.
 * `periodSeconds`: Длительность времени (в секундах) между двумя последовательными проведениями проб. По умолчанию 10
 секунд. Минимальное значение 1.
 * `timeoutSeconds`: Количество секунд ожидания пробы. По умолчанию

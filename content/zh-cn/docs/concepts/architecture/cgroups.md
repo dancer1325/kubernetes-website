@@ -1,5 +1,5 @@
 ---
-title: 关于 cgroup v2
+title: 关于 CGroup v2
 content_type: concept
 weight: 50
 ---
@@ -29,14 +29,15 @@ the new generation of the `cgroup` API.
 来强制执行[为 Pod 和容器管理资源](/zh-cn/docs/concepts/configuration/manage-resources-containers/)，
 这包括为容器化工作负载配置 CPU/内存请求和限制。
 
-Linux 中有两个 cgroup 版本：cgroup v1 和 cgroup v2。cgroup v2 是新一代的 `cgroup` API。
+Linux 中有两个 CGroup 版本：CGroup v1 和 CGroup v2。
+CGroup v2 是新一代的 `cgroup` API。
 
 <!-- body -->
 
 <!--
 ## What is cgroup v2? {#cgroup-v2}
 -->
-## 什么是 cgroup v2？  {#cgroup-v2}
+## 什么是 CGroup v2？  {#cgroup-v2}
 
 {{< feature-state for_k8s_version="v1.25" state="stable" >}}
 
@@ -45,7 +46,8 @@ cgroup v2 is the next version of the Linux `cgroup` API. cgroup v2 provides a
 unified control system with enhanced resource management
 capabilities.
 -->
-cgroup v2 是 Linux `cgroup` API 的下一个版本。cgroup v2 提供了一个具有增强资源管理能力的统一控制系统。
+CGroup v2 是 Linux `cgroup` API 的下一个版本。
+CGroup v2 提供了一个具有增强资源管理能力的统一控制系统。
 
 <!--
 cgroup v2 offers several improvements over cgroup v1, such as the following:
@@ -57,7 +59,7 @@ cgroup v2 offers several improvements over cgroup v1, such as the following:
   - Unified accounting for different types of memory allocations (network memory, kernel memory, etc)
   - Accounting for non-immediate resource changes such as page cache write backs
 -->
-cgroup v2 对 cgroup v1 进行了多项改进，例如：
+CGroup v2 对 CGroup v1 进行了多项改进，例如：
 
 - API 中单个统一的层次结构设计
 - 更安全的子树委派给容器
@@ -70,11 +72,12 @@ cgroup v2 对 cgroup v1 进行了多项改进，例如：
 <!--
 Some Kubernetes features exclusively use cgroup v2 for enhanced resource
 management and isolation. For example, the
-[MemoryQoS](/blog/2021/11/26/qos-memory-resources/) feature improves memory QoS
+[MemoryQoS](/docs/concepts/workloads/pods/pod-qos/#memory-qos-with-cgroup-v2) feature improves memory QoS
 and relies on cgroup v2 primitives.
 -->
-一些 Kubernetes 特性专门使用 cgroup v2 来增强资源管理和隔离。
-例如，[MemoryQoS](/blog/2021/11/26/qos-memory-resources/) 特性改进了内存 QoS 并依赖于 cgroup v2 原语。
+一些 Kubernetes 特性专门使用 CGroup v2 来增强资源管理和隔离。
+例如，[MemoryQoS](/zh-cn/docs/concepts/workloads/pods/pod-qos/#memory-qos-with-cgroup-v2)
+特性改进了内存 QoS 并依赖于 CGroup v2 原语。
 
 <!--
 ## Using cgroup v2 {#using-cgroupv2}
@@ -86,9 +89,9 @@ To check if your distribution uses cgroup v2, refer to [Identify cgroup version 
 -->
 ## 使用 cgroup v2  {#using-cgroupv2}
 
-使用 cgroup v2 的推荐方法是使用一个默认启用 cgroup v2 的 Linux 发行版。
+使用 cgroup v2 的推荐方法是使用一个默认启用 CGroup v2 的 Linux 发行版。
 
-要检查你的发行版是否使用 cgroup v2，请参阅[识别 Linux 节点上的 cgroup 版本](#check-cgroup-version)。
+要检查你的发行版是否使用 CGroup v2，请参阅[识别 Linux 节点上的 CGroup 版本](#check-cgroup-version)。
 
 <!--
 ### Requirements
@@ -104,25 +107,25 @@ cgroup v2 has the following requirements:
 -->
 ### 要求  {#requirements}
 
-cgroup v2 具有以下要求：
+CGroup v2 具有以下要求：
 
-* 操作系统发行版启用 cgroup v2
+* 操作系统发行版启用 CGroup v2
 * Linux 内核为 5.8 或更高版本
-* 容器运行时支持 cgroup v2。例如：
+* 容器运行时支持 CGroup v2。例如：
   * [containerd](https://containerd.io/) v1.4 和更高版本
   * [cri-o](https://cri-o.io/) v1.20 和更高版本
 * kubelet 和容器运行时被配置为使用
-  [systemd cgroup 驱动](/zh-cn/docs/setup/production-environment/container-runtimes#systemd-cgroup-driver)
+  [systemd CGroup 驱动](/zh-cn/docs/setup/production-environment/container-runtimes#systemd-cgroup-driver)
 
 <!--
 ### Linux Distribution cgroup v2 support
 
 For a list of Linux distributions that use cgroup v2, refer to the [cgroup v2 documentation](https://github.com/opencontainers/runc/blob/main/docs/cgroup-v2.md)
 -->
-### Linux 发行版 cgroup v2 支持  {#linux-distribution-cgroup-v2-support}
+### Linux 发行版 CGroup v2 支持  {#linux-distribution-cgroup-v2-support}
 
-有关使用 cgroup v2 的 Linux 发行版的列表，
-请参阅 [cgroup v2 文档](https://github.com/opencontainers/runc/blob/main/docs/cgroup-v2.md)。
+有关使用 CGroup v2 的 Linux 发行版的列表，
+请参阅 [CGroup v2 文档](https://github.com/opencontainers/runc/blob/main/docs/cgroup-v2.md)。
 
 <!-- the list should be kept in sync with https://github.com/opencontainers/runc/blob/main/docs/cgroup-v2.md -->
 <!--
@@ -151,13 +154,13 @@ under `/etc/default/grub`, followed by `sudo update-grub`.  However, the
 recommended approach is to use a distribution that already enables cgroup v2 by
 default.
 -->
-要检查你的发行版是否使用 cgroup v2，
-请参阅你的发行版文档或遵循[识别 Linux 节点上的 cgroup 版本](#check-cgroup-version)中的指示说明。
+要检查你的发行版是否使用 CGroup v2，
+请参阅你的发行版文档或遵循[识别 Linux 节点上的 CGroup 版本](#check-cgroup-version)中的指示说明。
 
-你还可以通过修改内核 cmdline 引导参数在你的 Linux 发行版上手动启用 cgroup v2。
+你还可以通过修改内核 cmdline 引导参数在你的 Linux 发行版上手动启用 CGroup v2。
 如果你的发行版使用 GRUB，则应在 `/etc/default/grub` 下的 `GRUB_CMDLINE_LINUX`
 中添加 `systemd.unified_cgroup_hierarchy=1`，
-然后执行 `sudo update-grub`。不过，推荐的方法仍是使用一个默认已启用 cgroup v2 的发行版。
+然后执行 `sudo update-grub`。不过，推荐的方法仍是使用一个默认已启用 CGroup v2 的发行版。
 
 <!--
 ### Migrating to cgroup v2 {#migrating-cgroupv2}
@@ -168,11 +171,11 @@ to a kernel version that enables cgroup v2 by default.
 The kubelet automatically detects that the OS is running on cgroup v2 and
 performs accordingly with no additional configuration required.
 -->
-### 迁移到 cgroup v2   {#migrating-cgroupv2}
+### 迁移到 CGroup v2   {#migrating-cgroupv2}
 
-要迁移到 cgroup v2，需确保满足[要求](#requirements)，然后升级到一个默认启用 cgroup v2 的内核版本。
+要迁移到 CGroup v2，需确保满足[要求](#requirements)，然后升级到一个默认启用 CGroup v2 的内核版本。
 
-kubelet 能够自动检测操作系统是否运行在 cgroup v2 上并相应调整其操作，无需额外配置。
+kubelet 能够自动检测操作系统是否运行在 CGroup v2 上并相应调整其操作，无需额外配置。
 
 <!--
 There should not be any noticeable difference in the user experience when
@@ -183,10 +186,11 @@ cgroup v2 uses a different API than cgroup v1, so if there are any
 applications that directly access the cgroup file system, they need to be
 updated to newer versions that support cgroup v2. For example:
 -->
-切换到 cgroup v2 时，用户体验应没有任何明显差异，除非用户直接在节点上或从容器内访问 cgroup 文件系统。
+切换到 CGroup v2 时，用户体验应没有任何明显差异，
+除非用户直接在节点上或从容器内访问 CGroup 文件系统。
 
-cgroup v2 使用一个与 cgroup v1 不同的 API，因此如果有任何应用直接访问 cgroup 文件系统，
-则需要将这些应用更新为支持 cgroup v2 的版本。例如：
+CGroup v2 使用一个与 CGroup v1 不同的 API，因此如果有任何应用直接访问 CGroup 文件系统，
+则需要将这些应用更新为支持 CGroup v2 的版本。例如：
 
 <!--
 * Some third-party monitoring and security agents may depend on the cgroup filesystem.
@@ -195,18 +199,18 @@ cgroup v2 使用一个与 cgroup v1 不同的 API，因此如果有任何应用�
  DaemonSet for monitoring pods and containers, update it to v0.43.0 or later.
  * If you deploy Java applications, prefer to use versions which fully support cgroup v2:
     * [OpenJDK / HotSpot](https://bugs.openjdk.org/browse/JDK-8230305): jdk8u372, 11.0.16, 15 and later
-    * [IBM Semeru Runtimes](https://www.eclipse.org/openj9/docs/version0.33/#control-groups-v2-support): jdk8u345-b01, 11.0.16.0, 17.0.4.0, 18.0.2.0 and later
-    * [IBM Java](https://www.ibm.com/docs/en/sdk-java-technology/8?topic=new-service-refresh-7#whatsnew_sr7__fp15): 8.0.7.15 and later
+    * [IBM Semeru Runtimes](https://www.ibm.com/support/pages/apar/IJ46681): 8.0.382.0, 11.0.20.0, 17.0.8.0, and later
+    * [IBM Java](https://www.ibm.com/support/pages/apar/IJ46681): 8.0.8.6 and later
 * If you are using the [uber-go/automaxprocs](https://github.com/uber-go/automaxprocs) package, make sure
   the version you use is v1.5.1 or higher.
 -->
-* 一些第三方监控和安全代理可能依赖于 cgroup 文件系统。你要将这些代理更新到支持 cgroup v2 的版本。
+* 一些第三方监控和安全代理可能依赖于 cgroup 文件系统。你要将这些代理更新到支持 CGroup v2 的版本。
 * 如果以独立的 DaemonSet 的形式运行 [cAdvisor](https://github.com/google/cadvisor) 以监控 Pod 和容器，
   需将其更新到 v0.43.0 或更高版本。
-* 如果你部署 Java 应用程序，最好使用完全支持 cgroup v2 的版本：
-    * [OpenJDK / HotSpot](https://bugs.openjdk.org/browse/JDK-8230305): jdk8u372、11.0.16、15 及更高的版本
-    * [IBM Semeru Runtimes](https://www.eclipse.org/openj9/docs/version0.33/#control-groups-v2-support): jdk8u345-b01、11.0.16.0、17.0.4.0、18.0.2.0 及更高的版本
-    * [IBM Java](https://www.ibm.com/docs/en/sdk-java-technology/8?topic=new-service-refresh-7#whatsnew_sr7__fp15): 8.0.7.15 及更高的版本
+* 如果你部署 Java 应用程序，最好使用完全支持 CGroup v2 的版本：
+    * [OpenJDK / HotSpot](https://bugs.openjdk.org/browse/JDK-8230305)：jdk8u372、11.0.16、15 及更高的版本
+    * [IBM Semeru Runtimes](https://www.ibm.com/support/pages/apar/IJ46681)：8.0.382.0、11.0.20.0、17.0.8.0 及更高的版本
+    * [IBM Java](https://www.ibm.com/support/pages/apar/IJ46681)：8.0.8.6 及更高的版本
 * 如果你正在使用 [uber-go/automaxprocs](https://github.com/uber-go/automaxprocs) 包，
   确保你使用的版本是 v1.5.1 或者更高。
 
@@ -218,10 +222,10 @@ default cgroup version configured on the OS. To check which cgroup version your
 distribution uses, run the `stat -fc %T /sys/fs/cgroup/` command on
 the node:
 -->
-## 识别 Linux 节点上的 cgroup 版本 {#check-cgroup-version}
+## 识别 Linux 节点上的 CGroup 版本 {#check-cgroup-version}
 
-cgroup 版本取决于正在使用的 Linux 发行版和操作系统上配置的默认 cgroup 版本。
-要检查你的发行版使用的是哪个 cgroup 版本，请在该节点上运行 `stat -fc %T /sys/fs/cgroup/` 命令：
+CGroup 版本取决于正在使用的 Linux 发行版和操作系统上配置的默认 CGroup 版本。
+要检查你的发行版使用的是哪个 CGroup 版本，请在该节点上运行 `stat -fc %T /sys/fs/cgroup/` 命令：
 
 ```shell
 stat -fc %T /sys/fs/cgroup/
@@ -232,9 +236,31 @@ For cgroup v2, the output is `cgroup2fs`.
 
 For cgroup v1, the output is `tmpfs.`
 -->
-对于 cgroup v2，输出为 `cgroup2fs`。
+对于 CGroup v2，输出为 `cgroup2fs`。
 
-对于 cgroup v1，输出为 `tmpfs`。
+对于 CGroup v1，输出为 `tmpfs`。
+
+<!--
+## Deprecation of cgroup v1
+-->
+## 弃用 CGroup v1
+
+{{< feature-state for_k8s_version="v1.35" state="deprecated" >}}
+
+<!--
+Kubernetes has deprecated cgroup v1.
+Removal will follow [Kubernetes deprecation policy](/docs/reference/using-api/deprecation-policy/).
+
+Kubelet will no longer start on a cgroup v1 node by default.
+To disable this setting a cluster admin should set `failCgroupV1` to false in the [kubelet configuration file](/docs/tasks/administer-cluster/kubelet-config-file/).
+-->
+Kubernetes 已弃用 CGroup v1。
+移除将遵循 [Kubernetes 弃用策略](/zh-cn/docs/reference/using-api/deprecation-policy/)。
+
+默认情况下，kubelet 将不再在 CGroup v1 节点上启动。
+要禁用此设置，集群管理员应在
+[kubelet 配置文件](/zh-cn/docs/tasks/administer-cluster/kubelet-config-file/)中将
+`failCgroupV1` 设置为 false。
 
 ## {{% heading "whatsnext" %}}
 
@@ -243,7 +269,6 @@ For cgroup v1, the output is `tmpfs.`
 - Learn more about [container runtime](/docs/concepts/architecture/cri)
 - Learn more about [cgroup drivers](/docs/setup/production-environment/container-runtimes#cgroup-drivers)
 -->
-- 进一步了解 [cgroups](https://man7.org/linux/man-pages/man7/cgroups.7.html)
+- 进一步了解 [CGroup](https://man7.org/linux/man-pages/man7/cgroups.7.html)
 - 进一步了解[容器运行时](/zh-cn/docs/concepts/architecture/cri)
-- 进一步了解 [cgroup 驱动](/zh-cn/docs/setup/production-environment/container-runtimes#cgroup-drivers)
-
+- 进一步了解 [CGroup 驱动](/zh-cn/docs/setup/production-environment/container-runtimes#cgroup-drivers)

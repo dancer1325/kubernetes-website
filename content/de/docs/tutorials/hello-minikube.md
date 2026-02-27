@@ -2,12 +2,6 @@
 title: Hallo Minikube
 content_type: tutorial
 weight: 5
-menu:
-  main:
-    title: "Loslegen"
-    weight: 10
-    post: >
-      <p>Sind Sie bereit, Ihre Hände schmutzig zu machen? Erstellen Sie einen einfachen Kubernetes-Cluster, auf dem "Hallo Welt" für Node.js ausgeführt wird.</p>
 card:
   name: tutorials
   weight: 10
@@ -77,7 +71,7 @@ Deployments sind die empfohlene Methode zum Verwalten der Erstellung und Skalier
 Der Pod führt einen Container basierend auf dem bereitgestellten Docker-Image aus.
 
     ```shell
-    kubectl create deployment hello-node --image=registry.k8s.io/echoserver:1.4
+    kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.53 -- /agnhost netexec --http-port=8080
     ```
 
 2. Anzeigen des Deployments:

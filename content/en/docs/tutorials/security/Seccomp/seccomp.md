@@ -150,8 +150,7 @@ If observing the filesystem of that container, you should see that the
 of the kubelet. Use `docker exec` to run a command in the Pod:
 
 ```shell
-# Change 6a96207fed4b to the container ID you saw from "docker ps"
-docker exec -it 6a96207fed4b ls /var/lib/kubelet/seccomp/profiles
+docker exec -it kind-control-plane ls /var/lib/kubelet/seccomp/profiles
 ```
 
 ```
@@ -259,8 +258,8 @@ at the port exposed by this Service. Use `docker exec` to run the `curl` command
 container belonging to that control plane container:
 
 ```shell
-# Change 6a96207fed4b to the control plane container ID and 32373 to the port number you saw from "docker ps"
-docker exec -it 6a96207fed4b curl localhost:32373
+# Change 32373 to the port number you saw from "kubectl get service audit-pod"
+docker exec -it kind-control-plane curl localhost:32373
 ```
 
 ```
@@ -401,8 +400,8 @@ fine-pod    NodePort   10.111.36.142   <none>        5678:32373/TCP   72s
 Use `curl` to access that endpoint from inside the kind control plane container:
 
 ```shell
-# Change 6a96207fed4b to the control plane container ID and 32373 to the port number you saw from "docker ps"
-docker exec -it 6a96207fed4b curl localhost:32373
+# Change 32373 to the port number you saw from "kubectl get service fine-pod"
+docker exec -it kind-control-plane curl localhost:32373
 ```
 
 ```
@@ -482,7 +481,7 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
-    image: kindest/node:v1.23.0@sha256:49824ab1727c04e56a21a5d8372a402fcd32ea51ac96a2706a12af38934f81ac
+    image: kindest/node:v1.28.0@sha256:9f3ff58f19dcf1a0611d11e8ac989fdb30a28f40f236f59f0bea31fb956ccf5c
     kubeadmConfigPatches:
       - |
         kind: JoinConfiguration
@@ -490,7 +489,7 @@ nodes:
           kubeletExtraArgs:
             seccomp-default: "true"
   - role: worker
-    image: kindest/node:v1.23.0@sha256:49824ab1727c04e56a21a5d8372a402fcd32ea51ac96a2706a12af38934f81ac
+    image: kindest/node:v1.28.0@sha256:9f3ff58f19dcf1a0611d11e8ac989fdb30a28f40f236f59f0bea31fb956ccf5c
     kubeadmConfigPatches:
       - |
         kind: JoinConfiguration

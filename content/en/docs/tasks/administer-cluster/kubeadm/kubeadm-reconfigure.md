@@ -3,7 +3,7 @@ reviewers:
 - sig-cluster-lifecycle
 title: Reconfiguring a kubeadm cluster
 content_type: task
-weight: 30
+weight: 90
 ---
 
 <!-- overview -->
@@ -60,7 +60,7 @@ component configuration and avoid introducing typos and YAML indentation mistake
 #### Updating the `ClusterConfiguration`
 
 During cluster creation and upgrade, kubeadm writes its
-[`ClusterConfiguration`](/docs/reference/config-api/kubeadm-config.v1beta3/)
+[`ClusterConfiguration`](/docs/reference/config-api/kubeadm-config.v1beta4/)
 in a ConfigMap called `kubeadm-config` in the `kube-system` namespace.
 
 To change a particular option in the `ClusterConfiguration` you can edit the ConfigMap with this command:
@@ -86,8 +86,8 @@ keys must be reflected in the associated files in the manifests directory on a c
 
 Such changes may include:
 - `extraArgs` - requires updating the list of flags passed to a component container
-- `extraMounts` - requires updated the volume mounts for a component container
-- `*SANs` - requires writing new certificates with updated Subject Alternative Names.
+- `extraVolumes` - requires updating the volume mounts for a component container
+- `*SANs` - requires writing new certificates with updated Subject Alternative Names
 
 Before proceeding with these changes, make sure you have backed up the directory `/etc/kubernetes/`.
 
@@ -99,11 +99,14 @@ kubeadm init phase certs <component-name> --config <config-file>
 To write new manifest files in `/etc/kubernetes/manifests` you can use:
 
 ```shell
+# For Kubernetes control plane components
 kubeadm init phase control-plane <component-name> --config <config-file>
+# For local etcd
+kubeadm init phase etcd local --config <config-file>
 ```
 
 The `<config-file>` contents must match the updated `ClusterConfiguration`.
-The `<component-name>` value must be the name of the component.
+The `<component-name>` value must be a name of a Kubernetes control plane component (`apiserver`, `controller-manager` or `scheduler`).
 
 {{< note >}}
 Updating a file in `/etc/kubernetes/manifests` will tell the kubelet to restart the static Pod for the corresponding component.
@@ -131,7 +134,7 @@ The configuration is located under the `data.kubelet` key.
 To reflect the change on kubeadm nodes you must do the following:
 - Log in to a kubeadm node
 - Run `kubeadm upgrade node phase kubelet-config` to download the latest `kubelet-config`
-ConfigMap contents into the local file `/var/lib/kubelet/config.conf`
+ConfigMap contents into the local file `/var/lib/kubelet/config.yaml`
 - Edit the file `/var/lib/kubelet/kubeadm-flags.env` to apply additional configuration with
 flags
 - Restart the kubelet service with `systemctl restart kubelet`
@@ -142,10 +145,10 @@ Do these changes one node at a time to allow workloads to be rescheduled properl
 
 {{< note >}}
 During `kubeadm upgrade`, kubeadm downloads the `KubeletConfiguration` from the
-`kubelet-config` ConfigMap and overwrite the contents of `/var/lib/kubelet/config.conf`.
+`kubelet-config` ConfigMap and overwrite the contents of `/var/lib/kubelet/config.yaml`.
 This means that node local configuration must be applied either by flags in
 `/var/lib/kubelet/kubeadm-flags.env` or by manually updating the contents of
-`/var/lib/kubelet/config.conf` after `kubeadm upgrade`, and then restarting the kubelet.
+`/var/lib/kubelet/config.yaml` after `kubeadm upgrade`, and then restarting the kubelet.
 {{< /note >}}
 
 ### Applying kube-proxy configuration changes
@@ -170,16 +173,10 @@ The configuration is located under the `data.config.conf` key.
 
 Once the `kube-proxy` ConfigMap is updated, you can restart all kube-proxy Pods:
 
-Obtain the Pod names:
+Delete the Pods with:
 
 ```shell
-kubectl get po -n kube-system | grep kube-proxy
-```
-
-Delete a Pod with:
-
-```shell
-kubectl delete po -n kube-system <pod-name>
+kubectl delete po -n kube-system -l k8s-app=kube-proxy
 ```
 
 New Pods that use the updated ConfigMap will be created.
@@ -205,21 +202,11 @@ kubectl edit service -n kube-system kube-dns
 
 #### Reflecting the CoreDNS changes
 
-Once the CoreDNS changes are applied you can delete the CoreDNS Pods:
-
-Obtain the Pod names:
+Once the CoreDNS changes are applied you can restart the CoreDNS deployment:
 
 ```shell
-kubectl get po -n kube-system | grep coredns
+kubectl rollout restart deployment -n kube-system coredns
 ```
-
-Delete a Pod with:
-
-```shell
-kubectl delete po -n kube-system <pod-name>
-```
-
-New Pods with the updated CoreDNS configuration will be created.
 
 {{< note >}}
 kubeadm does not allow CoreDNS configuration during cluster creation and upgrade.
@@ -264,14 +251,14 @@ the set of node specific patches must be updated accordingly.
 
 #### Persisting kubelet reconfiguration
 
-Any changes to the `KubeletConfiguration` stored in `/var/lib/kubelet/config.conf` will be overwritten on
+Any changes to the `KubeletConfiguration` stored in `/var/lib/kubelet/config.yaml` will be overwritten on
 `kubeadm upgrade` by downloading the contents of the cluster wide `kubelet-config` ConfigMap.
-To persist kubelet node specific configuration either the file `/var/lib/kubelet/config.conf`
+To persist kubelet node specific configuration either the file `/var/lib/kubelet/config.yaml`
 has to be updated manually post-upgrade or the file `/var/lib/kubelet/kubeadm-flags.env` can include flags.
 The kubelet flags override the associated `KubeletConfiguration` options, but note that
 some of the flags are deprecated.
 
-A kubelet restart will be required after changing `/var/lib/kubelet/config.conf` or
+A kubelet restart will be required after changing `/var/lib/kubelet/config.yaml` or
 `/var/lib/kubelet/kubeadm-flags.env`.
 
 ## {{% heading "whatsnext" %}}

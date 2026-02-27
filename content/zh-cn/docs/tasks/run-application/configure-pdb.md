@@ -228,12 +228,12 @@ for policy/v1 an empty selector matches every pod in the namespace.
 <!--
 You can specify only one of `maxUnavailable` and `minAvailable` in a single `PodDisruptionBudget`.
 `maxUnavailable` can only be used to control the eviction of pods
-that have an associated controller managing them. In the examples below, "desired replicas"
+that all have the same associated controller managing them. In the examples below, "desired replicas"
 is the `scale` of the controller managing the pods being selected by the
 `PodDisruptionBudget`.
 -->
 用户在同一个 `PodDisruptionBudget` 中只能够指定 `maxUnavailable` 和 `minAvailable` 中的一个。
-`maxUnavailable` 只能够用于控制存在相应控制器的 Pod 的驱逐（即不受控制器控制的 Pod 不在
+`maxUnavailable` 只能够用于控制存在同一个关联控制器的 Pod 的驱逐（即不受控制器控制的 Pod 不在
 `maxUnavailable` 控制范围内）。在下面的示例中，
 “所需副本”指的是相应控制器的 `scale`，控制器对 `PodDisruptionBudget` 所选择的 Pod 进行管理。
 
@@ -311,14 +311,14 @@ Example PDB Using minAvailable:
 -->
 使用 minAvailable 的 PDB 示例：
 
-{{% code file="policy/zookeeper-pod-disruption-budget-minavailable.yaml" %}}
+{{% code_sample file="policy/zookeeper-pod-disruption-budget-minavailable.yaml" %}}
 
 <!--
 Example PDB Using maxUnavailable:
 -->
 使用 maxUnavailable 的 PDB 示例：
 
-{{% code file="policy/zookeeper-pod-disruption-budget-maxunavailable.yaml" %}}
+{{% code_sample file="policy/zookeeper-pod-disruption-budget-maxunavailable.yaml" %}}
 
 <!--
 For example, if the above `zk-pdb` object selects the pods of a StatefulSet of size 3, both
@@ -429,19 +429,7 @@ These pods are tracked via `.status.currentHealthy` field in the PDB status.
 -->
 ## 不健康的 Pod 驱逐策略   {#unhealthy-pod-eviction-policy}
 
-{{< feature-state for_k8s_version="v1.26" state="beta" >}}
-
-{{< note >}}
-<!--
-This feature is enabled by default. You can disable it by disabling the `PDBUnhealthyPodEvictionPolicy`
-[feature gate](/docs/reference/command-line-tools-reference/feature-gates/)
-on the [API server](/docs/reference/command-line-tools-reference/kube-apiserver/).
--->
-此特性默认启用，你可以通过在
-[API 服务器](/zh-cn/docs/reference/command-line-tools-reference/kube-apiserver/)上禁用
-`PDBUnhealthyPodEvictionPolicy`
-[特性门控](/zh-cn/docs/reference/command-line-tools-reference/feature-gates/)来禁用它。
-{{< /note >}}
+{{< feature-state feature_gate_name="PDBUnhealthyPodEvictionPolicy" >}}
 
 <!--
 PodDisruptionBudget guarding an application ensures that `.status.currentHealthy` number of pods
@@ -535,7 +523,7 @@ You can use a PDB with pods controlled by another resource, by an
 - only `.spec.minAvailable` can be used, not `.spec.maxUnavailable`.
 - only an integer value can be used with `.spec.minAvailable`, not a percentage.
 -->
-- 只能够使用 `.spec.minAvailable`，而不能够使用 `.spec.maxUnavailable。`
+- 只能够使用 `.spec.minAvailable`，而不能够使用 `.spec.maxUnavailable`。
 - 只能够使用整数作为 `.spec.minAvailable` 的值，而不能使用百分比。
 
 <!--

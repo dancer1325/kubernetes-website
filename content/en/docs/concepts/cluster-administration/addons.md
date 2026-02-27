@@ -1,7 +1,7 @@
 ---
 title: Installing Addons
 content_type: concept
-weight: 120
+weight: 150
 ---
 
 <!-- overview -->
@@ -37,7 +37,7 @@ installation instructions. The list does not try to be exhaustive.
   network policies on L3-L7 using an identity-based security model that is
   decoupled from network addressing. Cilium can act as a replacement for
   kube-proxy; it also offers additional, opt-in observability and security features.
-  Cilium is a [CNCF project at the Incubation level](https://www.cncf.io/projects/cilium/).
+  Cilium is a [CNCF project at the Graduated level](https://www.cncf.io/projects/cilium/).
 * [CNI-Genie](https://github.com/cni-genie/CNI-Genie) enables Kubernetes to seamlessly
   connect to a choice of CNI plugins, such as Calico, Canal, Flannel, or Weave.
   CNI-Genie is a [CNCF project at the Sandbox level](https://www.cncf.io/projects/cni-genie/).
@@ -54,6 +54,9 @@ installation instructions. The list does not try to be exhaustive.
   and bare metal workloads.
 * [Flannel](https://github.com/flannel-io/flannel#deploying-flannel-manually) is
   an overlay network provider that can be used with Kubernetes.
+* [Gateway API](/docs/concepts/services-networking/gateway/) is an open source project managed by
+  the [SIG Network](https://github.com/kubernetes/community/tree/master/sig-network) community and
+  provides an expressive, extensible, and role-oriented API for modeling service networking.
 * [Knitter](https://github.com/ZTE/Knitter/) is a plugin to support multiple network
   interfaces in a Kubernetes pod.
 * [Multus](https://github.com/k8snetworkplumbingwg/multus-cni) is a Multi plugin for
@@ -76,22 +79,28 @@ installation instructions. The list does not try to be exhaustive.
   Pods and non-Kubernetes environments with visibility and security monitoring.
 * [Romana](https://github.com/romana) is a Layer 3 networking solution for pod
   networks that also supports the [NetworkPolicy](/docs/concepts/services-networking/network-policies/) API.
-* [Weave Net](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/)
+* [Spiderpool](https://github.com/spidernet-io/spiderpool) is an underlay and RDMA
+  networking solution for Kubernetes. Spiderpool is supported on bare metal, virtual machines,
+  and public cloud environments.
+* [Terway](https://github.com/AliyunContainerService/terway/) is a suite of CNI plugins
+  based on AlibabaCloud's VPC and ECS network products. It provides native VPC networking
+  and network policies in AlibabaCloud environments.
+* [Weave Net](https://github.com/rajch/weave#using-weave-on-kubernetes)
   provides networking and network policy, will carry on working on both sides
   of a network partition, and does not require an external database.
 
 ## Service Discovery
 
 * [CoreDNS](https://coredns.io) is a flexible, extensible DNS server which can
-  be [installed](https://github.com/coredns/deployment/tree/master/kubernetes)
+  be [installed](https://github.com/coredns/helm)
   as the in-cluster DNS for pods.
 
 ## Visualization &amp; Control
 
 * [Dashboard](https://github.com/kubernetes/dashboard#kubernetes-dashboard)
   is a dashboard web interface for Kubernetes.
-* [Weave Scope](https://www.weave.works/documentation/scope-latest-installing/#k8s) is a
-  tool for visualizing your containers, Pods, Services and more.
+* [Headlamp](https://headlamp.dev/) is an extensible Kubernetes UI that can be
+  deployed in-cluster or used as a desktop application.
 
 ## Infrastructure
 
@@ -102,6 +111,10 @@ installation instructions. The list does not try to be exhaustive.
   runs on Linux nodes and reports system issues as either
   [Events](/docs/reference/kubernetes-api/cluster-resources/event-v1/) or
   [Node conditions](/docs/concepts/architecture/nodes/#condition).
+
+## Instrumentation
+
+* [kube-state-metrics](/docs/concepts/cluster-administration/kube-state-metrics)
 
 ## Legacy Add-ons
 

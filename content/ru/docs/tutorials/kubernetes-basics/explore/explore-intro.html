@@ -30,6 +30,14 @@ description: |-
 
             <div class="col-md-8">
                 <h2>Поды Kubernetes</h2>
+              
+              <blockquote>
+                <p>
+                    <b>Под (Pod)</b> — это группа из одного или нескольких контейнеров приложения
+                    (например, Docker), а также общих ресурсов, таких как хранилище,
+                    сетевой интерфейс и параметры запуска контейнеров.
+                </p>
+               </blockquote>
 
                 <p>После того, как вы создали Deployment в модуле <a href="/ru/docs/tutorials/kubernetes-basics/deploy-app/deploy-intro/">2</a>, Kubernetes создал <b>под (Pod)</b>, в котором был размещён экземпляр вашего приложения. Под — это абстрактный объект Kubernetes, представляющий собой группу из одного или нескольких контейнеров приложения (например, Docker) и совместно используемых ресурсов для этих контейнеров. Ресурсами могут быть:</p>
                 <ul>
@@ -155,7 +163,7 @@ description: |-
                 <p><code><b>export POD_NAME="$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')"</b></code><br />
                 <code><b>echo Name of the Pod: $POD_NAME</b></code></p>
                 <p>Чтобы увидеть вывод приложения, выполним запрос через <code>curl</code>:</p>
-                <p><code><b>curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME/proxy/</b></code></p>
+                <p><code><b>curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME:8080/proxy/</b></code></p>
                 <p>Здесь URL указывает на маршрут к API пода.</p>
            </div>
         </div>

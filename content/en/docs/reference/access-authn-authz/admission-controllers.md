@@ -6,41 +6,62 @@ reviewers:
 - erictune
 - janetkuo
 - thockin
-title: Admission Controllers Reference
-linkTitle: Admission Controllers
+title: Admission Control in Kubernetes
+linkTitle: Admission Control
 content_type: concept
-weight: 30
+weight: 40
 ---
 
 <!-- overview -->
-This page provides an overview of Admission Controllers.
+This page provides an overview of _admission controllers_.
 
+An admission controller is a piece of code that intercepts requests to the
+Kubernetes API server prior to persistence of the resource, but after the request
+is authenticated and authorized.
+
+Several important features of Kubernetes require an admission controller to be enabled in order
+to properly support the feature.  As a result, a Kubernetes API server that is not properly
+configured with the right set of admission controllers is an incomplete server that will not
+support all the features you expect.
 
 <!-- body -->
 ## What are they?
 
-An _admission controller_ is a piece of code that intercepts requests to the
-Kubernetes API server prior to persistence of the object, but after the request
-is authenticated and authorized.
+Admission controllers are code within the Kubernetes
+{{< glossary_tooltip term_id="kube-apiserver" text="API server" >}} that check the
+data arriving in a request to modify a resource.
 
-Admission controllers may be _validating_, _mutating_, or both. Mutating
-controllers may modify related objects to the requests they admit; validating controllers may not.
+Admission controllers apply to requests that create, delete, or modify objects.
+Admission controllers can also block custom verbs, such as a request to connect to a
+pod via an API server proxy. Admission controllers do _not_ (and cannot) block requests
+to read (**get**, **watch** or **list**) objects, because reads bypass the admission
+control layer.
 
-Admission controllers limit requests to create, delete, modify objects. Admission
-controllers can also block custom verbs, such as a request connect to a Pod via
-an API server proxy. Admission controllers do _not_ (and cannot) block requests
-to read (**get**, **watch** or **list**) objects.
+Admission control mechanisms may be _validating_, _mutating_, or both. Mutating
+controllers may modify the data for the resource being modified; validating controllers may not.
 
 The admission controllers in Kubernetes {{< skew currentVersion >}} consist of the
 [list](#what-does-each-admission-controller-do) below, are compiled into the
 `kube-apiserver` binary, and may only be configured by the cluster
-administrator. In that list, there are two special controllers:
-MutatingAdmissionWebhook and ValidatingAdmissionWebhook.  These execute the
-mutating and validating (respectively)
-[admission control webhooks](/docs/reference/access-authn-authz/extensible-admission-controllers/#admission-webhooks)
-which are configured in the API.
+administrator.
 
-## Admission control phases
+### Admission control extension points
+
+Within the full [list](#what-does-each-admission-controller-do), there are three
+special controllers:
+[MutatingAdmissionWebhook](#mutatingadmissionwebhook),
+[ValidatingAdmissionWebhook](#validatingadmissionwebhook), and
+[ValidatingAdmissionPolicy](#validatingadmissionpolicy).
+The two webhook controllers execute the mutating and validating (respectively)
+[admission control webhooks](/docs/reference/access-authn-authz/extensible-admission-controllers/#admission-webhooks)
+which are configured in the API. ValidatingAdmissionPolicy provides a way to embed
+declarative validation code within the API, without relying on any external HTTP
+callouts.
+
+You can use these three admission controllers to customize cluster behavior at
+admission time.
+
+### Admission control phases
 
 The admission control process proceeds in two phases. In the first phase,
 mutating admission controllers are run. In the second phase, validating
@@ -58,10 +79,14 @@ corresponding reclamation or reconciliation process, as a given admission
 controller does not know for sure that a given request will pass all of the
 other admission controllers.
 
+The ordering of these calls can be seen below.
+
+{{< figure src="/docs/reference/access-authn-authz/admission-control-phases.svg" alt="Sequence diagram for kube-apiserver handling requests during the admission phase showing mutation webhooks, followed by validatingadmissionpolicies and finally validating webhooks. It shows that the continue until the first rejection, or being accepted by all of them. It also shows that mutations by mutating webhooks cause all previously called webhooks to be called again." class="diagram-large" link="[https://mermaid.live/edit#pako:eNqtVm1r3DgQ_iuDj9CUc3aPlBa6HIFeSu_CEQhNr4XiL7I9a6srSz5J3mQb9r93RrK9jjcp9-H8xdZoXh7N80jyQ1KYEpNV4vDfDnWB76WorGgynemTE_hLbBG8AYce1kb7W_kdoVImF0rtQDjwtXQgnX7hwaJrsfBYQtmFoNr71q2Wy0r6ussXhWmWDdpGyPLsmxs-l9K5Dt3y1du3v3HJB6mlXz1kia-xwSxZZYnGzluhsiTNkgEETUCWnJ-392SmrwE-2ym4kdYa-67wxjoyedvhPs000NNn_iysFLlCFyPCVJwWHPXHpgq1f3l1_qbA11x77vIJ7_2lUcYGx7taepy5KWPaqRc8l08bj1Rx4ldZ3M2cnlp6pvf7_ckJsxVdibNPkRKiBkEof-YJAZFnQRQFOidzqaTfpSB0Ca42nSohR-jaUjB3uEW7Ay8bDAnKKAfKt4gFKMl7dIWd9uy2b_7ozdU2XY5nopUOLaWEmsopqSuSCTk770gllscBZtmQDKTR0NbCIcO647mm88Kz-Q7z2piNSym1UuaOgOY72AolCTV5jglao2Qh0YXVraUOOj34jYkWcIB_5UNB7pjwAU9BrZaaVNzRWwXTWlrHGv9GEqc6KdASc-SU3NbWR0RUDsyaA5pZBaGcmZYZluY4LA4m8KAQncOQrrW4laZztI6CxlRndKI9Rsz1VlEJqXuS9oMcWmE99aMV2sM_xARv2fA-nn53c8WzfxNtVqOnFrLlNrD3hHfna3bnN1KTisjTr8FgrPwexqMmH4WWzaW3KkSPvF9Sx61RMSA39_Anrcblxho49oLfc3txGZcdGZqxc4z3uu_wl9g7Lj6YoLedupfHcZ9H6dyYAPlgmOC66VX3s_hJ5UmOeW3U5WEzB6bOLi4CEyv4GHcOnOKiWqRQWKQdCwJaU77sCWXHEEAsrKbkkJQD_bQruHlFjcUmmlo6h-My3FCXzy34wCcG6W_eJneQdRABl5t1dwVXems2-LPYOSEH1NemlOsd76_IJ5g8vE7lGjRiieW0V0d4J819TMuI9hGnI9Zn4x5L4IDz439ER3J4CtzQEpCaXVjN6lmg88Y-kef_ATvWJiWRgPisnTDRn92DToLa2JmFyjVcSypCGBTqunDjcALk-5iKJWnSX_z0zxGukMNNT5-lsJtwq5Gf6Ly53ekiXt9pYk1X1clqTScpjeJ91f-tjFYsJd3M1_GXJvzZpAntw6_GDD77H6uICLI](https://mermaid.live/edit#pako:eNqtVm1r3DgQ_iuDj9CUc3aPlBa6HIFeSu_CEQhNr4XiL7I9a6srSz5J3mQb9r93RrK9jjcp9-H8xdZoXh7N80jyQ1KYEpNV4vDfDnWB76WorGgynemTE_hLbBG8AYce1kb7W_kdoVImF0rtQDjwtXQgnX7hwaJrsfBYQtmFoNr71q2Wy0r6ussXhWmWDdpGyPLsmxs-l9K5Dt3y1du3v3HJB6mlXz1kia-xwSxZZYnGzluhsiTNkgEETUCWnJ-392SmrwE-2ym4kdYa-67wxjoyedvhPs000NNn_iysFLlCFyPCVJwWHPXHpgq1f3l1_qbA11x77vIJ7_2lUcYGx7taepy5KWPaqRc8l08bj1Rx4ldZ3M2cnlp6pvf7_ckJsxVdibNPkRKiBkEof-YJAZFnQRQFOidzqaTfpSB0Ca42nSohR-jaUjB3uEW7Ay8bDAnKKAfKt4gFKMl7dIWd9uy2b_7ozdU2XY5nopUOLaWEmsopqSuSCTk770gllscBZtmQDKTR0NbCIcO647mm88Kz-Q7z2piNSym1UuaOgOY72AolCTV5jglao2Qh0YXVraUOOj34jYkWcIB_5UNB7pjwAU9BrZaaVNzRWwXTWlrHGv9GEqc6KdASc-SU3NbWR0RUDsyaA5pZBaGcmZYZluY4LA4m8KAQncOQrrW4laZztI6CxlRndKI9Rsz1VlEJqXuS9oMcWmE99aMV2sM_xARv2fA-nn53c8WzfxNtVqOnFrLlNrD3hHfna3bnN1KTisjTr8FgrPwexqMmH4WWzaW3KkSPvF9Sx61RMSA39_Anrcblxho49oLfc3txGZcdGZqxc4z3uu_wl9g7Lj6YoLedupfHcZ9H6dyYAPlgmOC66VX3s_hJ5UmOeW3U5WEzB6bOLi4CEyv4GHcOnOKiWqRQWKQdCwJaU77sCWXHEEAsrKbkkJQD_bQruHlFjcUmmlo6h-My3FCXzy34wCcG6W_eJneQdRABl5t1dwVXems2-LPYOSEH1NemlOsd76_IJ5g8vE7lGjRiieW0V0d4J819TMuI9hGnI9Zn4x5L4IDz439ER3J4CtzQEpCaXVjN6lmg88Y-kef_ATvWJiWRgPisnTDRn92DToLa2JmFyjVcSypCGBTqunDjcALk-5iKJWnSX_z0zxGukMNNT5-lsJtwq5Gf6Ly53ekiXt9pYk1X1clqTScpjeJ91f-tjFYsJd3M1_GXJvzZpAntw6_GDD77H6uICLI)" >}}
+
 ## Why do I need them?
 
 Several important features of Kubernetes require an admission controller to be enabled in order
-to properly support the feature.  As a result, a Kubernetes API server that is not properly
+to properly support the feature. As a result, a Kubernetes API server that is not properly
 configured with the right set of admission controllers is an incomplete server and will not
 support all the features you expect.
 
@@ -104,13 +129,6 @@ In Kubernetes {{< skew currentVersion >}}, the default ones are:
 ```shell
 CertificateApproval, CertificateSigning, CertificateSubjectRestriction, DefaultIngressClass, DefaultStorageClass, DefaultTolerationSeconds, LimitRanger, MutatingAdmissionWebhook, NamespaceLifecycle, PersistentVolumeClaimResize, PodSecurity, Priority, ResourceQuota, RuntimeClass, ServiceAccount, StorageObjectInUseProtection, TaintNodesByCondition, ValidatingAdmissionPolicy, ValidatingAdmissionWebhook
 ```
-
-{{< note >}}
-The [`ValidatingAdmissionPolicy`](#validatingadmissionpolicy) admission plugin is enabled
-by default, but is only active if you enable the `ValidatingAdmissionPolicy`
-[feature gate](/docs/reference/command-line-tools-reference/feature-gates/) **and**
-the `admissionregistration.k8s.io/v1alpha1` API.
-{{< /note >}}
 
 ## What does each admission controller do?
 
@@ -200,9 +218,12 @@ and automatically adds a default storage class to them.
 This way, users that do not request any special storage class do not need to care about them at all and they
 will get the default one.
 
-This admission controller does not do anything when no default storage class is configured. When more than one storage
-class is marked as default, it rejects any creation of `PersistentVolumeClaim` with an error and an administrator
-must revisit their `StorageClass` objects and mark only one as default.
+This admission controller does nothing when no default `StorageClass` exists. When more than one storage
+class is marked as default, and you then create a `PersistentVolumeClaim` with no `storageClassName` set, 
+Kubernetes uses the most recently created default `StorageClass`.
+When a `PersistentVolumeClaim` is created with a specified `volumeName`, it remains in a pending state 
+if the static volume's `storageClassName` does not match the `storageClassName` on the `PersistentVolumeClaim`
+after any default StorageClass is applied to it.
 This admission controller ignores any `PersistentVolumeClaim` updates; it acts only on creation.
 
 See [persistent volume](/docs/concepts/storage/persistent-volumes/) documentation about persistent volume claims and
@@ -547,6 +568,23 @@ A `Namespace` deletion kicks off a sequence of operations that remove all object
 etc.) in that namespace.  In order to enforce integrity of that process, we strongly recommend
 running this admission controller.
 
+### NodeDeclaredFeatureValidator {#nodedeclaredfeaturevalidator}
+
+{{< feature-state feature_gate_name="NodeDeclaredFeatures" >}}
+
+**Type**: Validating.
+
+This admission controller intercepts writes to bound Pods, to ensure that the
+changes are compatible with the features declared by the node where the Pod is
+currently running. It uses the `.status.declaredFeatures` field of the Node to
+determine the set of enabled features. If a Pod update requires a feature that
+is not listed in the features of its current node, the admission controller
+will reject the update request. This prevents runtime failures due to feature
+mismatch after a Pod has been scheduled.
+
+This admission controller is enabled by
+default if the [`NodeDeclaredFeatures`](/docs/reference/command-line-tools-reference/feature-gates/#NodeDeclaredFeatures) feature gate is enabled.
+
 ### NodeRestriction {#noderestriction}
 
 **Type**: Validating.
@@ -621,23 +659,6 @@ allowVolumeExpansion: true
 ```
 
 For more information about persistent volume claims, see [PersistentVolumeClaims](/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims).
-
-### PersistentVolumeLabel {#persistentvolumelabel}
-
-{{< feature-state for_k8s_version="v1.13" state="deprecated" >}}
-
-**Type**: Mutating.
-
-This admission controller automatically attaches region or zone labels to PersistentVolumes
-as defined by the cloud provider (for example, Azure or GCP).
-It helps ensure the Pods and the PersistentVolumes mounted are in the same
-region and/or zone.
-If the admission controller doesn't support automatic labelling your PersistentVolumes, you
-may need to add the labels manually to prevent pods from mounting volumes from
-a different zone. PersistentVolumeLabel is **deprecated** as labeling for persistent volumes has been taken over by
-the {{< glossary_tooltip text="cloud-controller-manager" term_id="cloud-controller-manager" >}}.
-
-This admission controller is disabled by default.
 
 ### PodNodeSelector {#podnodeselector}
 
@@ -757,6 +778,29 @@ metadata:
 
 This admission controller is disabled by default.
 
+### PodTopologyLabels {#podtopologylabels}
+
+{{< feature-state feature_gate_name="PodTopologyLabelsAdmission" >}}
+
+**Type**: Mutating
+
+The PodTopologyLabels admission controller mutates the `pods/binding` subresources
+for all pods bound to a Node, adding topology labels matching those of the bound Node.
+This allows Node topology labels to be available as pod labels,
+which can be surfaced to running containers using the
+[Downward API](/docs/concepts/workloads/pods/downward-api/).
+The labels available as a result of this controller are the
+[topology.kubernetes.io/region](/docs/reference/labels-annotations-taints/#topologykubernetesioregion) and
+[topology.kuberentes.io/zone](/docs/reference/labels-annotations-taints/#topologykubernetesiozone) labels.
+
+{{<note>}}
+If any mutating admission webhook adds or modifies labels of the `pods/binding` subresource,
+these changes will propagate to pod labels as a result of this controller,
+overwriting labels with conflicting keys.
+{{</note>}}
+
+This admission controller is enabled when the `PodTopologyLabelsAdmission` feature gate is enabled.
+
 ### Priority {#priority}
 
 **Type**: Mutating and Validating.
@@ -792,49 +836,6 @@ defined in the corresponding RuntimeClass.
 See also [Pod Overhead](/docs/concepts/scheduling-eviction/pod-overhead/)
 for more information.
 
-### SecurityContextDeny {#securitycontextdeny}
-
-**Type**: Validating.
-
-{{< feature-state for_k8s_version="v1.27" state="deprecated" >}}
-
-{{< caution >}}
-The Kubernetes project recommends that you **do not use** the
-`SecurityContextDeny` admission controller.
-
-The `SecurityContextDeny` admission controller plugin is deprecated and disabled
-by default. It will be removed in a future version. If you choose to enable the
-`SecurityContextDeny` admission controller plugin, you must enable the
-`SecurityContextDeny` feature gate as well.
-
-The `SecurityContextDeny` admission plugin is deprecated because it is outdated
-and incomplete; it may be unusable or not do what you would expect. As
-implemented, this plugin is unable to restrict all security-sensitive attributes
-of the Pod API. For example, the `privileged` and `ephemeralContainers` fields
-were never restricted by this plugin.
-
-The [Pod Security Admission](/docs/concepts/security/pod-security-admission/)
-plugin enforcing the [Pod Security Standards](/docs/concepts/security/pod-security-standards/)
-`Restricted` profile captures what this plugin was trying to achieve in a better
-and up-to-date way.
-{{< /caution >}}
-
-This admission controller will deny any Pod that attempts to set the following
-[SecurityContext](/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context)
-fields:
-- `.spec.securityContext.supplementalGroups`
-- `.spec.securityContext.seLinuxOptions`
-- `.spec.securityContext.runAsUser`
-- `.spec.securityContext.fsGroup`
-- `.spec.(init)Containers[*].securityContext.seLinuxOptions`
-- `.spec.(init)Containers[*].securityContext.runAsUser`
-
-For more historical context on this plugin, see
-[The birth of PodSecurityPolicy](/blog/2022/08/23/podsecuritypolicy-the-historical-context/#the-birth-of-podsecuritypolicy)
-from the Kubernetes blog article about PodSecurityPolicy and its removal. The
-article details the PodSecurityPolicy historical context and the birth of the
-`securityContext` field for Pods.
-
 ### ServiceAccount {#serviceaccount}
 
 **Type**: Mutating and Validating.
@@ -844,6 +845,8 @@ This admission controller implements automation for
 The Kubernetes project strongly recommends enabling this admission controller.
 You should enable this admission controller if you intend to make any use of Kubernetes
 `ServiceAccount` objects.
+
+To enhance the security measures around Secrets, use separate namespaces to isolate access to mounted secrets.
 
 ### StorageObjectInUseProtection
 

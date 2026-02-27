@@ -52,11 +52,13 @@ Save the file as `Dockerfile`, build the image and push it to a registry. This e
 pushes the image to
 [Google Container Registry (GCR)](https://cloud.google.com/container-registry/).
 For more details, please read the GCR
-[documentation](https://cloud.google.com/container-registry/docs/).
+[documentation](https://cloud.google.com/container-registry/docs/). Alternatively
+you can also use the [docker hub](https://hub.docker.com/search?q=). For more details
+refer to the docker hub [documentation](https://docs.docker.com/docker-hub/repos/create/#create-a-repository).
 
 ```shell
-docker build -t gcr.io/my-gcp-project/my-kube-scheduler:1.0 .
-gcloud docker -- push gcr.io/my-gcp-project/my-kube-scheduler:1.0
+docker build -t gcr.io/my-gcp-project/my-kube-scheduler:1.0 .     # The image name and the repository
+gcloud docker -- push gcr.io/my-gcp-project/my-kube-scheduler:1.0 # used in here is just an example
 ```
 
 ## Define a Kubernetes Deployment for the scheduler
@@ -76,7 +78,7 @@ to customize the behavior of your scheduler implementation. This configuration h
 the `kube-scheduler` during initialization with the `--config` option. The `my-scheduler-config` ConfigMap stores the configuration file. The Pod of the`my-scheduler` Deployment mounts the `my-scheduler-config` ConfigMap as a volume.
 
 In the aforementioned Scheduler Configuration, your scheduler implementation is represented via
-a [KubeSchedulerProfile](/docs/reference/config-api/kube-scheduler-config.v1beta3/#kubescheduler-config-k8s-io-v1beta3-KubeSchedulerProfile).
+a [KubeSchedulerProfile](/docs/reference/config-api/kube-scheduler-config.v1/#kubescheduler-config-k8s-io-v1-KubeSchedulerProfile).
 {{< note >}}
 To determine if a scheduler is responsible for scheduling a specific Pod, the `spec.schedulerName` field in a 
 PodTemplate or Pod manifest must match the `schedulerName` field of the `KubeSchedulerProfile`.
@@ -89,7 +91,7 @@ Also, note that you create a dedicated service account `my-scheduler` and bind t
 Please see the
 [kube-scheduler documentation](/docs/reference/command-line-tools-reference/kube-scheduler/) for
 detailed description of other command line arguments and
-[Scheduler Configuration reference](/docs/reference/config-api/kube-scheduler-config.v1beta3/) for
+[Scheduler Configuration reference](/docs/reference/config-api/kube-scheduler-config.v1/) for
 detailed description of other customizable `kube-scheduler` configurations.
 
 ## Run the second scheduler in the cluster

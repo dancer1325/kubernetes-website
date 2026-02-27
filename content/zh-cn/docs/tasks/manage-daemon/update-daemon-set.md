@@ -3,7 +3,6 @@ title: 对 DaemonSet 执行滚动更新
 content_type: task
 weight: 10
 ---
-
 <!--
 reviewers:
 - janetkuo
@@ -44,10 +43,9 @@ DaemonSet 有两种更新策略：
   will be created automatically, in a controlled fashion. At most one pod of
   the DaemonSet will be running on each node during the whole update process.
 -->
-
-* `OnDelete`: 使用 `OnDelete` 更新策略时，在更新 DaemonSet 模板后，只有当你手动删除老的
-  DaemonSet pods 之后，新的 DaemonSet Pod **才会**被自动创建。跟 Kubernetes 1.6 以前的版本类似。
-* `RollingUpdate`: 这是默认的更新策略。使用 `RollingUpdate` 更新策略时，在更新 DaemonSet 模板后，
+* `OnDelete`：使用 `OnDelete` 更新策略时，在更新 DaemonSet 模板后，只有当你手动删除老的
+  DaemonSet Pod 之后，新的 DaemonSet Pod **才会**被自动创建。跟 Kubernetes 1.6 以前的版本类似。
+* `RollingUpdate`：这是默认的更新策略。使用 `RollingUpdate` 更新策略时，在更新 DaemonSet 模板后，
   老的 DaemonSet Pod 将被终止，并且将以受控方式自动创建新的 DaemonSet Pod。
   更新期间，最多只能有 DaemonSet 的一个 Pod 运行于每个节点上。
 
@@ -71,8 +69,8 @@ You may want to set
 (defaults to 0) as well.
 -->
 你可能想设置
-[`.spec.updateStrategy.rollingUpdate.maxUnavailable`](/zh-cn/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/#DaemonSetSpec) (默认为 1)，
-[`.spec.minReadySeconds`](/zh-cn/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/#DaemonSetSpec) (默认为 0) 和
+[`.spec.updateStrategy.rollingUpdate.maxUnavailable`](/zh-cn/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/#DaemonSetSpec)（默认为 1）、
+[`.spec.minReadySeconds`](/zh-cn/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/#DaemonSetSpec)（默认为 0）和
 [`.spec.updateStrategy.rollingUpdate.maxSurge`](/zh-cn/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/#DaemonSetSpec)
 （默认为 0）。
 
@@ -85,7 +83,7 @@ This YAML file specifies a DaemonSet with an update strategy as 'RollingUpdate'
 
 下面的 YAML 包含一个 DaemonSet，其更新策略为 'RollingUpdate'：
 
-{{< codenew file="controllers/fluentd-daemonset.yaml" >}}
+{{% code_sample file="controllers/fluentd-daemonset.yaml" %}}
 
 <!--
 After verifying the update strategy of the DaemonSet manifest, create the DaemonSet:
@@ -115,7 +113,7 @@ Check the update strategy of your DaemonSet, and make sure it's set to
 -->
 ### 检查 DaemonSet 的滚动更新策略    {#checking-daemonset-rollingupdate-update-strategy}
 
-首先，检查 DaemonSet 的更新策略，确保已经将其设置为 `RollingUpdate`:
+首先，检查 DaemonSet 的更新策略，确保已经将其设置为 `RollingUpdate`：
 
 ```shell
 kubectl get ds/fluentd-elasticsearch -o go-template='{{.spec.updateStrategy.type}}{{"\n"}}' -n kube-system
@@ -125,7 +123,7 @@ kubectl get ds/fluentd-elasticsearch -o go-template='{{.spec.updateStrategy.type
 If you haven't created the DaemonSet in the system, check your DaemonSet
 manifest with the following command instead:
 -->
-如果还没在系统中创建 DaemonSet，请使用以下命令检查 DaemonSet 的清单：
+如果你还没在系统中创建 DaemonSet，请使用以下命令检查 DaemonSet 的清单：
 
 ```shell
 kubectl apply -f https://k8s.io/examples/controllers/fluentd-daemonset.yaml --dry-run=client -o go-template='{{.spec.updateStrategy.type}}{{"\n"}}'
@@ -157,7 +155,7 @@ update. Let's update the DaemonSet by applying a new YAML file. This can be done
 对 `RollingUpdate` DaemonSet 的 `.spec.template` 的任何更新都将触发滚动更新。
 这可以通过几个不同的 `kubectl` 命令来完成。
 
-{{< codenew file="controllers/fluentd-daemonset-update.yaml" >}}
+{{% code_sample file="controllers/fluentd-daemonset-update.yaml" %}}
 
 <!--
 #### Declarative commands
@@ -272,13 +270,13 @@ make room for new DaemonSet pods.
 -->
 一旦找到这些节点，从节点上删除一些非 DaemonSet Pod，为新的 DaemonSet Pod 腾出空间。
 
+{{< note >}}
 <!--
 This will cause service disruption when deleted pods are not controlled by any controllers or pods are not
 replicated. This does not respect [PodDisruptionBudget](/docs/tasks/run-application/configure-pdb/)
 either.
 -->
-{{< note >}}
-当所删除的 Pod 不受任何控制器管理，也不是多副本的 Pod时，上述操作将导致服务中断。
+当所删除的 Pod 不受任何控制器管理，也不是多副本的 Pod 时，上述操作将导致服务中断。
 同时，上述操作也不会考虑
 [PodDisruptionBudget](/zh-cn/docs/tasks/run-application/configure-pdb/)
 所施加的约束。
@@ -317,7 +315,7 @@ DaemonSet 无法检测到正确的滚动更新进度。
 <!--
 ## Clean up
 
-Delete DaemonSet from a namespace :
+Delete DaemonSet from a namespace:
 -->
 ## 清理    {#clean-up}
 
@@ -335,4 +333,3 @@ kubectl delete ds fluentd-elasticsearch -n kube-system
 -->
 * 查看[在 DaemonSet 上执行回滚](/zh-cn/docs/tasks/manage-daemon/rollback-daemon-set/)
 * 查看[创建 DaemonSet 以收养现有 DaemonSet Pod](/zh-cn/docs/concepts/workloads/controllers/daemonset/)
-

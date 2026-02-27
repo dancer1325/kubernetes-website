@@ -6,7 +6,7 @@ api_metadata:
 content_type: "api_reference"
 description: "StorageClass describes the parameters for a class of storage for which PersistentVolumes can be dynamically provisioned."
 title: "StorageClass"
-weight: 6
+weight: 8
 auto_generated: true
 ---
 
@@ -63,6 +63,8 @@ StorageClasses are non-namespaced; the name of the storage class according to et
 
   - **allowedTopologies.matchLabelExpressions** ([]TopologySelectorLabelRequirement)
 
+    *Atomic: will be replaced during a merge*
+    
     A list of topology selector requirements by labels.
 
     <a name="TopologySelectorLabelRequirement"></a>
@@ -74,10 +76,14 @@ StorageClasses are non-namespaced; the name of the storage class according to et
 
     - **allowedTopologies.matchLabelExpressions.values** ([]string), required
 
+      *Atomic: will be replaced during a merge*
+      
       An array of string values. One value must match the label to be selected. Each entry in Values is ORed.
 
 - **mountOptions** ([]string)
 
+  *Atomic: will be replaced during a merge*
+  
   mountOptions controls the mountOptions for dynamically provisioned PersistentVolumes of this storage class. e.g. ["ro", "soft"]. Not validated - mount of the PVs will simply fail if one is invalid.
 
 - **parameters** (map[string]string)
@@ -87,10 +93,19 @@ StorageClasses are non-namespaced; the name of the storage class according to et
 - **reclaimPolicy** (string)
 
   reclaimPolicy controls the reclaimPolicy for dynamically provisioned PersistentVolumes of this storage class. Defaults to Delete.
+  
+  Possible enum values:
+   - `"Delete"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.
+   - `"Recycle"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.
+   - `"Retain"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.
 
 - **volumeBindingMode** (string)
 
   volumeBindingMode indicates how PersistentVolumeClaims should be provisioned and bound.  When unset, VolumeBindingImmediate is used. This field is only honored by servers that enable the VolumeScheduling feature.
+  
+  Possible enum values:
+   - `"Immediate"` indicates that PersistentVolumeClaims should be immediately provisioned and bound. This is the default mode.
+   - `"WaitForFirstConsumer"` indicates that PersistentVolumeClaims should not be provisioned and bound until the first Pod is created that references the PeristentVolumeClaim. The volume provisioning and binding will occur during Pod scheduing.
 
 
 
@@ -413,6 +428,11 @@ DELETE /apis/storage.k8s.io/v1/storageclasses/{name}
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
 
 
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
+
+
 - **pretty** (*in query*): string
 
   <a href="{{< ref "../common-parameters/common-parameters#pretty" >}}">pretty</a>
@@ -466,6 +486,11 @@ DELETE /apis/storage.k8s.io/v1/storageclasses
 - **gracePeriodSeconds** (*in query*): integer
 
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
+
+
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
 
 
 - **labelSelector** (*in query*): string

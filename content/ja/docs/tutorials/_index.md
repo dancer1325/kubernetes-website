@@ -24,8 +24,6 @@ content_type: concept
 
 ## 設定
 
-* [例: Javaのマイクロサービスの設定](/docs/tutorials/configuration/configure-java-microservice/)
-
 * [ConfigMapを用いたRedisの設定](/ja/docs/tutorials/configuration/configure-redis-using-configmap/)
 
 ## ステートレスアプリケーション
@@ -54,7 +52,7 @@ content_type: concept
 * [クラスターレベルのPod Securityの標準の適用](/docs/tutorials/security/cluster-level-pss/)
 * [NamespaceレベルのPod Securityの標準の適用](/docs/tutorials/security/ns-level-pss/)
 * [AppArmor](/docs/tutorials/security/apparmor/)
-* [seccomp](/docs/tutorials/security/seccomp/)
+* [Seccomp](/docs/tutorials/security/seccomp/)
 
 ## {{% heading "whatsnext" %}}
 

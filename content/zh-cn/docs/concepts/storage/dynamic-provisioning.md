@@ -23,13 +23,15 @@ calls to their cloud or storage provider to create new storage volumes, and
 then create [`PersistentVolume` objects](/docs/concepts/storage/persistent-volumes/)
 to represent them in Kubernetes. The dynamic provisioning feature eliminates
 the need for cluster administrators to pre-provision storage. Instead, it
-automatically provisions storage when it is requested by users.
+automatically provisions storage when users create
+[`PersistentVolumeClaim` objects](/docs/concepts/storage/persistent-volumes/).
 -->
 动态卷制备允许按需创建存储卷。
 如果没有动态制备，集群管理员必须手动地联系他们的云或存储提供商来创建新的存储卷，
 然后在 Kubernetes 集群创建
 [`PersistentVolume` 对象](/zh-cn/docs/concepts/storage/persistent-volumes/)来表示这些卷。
-动态制备功能消除了集群管理员预先配置存储的需要。相反，它在用户请求时自动制备存储。
+动态制备功能消除了集群管理员预先配置存储的需要。相反，它在用户创建
+[`PersistentVolumeClaim` 对象](/zh-cn/docs/concepts/storage/persistent-volumes/)时自动制备存储。
 
 <!-- body -->
 
@@ -60,10 +62,9 @@ have the ability to select from multiple storage options.
 该设计也确保终端用户不必担心存储制备的复杂性和细微差别，但仍然能够从多个存储选项中进行选择。
 
 <!--
-More information on storage classes can be found
-[here](/docs/concepts/storage/storage-classes/).
+For more details, see the [Storage Classes](/docs/concepts/storage/storage-classes/) concept.
 -->
-点击[这里](/zh-cn/docs/concepts/storage/storage-classes/)查阅有关存储类的更多信息。
+有关更多详细信息，请参阅[存储类](/zh-cn/docs/concepts/storage/storage-classes/)概念。
 
 <!--
 ## Enabling Dynamic Provisioning
@@ -125,13 +126,13 @@ their `PersistentVolumeClaim`. Before Kubernetes v1.6, this was done via the
 is deprecated since v1.9. Users now can and should instead use the
 `storageClassName` field of the `PersistentVolumeClaim` object. The value of
 this field must match the name of a `StorageClass` configured by the
-administrator (see [below](#enabling-dynamic-provisioning)).
+administrator (see [Enabling Dynamic Provisioning](#enabling-dynamic-provisioning)).
 -->
 用户通过在 `PersistentVolumeClaim` 中包含存储类来请求动态制备的存储。
 在 Kubernetes v1.9 之前，这通过 `volume.beta.kubernetes.io/storage-class` 注解实现。
 然而，这个注解自 v1.6 起就不被推荐使用了。
 用户现在能够而且应该使用 `PersistentVolumeClaim` 对象的 `storageClassName` 字段。
-这个字段的值必须能够匹配到集群管理员配置的 `StorageClass` 名称（见[下面](#enabling-dynamic-provisioning)）。
+这个字段的值必须能够匹配到集群管理员配置的 `StorageClass` 名称（见[启用动态卷制备](#enabling-dynamic-provisioning)）。
 
 <!--
 To select the "fast" storage class, for example, a user would create the
@@ -174,11 +175,11 @@ can enable this behavior by:
 集群管理员可以通过以下方式启用此行为：
 
 <!--
-- Marking one `StorageClass` object as *default*;
+- Marking one `StorageClass` object as *default*,
 - Making sure that the [`DefaultStorageClass` admission controller](/docs/reference/access-authn-authz/admission-controllers/#defaultstorageclass)
   is enabled on the API server.
 -->
-- 标记一个 `StorageClass` 为 **默认**；
+- 标记一个 `StorageClass` 为 **默认**，
 - 确保 [`DefaultStorageClass` 准入控制器](/zh-cn/docs/reference/access-authn-authz/admission-controllers/#defaultstorageclass)在
   API 服务器端被启用。
 
@@ -197,12 +198,14 @@ When a default `StorageClass` exists in a cluster and a user creates a
 `DefaultStorageClass` 准入控制器会自动向其中添加指向默认存储类的 `storageClassName` 字段。
 
 <!--
-Note that there can be at most one *default* storage class on a cluster, or
-a `PersistentVolumeClaim` without `storageClassName` explicitly specified cannot
-be created.
+Note that if you set the `storageclass.kubernetes.io/is-default-class`
+annotation to true on more than one StorageClass in your cluster, and you then
+create a `PersistentVolumeClaim` with no `storageClassName` set, Kubernetes
+uses the most recently created default StorageClass.
 -->
-请注意，集群上最多只能有一个 **默认** 存储类，否则无法创建没有明确指定
-`storageClassName` 的 `PersistentVolumeClaim`。
+请注意，如果你在集群的多个 StorageClass 设置 `storageclass.kubernetes.io/is-default-class` 注解为 true，
+并之后创建了未指定 `storageClassName` 的 `PersistentVolumeClaim`，
+Kubernetes 会使用最新创建的默认 StorageClass。
 
 <!--
 ## Topology Awareness

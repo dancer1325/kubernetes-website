@@ -32,10 +32,12 @@ nohup.out
 .hugo_build.lock
 
 # Netlify Functions build output
-package-lock.json
 /functions/
 /node_modules/
 
 # Generated files when building with make container-build
 .config/
 .npm/
+
+# Local Netlify folder
+.netlify

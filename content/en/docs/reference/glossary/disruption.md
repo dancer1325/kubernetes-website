@@ -1,7 +1,6 @@
 ---
 title: Disruption
 id: disruption
-date: 2019-09-10
 full_link: /docs/concepts/workloads/pods/disruptions/
 short_description: >
   An event that leads to Pod(s) going out of service
@@ -11,8 +10,8 @@ tags:
 ---
  Disruptions are events that lead to one or more
 {{< glossary_tooltip term_id="pod" text="Pods" >}} going out of service.
-A disruption has consequences for workload resources, such as
-{{< glossary_tooltip term_id="deployment" >}}, that rely on the affected
+A disruption has consequences for workload management {{< glossary_tooltip text="resources" term_id="api-resource" >}},
+such as {{< glossary_tooltip term_id="deployment" >}}, that rely on the affected
 Pods.
 
 <!--more-->

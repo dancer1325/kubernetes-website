@@ -5,7 +5,7 @@ weight: 50
 card:
   name: contribute
   weight: 50
-  title: 翻译文档
+  title: 本地化文档
 ---
 <!--
 title: Localizing Kubernetes documentation
@@ -17,7 +17,7 @@ weight: 50
 card:
   name: contribute
   weight: 50
-  title: Translating the docs
+  title: Localizing the docs
 -->
 
 <!-- overview -->
@@ -37,14 +37,14 @@ the docs for a different language.
 
 You can help add or improve the content of an existing localization. In
 [Kubernetes Slack](https://slack.k8s.io/), you can find a channel for each
-localization. There is also a general [SIG Docs Localizations Slack
-channel](https://kubernetes.slack.com/messages/sig-docs-localizations) where you
-can say hello.
+localization. There is also a general
+[SIG Docs Localizations Slack channel](https://kubernetes.slack.com/messages/sig-docs-localizations)
+where you can say hello.
 -->
 ## 为现有的本地化做出贡献 {#contribute-to-an-existing-localization}
 
-你可以帮助添加或改进现有本地化的内容。在 [Kubernetes Slack](https://slack.k8s.io/) 中，
-你能找到每个本地化的频道。还有一个通用的
+你可以帮助添加或改进现有本地化的内容。在 [Kubernetes Slack](https://slack.k8s.io/)
+中，你能找到每个本地化的频道。还有一个通用的
 [SIG Docs Localizations Slack 频道](https://kubernetes.slack.com/messages/sig-docs-localizations)，
 你可以在这里打个招呼。
 
@@ -59,9 +59,9 @@ look for a localized version of this page.
 <!--
 ### Find your two-letter language code
 
-First, consult the [ISO 639-1
-standard](https://www.loc.gov/standards/iso639-2/php/code_list.php) to find your
-localization's two-letter language code. For example, the two-letter code for
+First, consult the
+[ISO 639-1 standard](https://www.loc.gov/standards/iso639-2/php/code_list.php)
+to find your localization's two-letter language code. For example, the two-letter code for
 Korean is `ko`.
 
 Some languages use a lowercase version of the country code as defined by the
@@ -80,11 +80,10 @@ language code is `pt-br`.
 <!--
 ### Fork and clone the repo
 
-First, [create your own
-fork](/docs/contribute/new-content/open-a-pr/#fork-the-repo) of the
+First, [create your own fork](/docs/contribute/new-content/open-a-pr/#fork-the-repo) of the
 [kubernetes/website](https://github.com/kubernetes/website) repository.
 -->
-### 派生（fork）并且克隆仓库 {#fork-and-clone-the-repo}
+### 派生（fork）并且克隆仓库     {#fork-and-clone-the-repo}
 
 首先，为 [kubernetes/website](https://github.com/kubernetes/website)
 仓库[创建你自己的副本](/zh-cn/docs/contribute/new-content/open-a-pr/#fork-the-repo)。
@@ -109,12 +108,21 @@ localization you want to help out with is inside `content/<two-letter-code>`.
 ### Suggest changes
 
 Create or update your chosen localized page based on the English original. See
-[translating content](#translating-content) for more details.
+[localize content](#localize-content) for more details.
 
 If you notice a technical inaccuracy or other problem with the upstream
 (English) documentation, you should fix the upstream documentation first and
 then repeat the equivalent fix by updating the localization you're working on.
+-->
+### 建议更改 {#suggest-changes}
 
+根据英文原件创建或更新你选择的本地化页面。
+有关更多详细信息，请参阅[本地化内容](#localize-content)。
+
+如果你发现上游（英文）文档存在技术错误或其他问题，
+你应该先修复上游文档，然后通过更新你正在处理的本地化来重复等效的修复。
+
+<!--
 Limit changes in a pull requests to a single localization. Reviewing pull
 requests that change content in multiple localizations is problematic.
 
@@ -122,14 +130,6 @@ Follow [Suggesting Content Improvements](/docs/contribute/suggesting-improvement
 to propose changes to that localization. The process is similar to proposing
 changes to the upstream (English) content.
 -->
-### 建议更改 {#suggest-changes}
-
-根据英文原件创建或更新你选择的本地化页面。
-有关更多详细信息，请参阅[翻译内容](#translating-content)。
-
-如果你发现上游（英文）文档存在技术错误或其他问题，
-你应该先修复上游文档，然后通过更新你正在处理的本地化来重复等效的修复。
-
 请将 PR 限制为单个语言版本，因为多语言的 PR 内容修改可能难以审查。
 
 按照[内容改进建议](/zh-cn/docs/contribute/suggesting-improvements/)提出对该本地化的更改。
@@ -152,7 +152,7 @@ localized content current.
 
 如果你希望将 Kubernetes 文档本地化为一种新语言，你需要执行以下操作。
 
-因为贡献者不能批准他们自己的拉取请求，你需要 **至少两个贡献者** 来开始本地化。
+因为贡献者不能批准他们自己的拉取请求，你需要**至少两个贡献者**来开始本地化。
 
 所有本地化团队都必须能够自我维持。
 Kubernetes 网站很乐意托管你的作品，但要由你来翻译它并使现有的本地化内容保持最新。
@@ -202,8 +202,8 @@ questions.
 ### 找到社区 {#find-community}
 
 让 Kubernetes SIG Docs 知道你有兴趣创建本地化！
-加入 [SIG Docs Slack 频道](https://kubernetes.slack.com/messages/sig-docs)
-和 [SIG Docs Localizations Slack 频道](https://kubernetes.slack.com/messages/sig-docs-localizations)。
+加入 [SIG Docs Slack 频道](https://kubernetes.slack.com/messages/sig-docs)和
+[SIG Docs Localizations Slack 频道](https://kubernetes.slack.com/messages/sig-docs-localizations)。
 其他本地化团队很乐意帮助你入门并回答你的问题。
 
 <!--
@@ -214,8 +214,8 @@ localization teams to collaborate on defining and documenting the processes for
 creating localized contribution guides. In addition, the SIG Docs localization
 subgroup looks for opportunities to create and share common tools across
 localization teams and identify new requirements for the SIG Docs Leadership
-team.  If you have questions about this meeting, please inquire on the [SIG Docs
-Localizations Slack channel](https://kubernetes.slack.com/messages/sig-docs-localizations).
+team. If you have questions about this meeting, please inquire on the
+[SIG Docs Localizations Slack channel](https://kubernetes.slack.com/messages/sig-docs-localizations).
 
 You can also create a Slack channel for your localization in the
 `kubernetes/community` repository. For an example of adding a Slack channel, see
@@ -241,7 +241,7 @@ GitHub organization. Each person on the team needs to create their own
 [Organization Membership Request](https://github.com/kubernetes/org/issues/new/choose)
 in the `kubernetes/org` repository.
 -->
-### 加入到 Kubernetes GitHub 组织 {#join-the-kubernetes-github-organization}
+### 加入到 Kubernetes GitHub 组织   {#join-the-kubernetes-github-organization}
 
 提交本地化 PR 后，你可以成为 Kubernetes GitHub 组织的成员。
 团队中的每个人都需要在 `kubernetes/org`
@@ -254,7 +254,14 @@ Next, add your Kubernetes localization team to
 [`sig-docs/teams.yaml`](https://github.com/kubernetes/org/blob/main/config/kubernetes/sig-docs/teams.yaml).
 For an example of adding a localization team, see the PR to add the
 [Spanish localization team](https://github.com/kubernetes/org/pull/685).
+-->
+### 在 GitHub 中添加你的本地化团队   {#add-your-localization-team-in-github}
 
+接下来，将你的 Kubernetes 本地化团队添加到
+[`sig-docs/teams.yaml`](https://github.com/kubernetes/org/blob/main/config/kubernetes/sig-docs/teams.yaml)。
+有关添加本地化团队的示例，请参见添加[西班牙本地化团队](https://github.com/kubernetes/org/pull/685)的 PR。
+
+<!--
 Members of `@kubernetes/sig-docs-**-owners` can approve PRs that change content
 within (and only within) your localization directory: `/content/**/`. For each
 localization, The `@kubernetes/sig-docs-**-reviews` team automates review
@@ -263,12 +270,6 @@ new localization branches to coordinate translation efforts. Members of
 `@kubernetes/website-milestone-maintainers` can use the `/milestone`
 [Prow command](https://prow.k8s.io/command-help) to assign a milestone to issues or PRs.
 -->
-### 在 GitHub 中添加你的本地化团队 {#add-your-localization-team-in-github}
-
-接下来，将你的 Kubernetes 本地化团队添加到
-[`sig-docs/teams.yaml`](https://github.com/kubernetes/org/blob/main/config/kubernetes/sig-docs/teams.yaml)。
-有关添加本地化团队的示例，请参见添加[西班牙本地化团队](https://github.com/kubernetes/org/pull/685)的 PR。
-
 `@kubernetes/sig-docs-**-owners` 成员可以批准更改对应本地化目录 `/content/**/` 中内容的 PR，并仅限这类 PR。
 对于每个本地化，`@kubernetes/sig-docs-**-reviews` 团队被自动分派新 PR 的审阅任务。
 `@kubernetes/website-maintainers` 成员可以创建新的本地化分支来协调翻译工作。
@@ -315,11 +316,16 @@ Kubernetes 网站使用 Hugo 作为其 Web 框架。网站的 Hugo 配置位于
 ```toml
 [languages.de]
 title = "Kubernetes"
-description = "Produktionsreife Container-Verwaltung"
 languageName = "Deutsch (German)"
-languageNameLatinScript = "Deutsch"
+weight = 5
 contentDir = "content/de"
-weight = 8
+languagedirection = "ltr"
+
+[languages.de.params]
+time_format_blog = "02.01.2006"
+language_alternatives = ["en"]
+description = "Produktionsreife Container-Orchestrierung"
+languageNameLatinScript = "Deutsch"
 ```
 
 <!--
@@ -334,21 +340,29 @@ script and use it in the theme. Assign "language name in latin script" to
 `languageNameLatinScript = "Deutsch"`.
 -->
 语言选择栏列出了 `languageName` 的值。
-将 `languageName` 赋值为“本地脚本中的语言名称（拉丁脚本中的语言名称）”。
+将 `languageName` 赋值为"本地脚本中的语言名称（拉丁脚本中的语言名称）"。
 例如，`languageName = "한국어 (Korean)"` 或 `languageName = "Deutsch (German)"`。
 
 `languageNameLatinScript` 可用于访问拉丁脚本中的语言名称并在主题中使用。
-将 `languageNameLatinScript` 赋值为“拉丁脚本中的语言名称”。
+将 `languageNameLatinScript` 赋值为"拉丁脚本中的语言名称"。
 例如，`languageNameLatinScript ="Korean"` 或 `languageNameLatinScript = "Deutsch"`。
 
 <!--
-When assigning a `weight` parameter for your block, find the language block with
-the highest weight and add 1 to that value.
+The `weight` parameter determines the order of languages in the language selection bar.
+A lower weight takes precedence, resulting in the language appearing first. 
+When assigning the `weight` parameter, it is important to examine the existing languages 
+block and adjust their weights to ensure they are in a sorted order relative to all languages,
+including any newly added language.
+-->
+`weight` 参数决定语言选择栏中的语言顺序，
+优先显示权重较低的语言。
+分配 `weight` 参数时，检查现有语言块并调整其权重以确保它们相对于所有语言
+（包括任何新添加的语言）按排序顺序非常重要。
 
+<!--
 For more information about Hugo's multilingual support, see
 "[Multilingual Mode](https://gohugo.io/content-management/multilingual/)".
 -->
-为你的语言块分配一个 `weight` 参数时，找到权重最高的语言块并将其加 1。
 
 有关 Hugo 多语言支持的更多信息，请参阅"[多语言模式](https://gohugo.io/content-management/multilingual/)"。
 
@@ -370,24 +384,16 @@ mkdir content/de
 ```
 
 <!--
-You also need to create a directory inside `data/i18n` for
+You also need to create a directory inside `i18n` for
 [localized strings](#site-strings-in-i18n); look at existing localizations
-for an example. To use these new strings, you must also create a symbolic link
-from `i18n/<localization>.toml` to the actual string configuration in
-`data/i18n/<localization>/<localization>.toml` (remember to commit the symbolic
-link).
+for an example.
 
-For example, for German the strings live in `data/i18n/de/de.toml`, and
-`i18n/de.toml` is a symbolic link to `data/i18n/de/de.toml`.
+For example, for German the strings live in `i18n/de/de.toml`.
 -->
-你还需要在 `data/i18n` 中为[本地化字符串](#site-strings-in-i18n)创建一个目录；
-以现有的本地化为例。要使用这些新字符串，
-你还必须创建从 `i18n/<localization>.toml`
-到 `data/i18n/<localization>/<localization>.toml`
-中实际字符串配置的符号链接（记得提交符号链接关联）。
+你还需要在 `i18n` 中为[本地化字符串](#site-strings-in-i18n)创建一个目录；
+以现有的本地化为例。
 
-例如，对于德语，字符串位于 `data/i18n/de/de.toml` 中，
-而 `i18n/de.toml` 是指向 `data/i18n/de/de.toml` 的符号链接。
+例如，对于德语，字符串位于 `i18n/de/de.toml`。
 
 <!--
 ### Localize the community code of conduct
@@ -402,7 +408,7 @@ repository to add the code of conduct in your language.
 仓库提交 PR，添加你所用语言版本的行为准则。
 
 <!--
-### Setting up the OWNERS files
+### Set up the OWNERS files
 
 To set the roles of each user contributing to the localization, create an
 `OWNERS` file inside the language-specific subdirectory with:
@@ -418,13 +424,13 @@ To set the roles of each user contributing to the localization, create an
 
 要设置每个对本地化做出贡献用户的角色，请在特定于语言的子目录内创建一个 `OWNERS` 文件，其中：
 
-- **reviewers**: 具有评审人角色的 Kubernetes 团队的列表，
+- **reviewers**：具有评审人角色的 Kubernetes 团队的列表，
   在本例中为在[在 GitHub 中添加你的本地化团队](#add-your-localization-team-in-github)中创建的
   `sig-docs-**-reviews` 团队。
-- **approvers**: 具有批准人角色的 Kubernetes 团队的列表，
+- **approvers**：具有批准人角色的 Kubernetes 团队的列表，
   在本例中为在[在 GitHub 中添加你的本地化团队](#add-your-localization-team-in-github)中创建的
   `sig-docs-**-owners` 团队。
-- **labels**: 可以自动应用于 PR 的 GitHub 标签列表，
+- **labels**：可以自动应用于 PR 的 GitHub 标签列表，
   在本例中为[配置工作流程](#configure-the-workflow)中创建的语言标签。
 
 <!--
@@ -439,13 +445,25 @@ language code `es`, looks like this:
 语言代码为 `es` 的[西班牙语 OWNERS 文件](https://git.k8s.io/website/content/es/OWNERS)看起来像：
 
 <!--
+```yaml
 # See the OWNERS docs at https://go.k8s.io/owners
 
 # This is the localization project for Spanish.
 # Teams and members are visible at https://github.com/orgs/kubernetes/teams.
+
+reviewers:
+- sig-docs-es-reviews
+
+approvers:
+- sig-docs-es-owners
+
+labels:
+- area/localization
+- language/es
+```
 -->
 ```yaml
-# 参见 OWNERS 文档，位于 https://go.k8s.io/owners
+# 参见 OWNERS 文档：https://go.k8s.io/owners
 
 # 这是西班牙语的本地化项目
 # 各团队和成员名单位于 https://github.com/orgs/kubernetes/teams
@@ -457,6 +475,7 @@ approvers:
 - sig-docs-es-owners
 
 labels:
+- area/localization
 - language/es
 ```
 
@@ -472,7 +491,8 @@ in alphabetical order.
 -->
 添加了特定语言的 OWNERS 文件之后，使用新的 Kubernetes 本地化团队、
 `sig-docs-**-owners` 和 `sig-docs-**-reviews`
-列表更新[根目录下的 OWNERS_ALIAES](https://git.k8s.io/website/OWNERS_ALIASES) 文件。
+列表更新[根目录下的 OWNERS_ALIAES](https://git.k8s.io/website/OWNERS_ALIASES)
+文件。
 
 对于每个团队，
 请按字母顺序添加[在 GitHub 中添加你的本地化团队](#add-your-localization-team-in-github)中所请求的
@@ -556,7 +576,7 @@ of Conduct.
 [Slack 频道](https://slack.com/)或其他联系方式。你还必须提供指向本地化的社区行为准则的链接。
 
 <!--
-### Launching your new localization
+### Launch your new localization
 
 When a localization meets the requirements for workflow and minimum output, SIG
 Docs does the following:
@@ -575,12 +595,12 @@ Docs does the following:
   [Kubernetes 博客](https://kubernetes.io/zh-cn/blog/)来宣传本地化的可用性。
 
 <!--
-## Translating content
+## Localize content
 
 Localizing *all* the Kubernetes documentation is an enormous task. It's okay to
 start small and expand over time.
 -->
-## 翻译文档 {#translating-content}
+## 本地化文档 {#localize-content}
 
 本地化**所有** Kubernetes 文档是一项艰巨的任务。从小做起，循序渐进。
 
@@ -606,7 +626,7 @@ Releases | [All heading and subheading URLs](/releases)
 -----|-----
 主页 | [所有标题和副标题网址](/zh-cn/docs/home/)
 安装 | [所有标题和副标题网址](/zh-cn/docs/setup/)
-教程 | [Kubernetes 基础](/zh-cn/docs/tutorials/kubernetes-basics/), [Hello Minikube](/zh-cn/docs/tutorials/hello-minikube/)
+教程 | [Kubernetes 基础](/zh-cn/docs/tutorials/kubernetes-basics/)、[Hello Minikube](/zh-cn/docs/tutorials/hello-minikube/)
 网站字符串 | [所有网站字符串](#site-strings-in-i18n)
 发行版本 | [所有标题和副标题 URL](/zh-cn/releases)
 
@@ -614,15 +634,15 @@ Releases | [All heading and subheading URLs](/releases)
 Translated documents must reside in their own `content/**/` subdirectory, but otherwise, follow the
 same URL path as the English source. For example, to prepare the
 [Kubernetes Basics](/docs/tutorials/kubernetes-basics/) tutorial for translation into German,
-create a subfolder under the `content/de/` folder and copy the English source:
+create a subdirectory under the `content/de/` directory and copy the English source or directory:
 -->
 翻译后的文档必须保存在自己的 `content/**/` 子目录中，否则将遵循与英文源相同的 URL 路径。
 例如，要准备将 [Kubernetes 基础](/zh-cn/docs/tutorials/kubernetes-basics/)教程翻译为德语，
-请在 `content/de/` 文件夹下创建一个子文件夹并复制英文源：
+请在 `content/de/` 目录下创建一个子目录，并复制英文源文件或目录：
 
 ```shell
 mkdir -p content/de/docs/tutorials
-cp content/en/docs/tutorials/kubernetes-basics.md content/de/docs/tutorials/kubernetes-basics.md
+cp -ra content/en/docs/tutorials/kubernetes-basics/ content/de/docs/tutorials/
 ```
 
 <!--
@@ -646,14 +666,14 @@ should carefully review all machine-generated translations before publishing.
 为了确保语法和含义的准确性，本地化团队的成员应在发布之前仔细检查所有由机器生成的翻译。
 
 <!--
-### Translating SVG images
+### Localize SVG images
 
 The Kubernetes project recommends using vector (SVG) images where possible, as
 these are much easier for a localization team to edit. If you find a raster
 image that needs localizing, consider first redrawing the English version as
 a vector image, and then localize that.
 -->
-### 翻译 SVG 图片    {#translating-svg-images}
+### 本地化 SVG 图片    {#localize-svg-images}
 
 Kubernetes 项目建议尽可能使用矢量（SVG）图片，因为这些图片对于本地化团队来说更容易编辑。
 如果你发现一个光栅图（位图）需要本地化翻译，先将英文版本重新绘制为矢量图片，然后再进行本地化。
@@ -671,19 +691,19 @@ Kubernetes 文档中常用 SVG 图片来说明概念、工作流和图表。
 
 <!--
 1. **Identifying translatable text**: Start by identifying the text elements
-within the SVG image that need to be translated. These elements typically
-include labels, captions, annotations, or any text that conveys information.
+   within the SVG image that need to be translated. These elements typically
+   include labels, captions, annotations, or any text that conveys information.
 -->
 1. **识别可翻译文本**：首先辨别出 SVG 图片中需要翻译的文本元素。
    这些元素通常包括标签、标题、注解或任何传达信息的文本。
 
 <!--
-2. **Editing SVG files**: SVG files are XML-based, which means they can be
-edited using a text editor. However, it's important to note that most of the
-documentation images in Kubernetes already convert text to curves to avoid font
-compatibility issues. In such cases, it is recommended to use specialized SVG
-editing software, such as Inkscape, for editing, open the SVG file and locate
-the text elements that require translation.
+1. **Editing SVG files**: SVG files are XML-based, which means they can be
+   edited using a text editor. However, it's important to note that most of the
+   documentation images in Kubernetes already convert text to curves to avoid font
+   compatibility issues. In such cases, it is recommended to use specialized SVG
+   editing software, such as Inkscape, for editing, open the SVG file and locate
+   the text elements that require translation.
 -->
 2. **编辑 SVG 文件**：SVG 文件是基于 XML 的，这意味着可以使用文本编辑器进行编辑。
    但请注意 Kubernetes 文档中的大部分图片已经将文本转换为曲线以避免字体兼容性问题。
@@ -691,12 +711,12 @@ the text elements that require translation.
    打开 SVG 文件并定位需要翻译的文本元素。
 
 <!--
-3. **Translating the text**: Replace the original text with the translated
-version in the desired language. Ensure the translated text accurately conveys
-the intended meaning and fits within the available space in the image. The Open
-Sans font family should be used when working with languages that use the Latin
-alphabet. You can download the Open Sans typeface from here:
-[Open Sans Typeface](https://fonts.google.com/specimen/Open+Sans).
+1. **Translating the text**: Replace the original text with the translated
+   version in the desired language. Ensure the translated text accurately conveys
+   the intended meaning and fits within the available space in the image. The Open
+   Sans font family should be used when working with languages that use the Latin
+   alphabet. You can download the Open Sans typeface from here:
+   [Open Sans Typeface](https://fonts.google.com/specimen/Open+Sans).
 -->
 3. **翻译文本**：将原始的文本替换为目标语言的译文。确保翻译的文本准确传达所需的含义，
    并适配图片中可用的空间。在处理使用拉丁字母的语言时，应使用 Open Sans 字体系列。
@@ -704,20 +724,20 @@ alphabet. You can download the Open Sans typeface from here:
    [Open Sans Typeface](https://fonts.google.com/specimen/Open+Sans)。
 
 <!--
-4. **Converting text to curves**: As already mentioned, to address font
-compatibility issues, it is recommended to convert the translated text to
-curves or paths. Converting text to curves ensures that the final image
-displays the translated text correctly, even if the user's system does not
-have the exact font used in the original SVG.
+1. **Converting text to curves**: As already mentioned, to address font
+   compatibility issues, it is recommended to convert the translated text to
+   curves or paths. Converting text to curves ensures that the final image
+   displays the translated text correctly, even if the user's system does not
+   have the exact font used in the original SVG.
 -->
 4. **文本转换为曲线**：如前所述，为解决字体兼容性问题，建议将翻译后的文本转换为曲线或路径。
    即使用户的系统没有原始 SVG 中所使用的确切字体，将文本转换为曲线也可确保最终图片能正确显示译文。
 
 <!--
-5. **Reviewing and testing**: After making the necessary translations and
-converting text to curves, save and review the updated SVG image to ensure
-the text is properly displayed and aligned. Check
-[Preview your changes locally](https://kubernetes.io/docs/contribute/new-content/open-a-pr/#preview-locally).
+1. **Reviewing and testing**: After making the necessary translations and
+   converting text to curves, save and review the updated SVG image to ensure
+   the text is properly displayed and aligned. Check
+   [Preview your changes locally](/docs/contribute/new-content/open-a-pr/#preview-locally).
 -->
 5. **检查和测试**：完成必要的翻译并将文本转换为曲线后，保存并检查更新后的 SVG 图片，确保文本正确显示和对齐。
    参考[在本地预览你的变更](/zh-cn/docs/contribute/new-content/open-a-pr/#preview-locally)。
@@ -732,7 +752,7 @@ release to target, referred to as the _target version_ below.
 To find source files for your target version:
 
 1. Navigate to the Kubernetes website repository at https://github.com/kubernetes/website.
-2. Select a branch for your target version from the following table:
+1. Select a branch for your target version from the following table:
 -->
 ### 源文件 {#source-files}
 
@@ -755,9 +775,9 @@ The `main` branch holds content for the current release `{{< latest-version >}}`
 The release team creates a `{{< release-branch >}}` branch before the next
 release: v{{< skew nextMinorVersion >}}.
 -->
-目标版本 | 分支
------|-----
-最新版本 | [`main`](https://github.com/kubernetes/website/tree/main)
+目标版本   | 分支
+----------|-----
+最新版本   | [`main`](https://github.com/kubernetes/website/tree/main)
 上一个版本 | [`release-{{< skew prevMinorVersion >}}`](https://github.com/kubernetes/website/tree/release-{{< skew prevMinorVersion >}})
 下一个版本 | [`dev-{{< skew nextMinorVersion >}}`](https://github.com/kubernetes/website/tree/dev-{{< skew nextMinorVersion >}})
 
@@ -769,24 +789,24 @@ release: v{{< skew nextMinorVersion >}}.
 ### Site strings in i18n
 
 Localizations must include the contents of
-[`data/i18n/en/en.toml`](https://github.com/kubernetes/website/blob/main/data/i18n/en/en.toml)
+[`i18n/en/en.toml`](https://github.com/kubernetes/website/blob/main/i18n/en/en.toml)
 in a new language-specific file. Using German as an example:
-`data/i18n/de/de.toml`.
+`i18n/de/de.toml`.
 
-Add a new localization directory and file to `data/i18n/`. For example, with
+Add a new localization directory and file to `i18n/`. For example, with
 German (`de`):
 -->
 ### i18n/ 中的网站字符串 {#site-strings-in-i18n}
 
 本地化必须在新的语言特定文件中包含
-[`data/i18n/en/en.toml`](https://github.com/kubernetes/website/blob/main/data/i18n/en/en.toml)
-的内容。以德语为例：`data/i18n/de/de.toml`。
+[`i18n/en/en.toml`](https://github.com/kubernetes/website/blob/main/i18n/en/en.toml)
+的内容。以德语为例：`i18n/de/de.toml`。
 
-将新的本地化文件和目录添加到 `data/i18n/`。例如德语 (`de`)：
+将新的本地化文件和目录添加到 `i18n/`。例如德语（`de`）：
 
 ```bash
-mkdir -p data/i18n/de
-cp data/i18n/en/en.toml data/i18n/de/de.toml
+mkdir -p i18n/de
+cp i18n/en/en.toml i18n/de/de.toml
 ```
 
 <!--
@@ -798,7 +818,7 @@ placeholder text for the search form:
 例如，这是搜索表单的德语占位符文本：
 
 ```toml
-[ui_search_placeholder]
+[ui_search]
 other = "Suchen"
 ```
 
@@ -841,7 +861,7 @@ process until SIG Docs automates it.
 SIG Docs 联合主席或技术主管可以帮助完成该过程，直到 SIG Docs 实现自动化。
 
 <!--
-## Branching strategy
+## Branch strategy
 
 Because localization projects are highly collaborative efforts, we
 encourage teams to work in shared localization branches - especially
@@ -849,7 +869,7 @@ when starting out and the localization is not yet live.
 
 To collaborate on a localization branch:
 -->
-### 分支策略 {#branching-strategy}
+### 分支策略 {#branch-strategy}
 
 因为本地化项目是高度协同的工作，
 特别是在刚开始本地化并且本地化尚未生效时，我们鼓励团队基于共享的本地化分支工作。
@@ -888,15 +908,15 @@ To collaborate on a localization branch:
    直接新建了 kubernetes/website 仓库的本地化分支 `dev-1.12-de.1`。
 
 <!--
-2. Individual contributors open feature branches based on the localization
+1. Individual contributors open feature branches based on the localization
    branch.
 
    For example, a German contributor opens a pull request with changes to
    `kubernetes:dev-1.12-de.1` from `username:local-branch-name`.
 
-3. Approvers review and merge feature branches into the localization branch.
+1. Approvers review and merge feature branches into the localization branch.
 
-4. Periodically, an approver merges the localization branch with its source
+1. Periodically, an approver merges the localization branch with its source
    branch by opening and approving a new pull request. Be sure to squash the
    commits before approving the pull request.
 -->
@@ -980,7 +1000,7 @@ permissions are required.
 For more information about working from forks or directly from the repository,
 see ["fork and clone the repo"](#fork-and-clone-the-repo).
 -->
-有关基于派生或直接从仓库开展工作的更多信息，请参见 ["派生和克隆"](#fork-and-clone-the-repo)。
+有关基于派生或直接从仓库开展工作的更多信息，请参见["派生和克隆"](#fork-and-clone-the-repo)。
 
 <!--
 ## Upstream contributions

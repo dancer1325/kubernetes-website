@@ -117,7 +117,7 @@ liveness-exec   1/1       Running   1          1m
 ## HTTPリクエストによるLiveness Probeを定義する {#define-a-liveness-http-request}
 
 別の種類のLiveness Probeでは、HTTP GETリクエストを使用します。
-次の構成ファイルは、`registry.k8s.io/liveness`イメージを使用したコンテナを起動するPodを作成します。
+次の構成ファイルは、`registry.k8s.io/e2e-test-images/agnhost`イメージを使用したコンテナを起動するPodを作成します。
 
 {{% codenew file="pods/probe/http-liveness.yaml" %}}
 
@@ -209,7 +209,6 @@ HTTPまたはTCPによるProbeにおいて、[ContainerPort](/docs/reference/gen
 ports:
 - name: liveness-port
   containerPort: 8080
-  hostPort: 8080
 
 livenessProbe:
   httpGet:
@@ -231,7 +230,6 @@ livenessProbe:
 ports:
 - name: liveness-port
   containerPort: 8080
-  hostPort: 8080
 
 livenessProbe:
   httpGet:
@@ -293,6 +291,8 @@ Liveness ProbeおよびReadiness Probeのチェック動作をより正確に制
 
 * `initialDelaySeconds`: コンテナが起動してから、Liveness ProbeまたはReadiness Probeが開始されるまでの秒数。デフォルトは0秒。最小値は0。
 * `periodSeconds`: Probeが実行される頻度(秒数)。デフォルトは10秒。最小値は1。
+コンテナが起動してから準備が整うまでの間、`periodSeconds`で指定した間隔とは異なるタイミングでReadiness Probeが実行される場合があります。
+これは、Podをより早く準備完了の状態に移行させるためです。
 * `timeoutSeconds`: Probeがタイムアウトになるまでの秒数。デフォルトは1秒。最小値は1。
 * `successThreshold`: 一度Probeが失敗した後、次のProbeが成功したとみなされるための最小連続成功数。
 デフォルトは1。Liveness ProbeおよびStartup Probeには1を設定する必要があります。最小値は1。

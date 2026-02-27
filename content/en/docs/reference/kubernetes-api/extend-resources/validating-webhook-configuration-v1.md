@@ -6,7 +6,7 @@ api_metadata:
 content_type: "api_reference"
 description: "ValidatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and object without changing it."
 title: "ValidatingWebhookConfiguration"
-weight: 3
+weight: 4
 auto_generated: true
 ---
 
@@ -46,6 +46,8 @@ ValidatingWebhookConfiguration describes the configuration of and admission webh
 
   *Patch strategy: merge on key `name`*
   
+  *Map: unique values on key name will be kept during a merge*
+  
   Webhooks is a list of webhooks and the affected resources and operations.
 
   <a name="ValidatingWebhook"></a>
@@ -53,6 +55,8 @@ ValidatingWebhookConfiguration describes the configuration of and admission webh
 
   - **webhooks.admissionReviewVersions** ([]string), required
 
+    *Atomic: will be replaced during a merge*
+    
     AdmissionReviewVersions is an ordered list of preferred `AdmissionReview` versions the Webhook expects. API server will try to use first version in the list which it supports. If none of the versions specified in this list supported by API server, validation will fail for this object. If a persisted webhook configuration specifies allowed versions and does not include any versions known to the API Server, calls to the webhook will fail and be subject to the failure policy.
 
   - **webhooks.clientConfig** (WebhookClientConfig), required
@@ -112,10 +116,20 @@ ValidatingWebhookConfiguration describes the configuration of and admission webh
   - **webhooks.sideEffects** (string), required
 
     SideEffects states whether this webhook has side effects. Acceptable values are: None, NoneOnDryRun (webhooks created via v1beta1 may also specify Some or Unknown). Webhooks with side effects MUST implement a reconciliation system, since a request may be rejected by a future step in the admission chain and the side effects therefore need to be undone. Requests with the dryRun attribute will be auto-rejected if they match a webhook with sideEffects == Unknown or Some.
+    
+    Possible enum values:
+     - `"None"` means that calling the webhook will have no side effects.
+     - `"NoneOnDryRun"` means that calling the webhook will possibly have side effects, but if the request being reviewed has the dry-run attribute, the side effects will be suppressed.
+     - `"Some"` means that calling the webhook will possibly have side effects. If a request with the dry-run attribute would trigger a call to this webhook, the request will instead fail.
+     - `"Unknown"` means that no information is known about the side effects of calling the webhook. If a request with the dry-run attribute would trigger a call to this webhook, the request will instead fail.
 
   - **webhooks.failurePolicy** (string)
 
     FailurePolicy defines how unrecognized errors from the admission endpoint are handled - allowed values are Ignore or Fail. Defaults to Fail.
+    
+    Possible enum values:
+     - `"Fail"` means that an error calling the webhook causes the admission to fail.
+     - `"Ignore"` means that an error calling the webhook is ignored.
 
   - **webhooks.matchConditions** ([]MatchCondition)
 
@@ -131,8 +145,6 @@ ValidatingWebhookConfiguration describes the configuration of and admission webh
       3. If any matchCondition evaluates to an error (but none are FALSE):
          - If failurePolicy=Fail, reject the request
          - If failurePolicy=Ignore, the error is ignored and the webhook is skipped
-    
-    This is a beta feature and managed by the AdmissionWebhookMatchConditions feature gate.
 
     <a name="MatchCondition"></a>
     *MatchCondition represents a condition which must by fulfilled for a request to be sent to a webhook.*
@@ -164,6 +176,10 @@ ValidatingWebhookConfiguration describes the configuration of and admission webh
     - Equivalent: match a request if modifies a resource listed in rules, even via another API group or version. For example, if deployments can be modified via apps/v1, apps/v1beta1, and extensions/v1beta1, and "rules" only included `apiGroups:["apps"], apiVersions:["v1"], resources: ["deployments"]`, a request to apps/v1beta1 or extensions/v1beta1 would be converted to apps/v1 and sent to the webhook.
     
     Defaults to "Equivalent"
+    
+    Possible enum values:
+     - `"Equivalent"` means requests should be sent to the webhook if they modify a resource listed in rules via another API group or version.
+     - `"Exact"` means requests should only be sent to the webhook if they exactly match a given rule.
 
   - **webhooks.namespaceSelector** (<a href="{{< ref "../common-definitions/label-selector#LabelSelector" >}}">LabelSelector</a>)
 
@@ -205,6 +221,8 @@ ValidatingWebhookConfiguration describes the configuration of and admission webh
 
   - **webhooks.rules** ([]RuleWithOperations)
 
+    *Atomic: will be replaced during a merge*
+    
     Rules describes what operations on what resources/subresources the webhook cares about. The webhook cares about an operation if it matches _any_ Rule. However, in order to prevent ValidatingAdmissionWebhooks and MutatingAdmissionWebhooks from putting the cluster in a state which cannot be recovered from without completely disabling the plugin, ValidatingAdmissionWebhooks and MutatingAdmissionWebhooks are never called on admission requests for ValidatingWebhookConfiguration and MutatingWebhookConfiguration objects.
 
     <a name="RuleWithOperations"></a>
@@ -243,6 +261,12 @@ ValidatingWebhookConfiguration describes the configuration of and admission webh
     - **webhooks.rules.scope** (string)
 
       scope specifies the scope of this rule. Valid values are "Cluster", "Namespaced", and "*" "Cluster" means that only cluster-scoped resources will match this rule. Namespace API objects are cluster-scoped. "Namespaced" means that only namespaced resources will match this rule. "*" means that there are no scope restrictions. Subresources match the scope of their parent resource. Default is "*".
+      
+      
+      Possible enum values:
+       - `"*"` means that all scopes are included.
+       - `"Cluster"` means that scope is limited to cluster-scoped objects. Namespace objects are cluster-scoped.
+       - `"Namespaced"` means that scope is limited to namespaced objects.
 
   - **webhooks.timeoutSeconds** (int32)
 
@@ -258,19 +282,21 @@ ValidatingWebhookConfigurationList is a list of ValidatingWebhookConfiguration.
 
 <hr>
 
-- **apiVersion**: admissionregistration.k8s.io/v1
+- **items** ([]<a href="{{< ref "../extend-resources/validating-webhook-configuration-v1#ValidatingWebhookConfiguration" >}}">ValidatingWebhookConfiguration</a>), required
 
+  List of ValidatingWebhookConfiguration.
 
-- **kind**: ValidatingWebhookConfigurationList
+- **apiVersion** (string)
 
+  APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+
+- **kind** (string)
+
+  Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
 
 - **metadata** (<a href="{{< ref "../common-definitions/list-meta#ListMeta" >}}">ListMeta</a>)
 
   Standard list metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-
-- **items** ([]<a href="{{< ref "../extend-resources/validating-webhook-configuration-v1#ValidatingWebhookConfiguration" >}}">ValidatingWebhookConfiguration</a>), required
-
-  List of ValidatingWebhookConfiguration.
 
 
 
@@ -569,6 +595,11 @@ DELETE /apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurations/{na
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
 
 
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
+
+
 - **pretty** (*in query*): string
 
   <a href="{{< ref "../common-parameters/common-parameters#pretty" >}}">pretty</a>
@@ -622,6 +653,11 @@ DELETE /apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurations
 - **gracePeriodSeconds** (*in query*): integer
 
   <a href="{{< ref "../common-parameters/common-parameters#gracePeriodSeconds" >}}">gracePeriodSeconds</a>
+
+
+- **ignoreStoreReadErrorWithClusterBreakingPotential** (*in query*): boolean
+
+  <a href="{{< ref "../common-parameters/common-parameters#ignoreStoreReadErrorWithClusterBreakingPotential" >}}">ignoreStoreReadErrorWithClusterBreakingPotential</a>
 
 
 - **labelSelector** (*in query*): string

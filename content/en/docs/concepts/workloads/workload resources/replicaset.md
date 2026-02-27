@@ -1,16 +1,18 @@
 ---
+# NOTE TO LOCALIZATION TEAMS
+#
+# If updating front matter for your localization because there is still
+# a "feature" key in this page, then you also need to update
+# content/??/docs/concepts/architecture/self-healing.md (which is where
+# it moved to)
 reviewers:
 - Kashomon
 - bprashanth
 - madhusudancs
 title: ReplicaSet
-feature:
-  title: Self-healing
-  anchor: How a ReplicaSet works
-  description: >
-    Restarts containers that fail, replaces and reschedules containers when nodes die,
-    kills containers that don't respond to your user-defined health check,
-    and doesn't advertise them to clients until they are ready to serve.
+api_metadata:
+- apiVersion: "apps/v1"
+  kind: "ReplicaSet"
 content_type: concept
 description: >-
   A ReplicaSet's purpose is to maintain a stable set of replica Pods running at any given time.
@@ -92,15 +94,14 @@ Namespace:    default
 Selector:     tier=frontend
 Labels:       app=guestbook
               tier=frontend
-Annotations:  kubectl.kubernetes.io/last-applied-configuration:
-                {"apiVersion":"apps/v1","kind":"ReplicaSet","metadata":{"annotations":{},"labels":{"app":"guestbook","tier":"frontend"},"name":"frontend",...
+Annotations:  <none>
 Replicas:     3 current / 3 desired
 Pods Status:  3 Running / 0 Waiting / 0 Succeeded / 0 Failed
 Pod Template:
   Labels:  tier=frontend
   Containers:
    php-redis:
-    Image:        gcr.io/google_samples/gb-frontend:v3
+    Image:        us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5
     Port:         <none>
     Host Port:    <none>
     Environment:  <none>
@@ -109,9 +110,9 @@ Pod Template:
 Events:
   Type    Reason            Age   From                   Message
   ----    ------            ----  ----                   -------
-  Normal  SuccessfulCreate  117s  replicaset-controller  Created pod: frontend-wtsmm
-  Normal  SuccessfulCreate  116s  replicaset-controller  Created pod: frontend-b2zdv
-  Normal  SuccessfulCreate  116s  replicaset-controller  Created pod: frontend-vcmts
+  Normal  SuccessfulCreate  13s   replicaset-controller  Created pod: frontend-gbgfx
+  Normal  SuccessfulCreate  13s   replicaset-controller  Created pod: frontend-rwz57
+  Normal  SuccessfulCreate  13s   replicaset-controller  Created pod: frontend-wkl7w
 ```
 
 And lastly you can check for the Pods brought up:
@@ -124,16 +125,16 @@ You should see Pod information similar to:
 
 ```
 NAME             READY   STATUS    RESTARTS   AGE
-frontend-b2zdv   1/1     Running   0          6m36s
-frontend-vcmts   1/1     Running   0          6m36s
-frontend-wtsmm   1/1     Running   0          6m36s
+frontend-gbgfx   1/1     Running   0          10m
+frontend-rwz57   1/1     Running   0          10m
+frontend-wkl7w   1/1     Running   0          10m
 ```
 
 You can also verify that the owner reference of these pods is set to the frontend ReplicaSet.
 To do this, get the yaml of one of the Pods running:
 
 ```shell
-kubectl get pods frontend-b2zdv -o yaml
+kubectl get pods frontend-gbgfx -o yaml
 ```
 
 The output will look similar to this, with the frontend ReplicaSet's info set in the metadata's ownerReferences field:
@@ -142,11 +143,11 @@ The output will look similar to this, with the frontend ReplicaSet's info set in
 apiVersion: v1
 kind: Pod
 metadata:
-  creationTimestamp: "2020-02-12T07:06:16Z"
+  creationTimestamp: "2024-02-28T22:30:44Z"
   generateName: frontend-
   labels:
     tier: frontend
-  name: frontend-b2zdv
+  name: frontend-gbgfx
   namespace: default
   ownerReferences:
   - apiVersion: apps/v1
@@ -154,7 +155,7 @@ metadata:
     controller: true
     kind: ReplicaSet
     name: frontend
-    uid: f391f6db-bb9b-4c09-ae74-6a1f77f3d5cf
+    uid: e129deca-f864-481b-bb16-b27abfd92292
 ...
 ```
 
@@ -225,7 +226,7 @@ pod1             1/1     Running   0          36s
 pod2             1/1     Running   0          36s
 ```
 
-In this manner, a ReplicaSet can own a non-homogenous set of Pods
+In this manner, a ReplicaSet can own a non-homogeneous set of Pods
 
 ## Writing a ReplicaSet manifest
 
@@ -318,6 +319,19 @@ To update Pods to a new spec in a controlled way, use a
 [Deployment](/docs/concepts/workloads/controllers/deployment/#creating-a-deployment), as
 ReplicaSets do not support a rolling update directly.
 
+### Terminating Pods
+
+{{< feature-state feature_gate_name="DeploymentReplicaSetTerminatingReplicas" >}}
+
+You can enable this feature by setting the `DeploymentReplicaSetTerminatingReplicas`
+[feature gate](/docs/reference/command-line-tools-reference/feature-gates/)
+on the [API server](/docs/reference/command-line-tools-reference/kube-apiserver/)
+and on the [kube-controller-manager](/docs/reference/command-line-tools-reference/kube-controller-manager/)
+
+Pods that become terminating due to deletion or scale down may take a long time to terminate, and may consume
+additional resources during that period. As a result, the total number of all pods can temporarily exceed
+`.spec.replicas`. Terminating pods can be tracked using the `.status.terminatingReplicas` field of the ReplicaSet.
+
 ### Isolating Pods from a ReplicaSet
 
 You can remove Pods from a ReplicaSet by changing their labels. This technique may be used to remove Pods
@@ -337,8 +351,7 @@ prioritize scaling down pods based on the following general algorithm:
    the pod with the lower value will come first.
 1. Pods on nodes with more replicas come before pods on nodes with fewer replicas.
 1. If the pods' creation times differ, the pod that was created more recently
-   comes before the older pod (the creation times are bucketed on an integer log scale
-   when the `LogarithmicScaleDown` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/) is enabled)
+   comes before the older pod (the creation times are bucketed on an integer log scale).
 
 If all of the above match, then selection is random.
 
@@ -395,7 +408,7 @@ Alternatively, you can use the `kubectl autoscale` command to accomplish the sam
 (and it's easier!)
 
 ```shell
-kubectl autoscale rs frontend --max=10 --min=3 --cpu-percent=50
+kubectl autoscale rs frontend --max=10 --min=3 --cpu=50%
 ```
 
 ## Alternatives to ReplicaSet

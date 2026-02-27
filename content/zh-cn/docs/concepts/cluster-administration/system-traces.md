@@ -23,12 +23,12 @@ System component traces record the latency of and relationships between operatio
 
 <!-- 
 Kubernetes components emit traces using the
-[OpenTelemetry Protocol](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md#opentelemetry-protocol-specification)
+[OpenTelemetry Protocol](https://opentelemetry.io/docs/specs/otlp/)
 with the gRPC exporter and can be collected and routed to tracing backends using an
 [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector#-opentelemetry-collector).
 -->
 Kubernetes 组件基于 gRPC 导出器的
-[OpenTelemetry 协议](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md#opentelemetry-protocol-specification)
+[OpenTelemetry 协议](https://opentelemetry.io/docs/specs/otlp/)
 发送追踪信息，并用
 [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector#-opentelemetry-collector)
 收集追踪信息，再将其转交给追踪系统的后台。
@@ -37,8 +37,14 @@ Kubernetes 组件基于 gRPC 导出器的
 
 <!-- 
 ## Trace Collection
+
+Kubernetes components have built-in gRPC exporters for OTLP to export traces, either with an OpenTelemetry Collector, 
+or without an OpenTelemetry Collector.
 -->
 ## 追踪信息的收集 {#trace-collection}
+
+Kubernetes 组件具有内置的 gRPC 导出器，供 OTLP 导出追踪信息，可以使用 OpenTelemetry Collector，
+也可以不使用 OpenTelemetry Collector。
 
 <!-- 
 For a complete guide to collecting traces and using the collector, see
@@ -68,13 +74,14 @@ receivers:
       grpc:
 exporters:
   # Replace this exporter with the exporter for your backend
-  logging:
-    logLevel: debug
+  exporters:
+    debug:
+      verbosity: detailed
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging]
+      exporters: [debug]
 ```
 -->
 ```yaml
@@ -84,14 +91,39 @@ receivers:
       grpc:
 exporters:
   # 用适合你后端环境的导出器替换此处的导出器
-  logging:
-    logLevel: debug
+  exporters:
+    debug:
+      verbosity: detailed
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging]
+      exporters: [debug]
 ```
+
+<!--
+To directly emit traces to a backend without utilizing a collector, 
+specify the endpoint field in the Kubernetes tracing configuration file with the desired trace backend address. 
+This method negates the need for a collector and simplifies the overall structure.
+-->
+要在不使用收集器的情况下直接将追踪信息发送到后端，请在 Kubernetes
+追踪配置文件中指定端点字段以及所需的追踪后端地址。
+该方法不需要收集器并简化了整体结构。
+
+<!--
+For trace backend header configuration, including authentication details, environment variables can be used with `OTEL_EXPORTER_OTLP_HEADERS`, 
+see [OTLP Exporter Configuration](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/).
+-->
+对于追踪后端标头配置，包括身份验证详细信息，环境变量可以与 `OTEL_EXPORTER_OTLP_HEADERS`
+一起使用，请参阅 [OTLP 导出器配置](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/)。
+
+<!--
+Additionally, for trace resource attribute configuration such as Kubernetes cluster name, namespace, Pod name, etc., 
+environment variables can also be used with `OTEL_RESOURCE_ATTRIBUTES`, see [OTLP Kubernetes Resource](https://opentelemetry.io/docs/specs/semconv/resource/k8s/).
+-->
+另外，对于 Kubernetes 集群名称、命名空间、Pod 名称等追踪资源属性配置，
+环境变量也可以与 `OTEL_RESOURCE_ATTRIBUTES` 配合使用，请参见
+[OTLP Kubernetes 资源](https://opentelemetry.io/docs/specs/semconv/resource/k8s/)。
 
 <!-- 
 ## Component traces
@@ -125,7 +157,7 @@ with `--tracing-config-file=<path-to-config>`. This is an example config that re
 spans for 1 in 10000 requests, and uses the default OpenTelemetry endpoint:
 
 ```yaml
-apiVersion: apiserver.config.k8s.io/v1beta1
+apiVersion: apiserver.config.k8s.io/v1
 kind: TracingConfiguration
 # default value
 #endpoint: localhost:4317
@@ -137,7 +169,7 @@ kube-apiserver 提供追踪配置文件。下面是一个示例配置，它为�
 span，并使用了默认的 OpenTelemetry 端点。
 
 ```yaml
-apiVersion: apiserver.config.k8s.io/v1beta1
+apiVersion: apiserver.config.k8s.io/v1
 kind: TracingConfiguration
 # 默认值
 #endpoint: localhost:4317
@@ -146,17 +178,17 @@ samplingRatePerMillion: 100
 
 <!-- 
 For more information about the `TracingConfiguration` struct, see
-[API server config API (v1beta1)](/docs/reference/config-api/apiserver-config.v1beta1/#apiserver-k8s-io-v1beta1-TracingConfiguration).
+[API server config API (v1)](/docs/reference/config-api/apiserver-config.v1/#apiserver-k8s-io-v1-TracingConfiguration).
 -->
 有关 TracingConfiguration 结构体的更多信息，请参阅
-[API 服务器配置 API (v1beta1)](/zh-cn/docs/reference/config-api/apiserver-config.v1beta1/#apiserver-k8s-io-v1beta1-TracingConfiguration)。
+[API 服务器配置 API](/zh-cn/docs/reference/config-api/apiserver-config.v1/#apiserver-k8s-io-v1-TracingConfiguration)。
 
 <!--
 ### kubelet traces
 -->
 ### kubelet 追踪   {#kubelet-traces}
 
-{{< feature-state for_k8s_version="v1.27" state="beta" >}}
+{{< feature-state feature_gate_name="KubeletTracing" >}}
 
 <!--
 The kubelet CRI interface and authenticated http servers are instrumented to generate
@@ -181,8 +213,6 @@ This is an example snippet of a kubelet config that records spans for 1 in 10000
 ```yaml
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
-featureGates:
-  KubeletTracing: true
 tracing:
   # default value
   #endpoint: localhost:4317
@@ -198,8 +228,6 @@ span，并使用默认的 OpenTelemetry 端点：
 ```yaml
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
-featureGates:
-  KubeletTracing: true
 tracing:
   # 默认值
   #endpoint: localhost:4317
@@ -210,17 +238,25 @@ tracing:
 If the `samplingRatePerMillion` is set to one million (`1000000`), then every
 span will be sent to the exporter.
 -->
-如果 `samplingRatePerMillion` 被设置为一百万 (`1000000`)，则所有 span 都将被发送到导出器。
+如果 `samplingRatePerMillion` 被设置为一百万（`1000000`），
+则所有 span 都将被发送到导出器。
 
 <!--
 The kubelet in Kubernetes v{{< skew currentVersion >}} collects spans from
 the garbage collection, pod synchronization routine as well as every gRPC
-method. Connected container runtimes like CRI-O and containerd can link the
-traces to their exported spans to provide additional context of information.
+method. The kubelet propagates trace context with gRPC requests so that
+container runtimes with trace instrumentation, such as CRI-O and containerd,
+can associate their exported spans with the trace context from the kubelet.
+The resulting traces will have parent-child links between kubelet and
+container runtime spans, providing helpful context when debugging node
+issues.
 -->
-Kubernetes v{{< skew currentVersion >}} 中的 kubelet 从垃圾回收、Pod
-同步例程以及每个 gRPC 方法中收集 span。CRI-O 和 containerd
-这类关联的容器运行时可以将链路链接到其导出的 span，以提供更多上下文信息。
+Kubernetes v{{< skew currentVersion >}} 中的 kubelet 收集与垃圾回收、Pod
+同步例程以及每个 gRPC 方法相关的 Span。
+kubelet 借助 gRPC 来传播跟踪上下文，以便 CRI-O 和 containerd
+这类带有跟踪插桩的容器运行时可以在其导出的 Span 与 kubelet
+所提供的跟踪上下文之间建立关联。所得到的跟踪数据会包含 kubelet
+与容器运行时 Span 之间的父子链接关系，从而为调试节点问题提供有用的上下文信息。
 
 <!--
 Please note that exporting spans always comes with a small performance overhead
@@ -253,5 +289,7 @@ there are no guarantees of backwards compatibility for tracing instrumentation.
 
 <!-- 
 * Read about [Getting Started with the OpenTelemetry Collector](https://opentelemetry.io/docs/collector/getting-started/)
+* Read about [OTLP Exporter Configuration](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/)
 -->
 * 阅读 [Getting Started with the OpenTelemetry Collector](https://opentelemetry.io/docs/collector/getting-started/)
+* 了解 [OTLP 导出器配置](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/)

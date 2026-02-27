@@ -1,5 +1,4 @@
 ---
-reviewers:
 title: リソースクォータ
 content_type: concept
 weight: 20
@@ -136,7 +135,7 @@ Kubernetes v1.8において、ローカルのエフェメラルストレージ�
 | `configmaps` | 名前空間内で存在可能なConfigMapの総数。  |
 | `persistentvolumeclaims` | 名前空間内で存在可能な[PersistentVolumeClaim](/ja/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims)の総数。 |
 | `pods` | 名前空間内で存在可能な停止していないPodの総数。`.status.phase in (Failed, Succeeded)`がtrueのとき、Podは停止状態にあります。  |
-| `replicationcontrollers` | 名前空間内で存在可能なReplicationControlerの総数。 |
+| `replicationcontrollers` | 名前空間内で存在可能なReplicationControllerの総数。 |
 | `resourcequotas` | 名前空間内で存在可能なResourceQuotaの総数。 |
 | `services` | 名前空間内で存在可能なServiceの総数。 |
 | `services.loadbalancers` | 名前空間内で存在可能なtype:LoadBalancerであるServiceの総数。 |

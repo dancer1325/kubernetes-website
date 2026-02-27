@@ -61,7 +61,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/website/main/conte
 Redis 파드 매니페스트의 내용을 검토하고 다음의 사항을 염두에 둔다.
 
 * `config` 라는 이름의 볼륨은 `spec.volumes[1]` 에 의해서 생성된다.
-* `spec.volumes[1].items[0]` 내부의 `key` 와 `path` 는 `config` 볼륨에 `redis.conf` 라는 파일명으로 지정된
+* `spec.volumes[1].configMap.items[0]` 내부의 `key` 와 `path` 는 `config` 볼륨에 `redis.conf` 라는 파일명으로 지정된
   `example-redis-config` 컨피그맵의 `redis-config` 키를 노출시킨다.
 * 그리고 `config` 볼륨은 `spec.containers[0].volumeMounts[1]` 에 의해서 `/redis-master` 에 마운트된다.
 
@@ -108,7 +108,7 @@ redis-config:
 `kubectl exec` 를 사용하여 파드에 접속하고, 현재 설정 확인을 위해서 `redis-cli` 도구를 실행한다.
 
 ```shell
-kubectl exec -it redis -- redis-cli
+kubectl exec -it pod/redis -- redis-cli
 ```
 
 `maxmemory` 를 확인한다.
@@ -172,7 +172,7 @@ maxmemory-policy allkeys-lru
 설정이 적용되었는지 확인하려면, `kubectl exec` 를 통한 `redis-cli` 로 Redis 파드를 다시 확인한다.
 
 ```shell
-kubectl exec -it redis -- redis-cli
+kubectl exec -it pod/redis -- redis-cli
 ```
 
 `maxmemory` 를 확인한다.
@@ -212,7 +212,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/website/main/conte
 이제 마지막으로 설정값을 다시 확인해 본다.
 
 ```shell
-kubectl exec -it redis -- redis-cli
+kubectl exec -it pod/redis -- redis-cli
 ```
 
 `maxmemory` 를 확인한다.

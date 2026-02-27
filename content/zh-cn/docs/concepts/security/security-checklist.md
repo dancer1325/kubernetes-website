@@ -63,16 +63,17 @@ evaluated on its merits.
 - [ ] A process exists for periodic access review, and reviews occur no more
   than 24 months apart.
 - [ ] The [Role Based Access Control Good Practices](/docs/concepts/security/rbac-good-practices/)
-  is followed for guidance related to authentication and authorization.
+  are followed for guidance related to authentication and authorization.
 -->
-## 认证和鉴权 {#authentication-authorization}
+## 身份验证和鉴权 {#authentication-authorization}
 
 - [ ] 在启动后 `system:masters` 组不用于用户或组件的身份验证。
 - [ ] kube-controller-manager 运行时要启用 `--use-service-account-credentials` 参数。
 - [ ] 根证书要受到保护（或离线 CA，或一个具有有效访问控制的托管型在线 CA）。
 - [ ] 中级证书和叶子证书的有效期不要超过未来 3 年。
 - [ ] 存在定期访问审查的流程，审查间隔不要超过 24 个月。
-- [ ] 遵循[基于角色的访问控制良好实践](/zh-cn/docs/concepts/security/rbac-good-practices/)，以获得与身份验证和授权相关的指导。
+- [ ] 遵循[基于角色的访问控制良好实践](/zh-cn/docs/concepts/security/rbac-good-practices/)，
+  以获得与身份验证和授权相关的指导。
 
 <!--
 After bootstrapping, neither users nor components should authenticate to the
@@ -88,7 +89,7 @@ an admin user.
 <!--
 ## Network security
 
-- [ ] CNI plugins in-use supports network policies.
+- [ ] CNI plugins in use support network policies.
 - [ ] Ingress and egress network policies are applied to all workloads in the
   cluster.
 - [ ] Default network policies within each namespace, selecting all pods, denying
@@ -114,16 +115,15 @@ plugins provide the functionality to
 restrict network resources that pods may communicate with. This is most commonly done
 through [Network Policies](/docs/concepts/services-networking/network-policies/)
 which provide a namespaced resource to define rules. Default network policies
-blocking everything egress and ingress, in each namespace, selecting all the
-pods, can be useful to adopt an allow list approach, ensuring that no workloads
-is missed.
+that block all egress and ingress, in each namespace, selecting all pods, can be
+useful to adopt an allow list approach to ensure that no workloads are missed.
 -->
 许多[容器网络接口（Container Network Interface，CNI）插件](/zh-cn/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)提供了限制
 Pod 可能与之通信的网络资源的功能。
 这种限制通常通过[网络策略](/zh-cn/docs/concepts/services-networking/network-policies/)来完成，
 网络策略提供了一种名字空间作用域的资源来定义规则。
 在每个名字空间中，默认的网络策略会阻塞所有的出入站流量，并选择所有 Pod，
-采用允许列表的方法很有用，可以确保不遗漏任何工作负载。
+这种采用允许列表的方法很有用，可以确保不遗漏任何工作负载。
 
 <!--
 Not all CNI plugins provide encryption in transit. If the chosen plugin lacks this
@@ -144,12 +144,12 @@ should be unique to etcd.
 
 <!--
 External Internet access to the Kubernetes API server should be restricted to
-not expose the API publicly. Be careful as many managed Kubernetes distribution
+not expose the API publicly. Be careful, as many managed Kubernetes distributions
 are publicly exposing the API server by default. You can then use a bastion host
 to access the server.
 
 The [kubelet](/docs/reference/command-line-tools-reference/kubelet/) API access
-should be restricted and not publicly exposed, the defaults authentication and
+should be restricted and not exposed publicly, the default authentication and
 authorization settings, when no configuration file specified with the `--config`
 flag, are overly permissive.
 -->
@@ -325,18 +325,18 @@ Seccomp 仅适用于 Linux 节点。
 #### AppArmor
 
 <!--
-[AppArmor](https://apparmor.net/) is a Linux kernel security module that can
+[AppArmor](/docs/tutorials/security/apparmor/) is a Linux kernel security module that can
 provide an easy way to implement Mandatory Access Control (MAC) and better
-auditing through system logs. To [enable AppArmor in Kubernetes](/docs/tutorials/security/apparmor/),
-at least version 1.4 is required. Like seccomp, AppArmor is also configured
+auditing through system logs. A default AppArmor profile is enforced on nodes that support it, or a custom profile can be configured.
+Like seccomp, AppArmor is also configured
 through profiles, where each profile is either running in enforcing mode, which
 blocks access to disallowed resources or complain mode, which only reports
 violations. AppArmor profiles are enforced on a per-container basis, with an
 annotation, allowing for processes to gain just the right privileges.
 -->
-[AppArmor](https://apparmor.net/) 是一个 Linux 内核安全模块，
+[AppArmor](/zh-cn/docs/tutorials/security/apparmor/) 是一个 Linux 内核安全模块，
 可以提供一种简单的方法来实现强制访问控制（Mandatory Access Control, MAC）并通过系统日志进行更好地审计。
-要在 Kubernetes 中[启用 AppArmor](/zh-cn/docs/tutorials/security/apparmor/)，至少需要 1.4 版本。
+默认 AppArmor 配置文件在支持它的节点上强制执行，或者可以配置自定义配置文件。
 与 Seccomp 一样，AppArmor 也通过配置文件进行配置，
 其中每个配置文件要么在强制（Enforcing）模式下运行，即阻止访问不允许的资源，要么在投诉（Complaining）模式下运行，只报告违规行为。
 AppArmor 配置文件是通过注解的方式，以容器为粒度强制执行的，允许进程获得刚好合适的权限。
@@ -373,43 +373,6 @@ SELinux 仅在 Linux 节点上可用，
 {{< /note >}}
 
 <!--
-## Logs and auditing
-
-- [ ] Audit logs, if enabled, are protected from general access.
-- [ ] The `/logs` API is disabled (you are running kube-apiserver with
-  `--enable-logs-handler=false`).
--->
-## 日志和审计   {#logs-and-auditing}
-
-- [ ] 审计日志（如果启用）将受到保护以防止常规访问。
-- [ ] `/logs` API 被禁用（你所运行的 kube-apiserver 设置了 `--enable-logs-handler=false`）。
-
-  <!--
-  Kubernetes includes a `/logs` API endpoint, enabled by default,
-  that lets users request the contents of the API server's `/var/log` directory over HTTP. Accessing
-  that endpoint requires authentication.
-  -->
-  Kubernetes 包含一个 `/logs` API 端点，默认启用。
-  这个端点允许用户通过 HTTP 来请求 API 服务器的 `/var/log` 目录的内容。
-  访问此端点需要身份验证。
-
-<!--
-Allowing broad access to Kubernetes logs can make security information
-available to a potential attacker.
-
-As a good practice, set up a separate means to collect and aggregate
-control plane logs, and do not use the `/logs` API endpoint.
-Alternatively, if you run your control plane with the `/logs` API endpoint
-and limit the content of `/var/log` (within the host or container where the API server is running) to
-Kubernetes API server logs only.
--->
-允许大范围访问 Kubernetes 日志可能会令安全信息被潜在的攻击者利用。
-
-一个好的做法是设置一个单独的方式来收集和聚合控制平面日志，
-并且不要使用 `/logs` API 端点。另一个使用场景是你运行控制平面时启用了 `/logs` API 端点并
-（在运行 API 服务器的主机或容器内）将 `/var/log` 的内容限制为仅保存 Kubernetes API 服务器日志。
-
-<!--
 ## Pod placement
 
 - [ ] Pod placement is done in accordance with the tiers of sensitivity of the
@@ -419,8 +382,8 @@ Kubernetes API server logs only.
 -->
 ## Pod 布局 {#pod-placement}
 
-- [ ] Pod 布局是根据应用程序的敏感级别来完成的。
-- [ ] 敏感应用程序在节点上隔离运行或使用特定的沙箱运行时运行。
+- [ ] Pod 布局是根据应用的敏感级别来完成的。
+- [ ] 敏感应用在节点上隔离运行或使用特定的沙箱运行时运行。
 
 <!--
 Pods that are on different tiers of sensitivity, for example, an application pod
@@ -431,8 +394,8 @@ pivot within the cluster. This separation should be enforced to prevent pods
 accidentally being deployed onto the same node. This could be enforced with the
 following features:
 -->
-处于不同敏感级别的 Pod，例如，应用程序 Pod 和 Kubernetes API 服务器，应该部署到不同的节点上。
-节点隔离的目的是防止应用程序容器的逃逸，进而直接访问敏感度更高的应用，
+处于不同敏感级别的 Pod，例如，应用程序 Pod 和 Kubernetes API 服务器应该被部署到不同的节点上。
+节点隔离的目的是防止应用容器的逃逸，进而直接访问敏感度更高的应用，
 甚至轻松地改变集群工作机制。
 这种隔离应该被强制执行，以防止 Pod 集合被意外部署到同一节点上。
 可以通过以下功能实现：
@@ -473,7 +436,7 @@ overhead.
 : RuntimeClass 是一个用于选择容器运行时配置的特性，容器运行时配置用于运行 Pod 中的容器，
   并以性能开销为代价提供或多或少的主机隔离能力。
 
-## Secrets {#secrets}
+## Secret {#secrets}
 
 <!--
 - [ ] ConfigMaps are not used to hold confidential data.
@@ -627,20 +590,20 @@ Production.
 - [ ] 保证准入链插件和 Webhook 的配置都是安全的。
 
 <!--
-Admission controllers can help to improve the security of the cluster. However,
+Admission controllers can help improve the security of the cluster. However,
 they can present risks themselves as they extend the API server and
 [should be properly secured](/blog/2022/01/19/secure-your-admission-controllers-and-webhooks/).
 -->
 准入控制器可以帮助提高集群的安全性。
 然而，由于它们是对 API 服务器的扩展，其自身可能会带来风险，
-所以它们[应该得到适当的保护](/blog/2022/01/19/secure-your-admission-controllers-and-webhooks/)。
+所以它们[应该得到适当的保护](/zh-cn/blog/2022/01/19/secure-your-admission-controllers-and-webhooks/)。
 
 <!--
 The following lists present a number of admission controllers that could be
 considered to enhance the security posture of your cluster and application. It
 includes controllers that may be referenced in other parts of this document.
 -->
-下面列出了一些准入控制器，可以考虑用这些控制器来增强集群和应用程序的安全状况。
+下面列出了一些准入控制器，可以考虑用这些控制器来增强集群和应用的安全状况。
 列表中包括了可能在本文档其他部分曾提及的控制器。
 
 <!--
@@ -677,7 +640,7 @@ attribute') of `system:masters`.
 
 <!--
 [`LimitRanger`](/docs/reference/access-authn-authz/admission-controllers/#limitranger)
-: Enforce the LimitRange API constraints.
+: Enforces the LimitRange API constraints.
 -->
 [`LimitRanger`](/zh-cn/docs/reference/access-authn-authz/admission-controllers/#limitranger)
 : 强制执行 LimitRange API 约束。
@@ -685,10 +648,10 @@ attribute') of `system:masters`.
 <!--
 [`MutatingAdmissionWebhook`](/docs/reference/access-authn-authz/admission-controllers/#mutatingadmissionwebhook)
 : Allows the use of custom controllers through webhooks, these controllers may
-mutate requests that it reviews.
+mutate requests that they review.
 -->
 [`MutatingAdmissionWebhook`](/zh-cn/docs/reference/access-authn-authz/admission-controllers/#mutatingadmissionwebhook)
-: 允许通过 Webhook 使用自定义控制器，这些控制器可能会变更它所审查的请求。
+: 允许通过 Webhook 使用自定义控制器，这些控制器可能会变更它们所审查的请求。
 
 <!--
 [`PodSecurity`](/docs/reference/access-authn-authz/admission-controllers/#podsecurity)
@@ -714,8 +677,8 @@ not mutate requests that it reviews.
 : 允许通过 Webhook 使用自定义控制器，这些控制器不变更它所审查的请求。
 
 <!--
-The second group includes plugin that are not enabled by default but in general
-availability state and recommended to improve your security posture:
+The second group includes plugins that are not enabled by default but are in general
+availability state and are recommended to improve your security posture:
 -->
 第二组包括默认情况下没有启用、但处于正式发布状态的插件，建议启用这些插件以改善你的安全状况：
 
@@ -732,7 +695,7 @@ availability state and recommended to improve your security posture:
 <!--
 [`NodeRestriction`](/docs/reference/access-authn-authz/admission-controllers/#noderestriction)
 : Restricts kubelet's permissions to only modify the pods API resources they own
-or the node API ressource that represent themselves. It also prevents kubelet
+or the node API resource that represent themselves. It also prevents kubelet
 from using the `node-restriction.kubernetes.io/` annotation, which can be used
 by an attacker with access to the kubelet's credentials to influence pod
 placement to the controlled node.
@@ -766,8 +729,12 @@ has permissions to use the image.
 <!--
 ## What's next
 
-- [RBAC Good Practices](/docs/concepts/security/rbac-good-practices/) for
-  further information on authorization.
+- [Privilege escalation via Pod creation](/docs/reference/access-authn-authz/authorization/#privilege-escalation-via-pod-creation)
+  warns you about a specific access control risk; check how you're managing that
+  threat.
+  - If you use Kubernetes RBAC, read
+    [RBAC Good Practices](/docs/concepts/security/rbac-good-practices/) for
+    further information on authorization.
 - [Securing a Cluster](/docs/tasks/administer-cluster/securing-a-cluster/) for
   information on protecting a cluster from accidental or malicious access.
 - [Cluster Multi-tenancy guide](/docs/concepts/security/multi-tenancy/) for
@@ -777,7 +744,10 @@ has permissions to use the image.
 -->
 ## 接下来  {#what-is-next}
 
-- [RBAC 良好实践](/zh-cn/docs/concepts/security/rbac-good-practices/)提供有关授权的更多信息。
+- [通过 Pod 创建进行权限升级](/zh-cn/docs/reference/access-authn-authz/authorization/#privilege-escalation-via-pod-creation)会警告你特定的访问控制风险；
+  请检查你如何管理该风险。
+  - 如果你使用 Kubernetes RBAC，请阅读
+    [RBAC 良好实践](/zh-cn/docs/concepts/security/rbac-good-practices/)获取有关鉴权的更多信息。
 - [保护集群](/zh-cn/docs/tasks/administer-cluster/securing-a-cluster/)提供如何保护集群免受意外或恶意访问的信息。
 - [集群多租户指南](/zh-cn/docs/concepts/security/multi-tenancy/)提供有关多租户的配置选项建议和最佳实践。
 - [博文“深入了解 NSA/CISA Kubernetes 强化指南”](/blog/2021/10/05/nsa-cisa-kubernetes-hardening-guidance/#building-secure-container-images)为强化

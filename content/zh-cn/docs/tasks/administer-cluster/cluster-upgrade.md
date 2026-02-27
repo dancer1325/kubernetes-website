@@ -10,9 +10,14 @@ weight: 350
 -->
 
 <!-- overview -->
+
 <!--
 This page provides an overview of the steps you should follow to upgrade a
 Kubernetes cluster.
+
+The Kubernetes project recommends upgrading to the latest patch releases promptly, and
+to ensure that you are running a supported minor release of Kubernetes.
+Following this recommendation helps you to stay secure.
 
 The way that you upgrade a cluster depends on how you initially deployed it
 and on any subsequent changes.
@@ -20,6 +25,9 @@ and on any subsequent changes.
 At a high level, the steps you perform are:
 -->
 本页概述升级 Kubernetes 集群的步骤。
+
+Kubernetes 项目建议及时升级到最新的补丁版本，并确保使用受支持的 Kubernetes 版本。
+遵循这一建议有助于保障安全。
 
 升级集群的方式取决于你最初部署它的方式、以及后续更改它的方式。
 
@@ -50,6 +58,22 @@ the documentation for the version of Kubernetes that you plan to upgrade to.
 升级到 Kubernetes {{< skew currentVersion >}}。
 如果你的集群未运行 Kubernetes {{< skew currentVersionAddMinor -1 >}}，
 那请参考目标 Kubernetes 版本的文档。
+
+{{< note >}}
+<!--
+On Linux nodes, the kubelet defaults to supporting only cgroups v2.
+For Kubernetes {{< skew currentVersion >}} the `FailCgroupV1` kubelet configuration option is set to `true` by default.
+
+To learn more, refer to the [Kubernetes cgroup v1 deprecation documentation](/docs/concepts/architecture/cgroups/#deprecation-of-cgroup-v1).
+-->
+在 Linux 节点上，kubelet 默认仅支持 CGroup v2。
+
+对于 Kubernetes {{< skew currentVersion >}}，kubelet
+配置选项 `FailCgroupV1` 默认设置为 `true`。
+
+要了解更多信息，请参阅
+[Kubernetes CGroup v1 弃用文档](/zh-cn/docs/concepts/architecture/cgroups/#deprecation-of-cgroup-v1)。
+{{</ note >}}
 
 <!--
 ## Upgrade approaches
@@ -95,11 +119,11 @@ You should manually update the control plane following this sequence:
 -->
 你应该按照下面的操作顺序，手动更新控制平面：
 
-- etcd (所有实例)
-- kube-apiserver (所有控制平面的宿主机)
+- etcd（所有实例）
+- kube-apiserver（所有控制平面的宿主机）
 - kube-controller-manager
 - kube-scheduler
-- cloud controller manager (在你用到时)
+- cloud controller manager（在你用到时）
 
 <!--
 At this point you should
@@ -115,6 +139,15 @@ kubelet, or upgrade the kubelet on that node and bring the node back into servic
 首先需要[腾空](/zh-cn/docs/tasks/administer-cluster/safely-drain-node/)节点，
 然后使用一个运行了 kubelet {{< skew currentVersion >}} 版本的新节点替换它；
 或者升级此节点的 kubelet，并使节点恢复服务。
+
+{{< caution >}}
+<!--
+Draining nodes before upgrading kubelet ensures that pods are re-admitted and containers are
+re-created, which may be necessary to resolve some security issues or other important bugs.
+-->
+在升级 kubelet 之前先进行节点排空，这样可以确保 Pod 被重新准入并且容器被重新创建。
+这一步骤对于解决某些安全问题或其他关键错误是非常必要的。
+{{</ caution >}}
 
 <!--
 ### Other deployments {#upgrade-other}

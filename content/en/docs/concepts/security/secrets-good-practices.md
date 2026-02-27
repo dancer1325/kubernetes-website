@@ -62,6 +62,9 @@ recommendations include:
 *  Implement audit rules that alert on specific events, such as concurrent
    reading of multiple Secrets by a single user
 
+#### Restrict Access for Secrets
+Use separate namespaces to isolate access to mounted secrets.
+
 ### Improve etcd management policies
 
 Consider wiping or shredding the durable storage used by `etcd` once it is
@@ -83,6 +86,11 @@ the data.
 
 For a list of supported providers, refer to
 [Providers for the Secret Store CSI Driver](https://secrets-store-csi-driver.sigs.k8s.io/concepts.html#provider-for-the-secrets-store-csi-driver).
+
+## Good practices for using swap memory
+
+For best practices for setting swap memory for Linux nodes, please refer to
+[swap memory management](/docs/concepts/cluster-administration/swap-memory-management/#good-practice-for-using-swap-in-a-kubernetes-cluster).
 
 ## Developers
 

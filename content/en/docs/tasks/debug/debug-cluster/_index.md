@@ -14,6 +14,9 @@ problem you are experiencing. See
 the [application troubleshooting guide](/docs/tasks/debug/debug-application/) for tips on application debugging.
 You may also visit the [troubleshooting overview document](/docs/tasks/debug/) for more information.
 
+For troubleshooting {{<glossary_tooltip text="kubectl" term_id="kubectl">}}, refer to
+[Troubleshooting kubectl](/docs/tasks/debug/debug-cluster/troubleshoot-kubectl/).
+
 <!-- body -->
 
 ## Listing your cluster
@@ -68,7 +71,6 @@ Labels:             beta.kubernetes.io/arch=amd64
                     kubernetes.io/arch=amd64
                     kubernetes.io/hostname=kube-worker-1
                     kubernetes.io/os=linux
-Annotations:        kubeadm.alpha.kubernetes.io/cri-socket: /run/containerd/containerd.sock
                     node.alpha.kubernetes.io/ttl: 0
                     volumes.kubernetes.io/controller-managed-attach-detach: true
 CreationTimestamp:  Thu, 17 Feb 2022 16:46:30 -0500
@@ -141,7 +143,6 @@ apiVersion: v1
 kind: Node
 metadata:
   annotations:
-    kubeadm.alpha.kubernetes.io/cri-socket: /run/containerd/containerd.sock
     node.alpha.kubernetes.io/ttl: "0"
     volumes.kubernetes.io/controller-managed-attach-detach: "true"
   creationTimestamp: "2022-02-17T21:46:30Z"
@@ -200,7 +201,7 @@ status:
     type: PIDPressure
   - lastHeartbeatTime: "2022-02-17T22:20:15Z"
     lastTransitionTime: "2022-02-17T22:15:15Z"
-    message: kubelet is posting ready status. AppArmor enabled
+    message: kubelet is posting ready status
     reason: KubeletReady
     status: "True"
     type: Ready
@@ -249,14 +250,14 @@ This is an incomplete list of things that could go wrong, and how to adjust your
 - Network partition within cluster, or between cluster and users
 - Crashes in Kubernetes software
 - Data loss or unavailability of persistent storage (e.g. GCE PD or AWS EBS volume)
-- Operator error, for example misconfigured Kubernetes software or application software
+- Operator error, for example, misconfigured Kubernetes software or application software
 
 ### Specific scenarios
 
 - API server VM shutdown or apiserver crashing
   - Results
     - unable to stop, update, or start new pods, services, replication controller
-    - existing pods and services should continue to work normally, unless they depend on the Kubernetes API
+    - existing pods and services should continue to work normally unless they depend on the Kubernetes API
 - API server backing storage lost
   - Results
     - the kube-apiserver component fails to start successfully and become healthy
@@ -288,7 +289,7 @@ This is an incomplete list of things that could go wrong, and how to adjust your
 
 ### Mitigations
 
-- Action: Use IaaS provider's automatic VM restarting feature for IaaS VMs
+- Action: Use the IaaS provider's automatic VM restarting feature for IaaS VMs
   - Mitigates: Apiserver VM shutdown or apiserver crashing
   - Mitigates: Supporting services VM shutdown or crashes
 
@@ -327,4 +328,3 @@ This is an incomplete list of things that could go wrong, and how to adjust your
 * Use `crictl` to [debug Kubernetes nodes](/docs/tasks/debug/debug-cluster/crictl/)
 * Get more information about [Kubernetes auditing](/docs/tasks/debug/debug-cluster/audit/)
 * Use `telepresence` to [develop and debug services locally](/docs/tasks/debug/debug-cluster/local-debugging/)
-

@@ -106,12 +106,16 @@ many nodes, consider the following:
   as you scale out your cluster.
 * Many addons scale horizontally - you add capacity by running more pods - but with
   a very large cluster you may also need to raise CPU or memory limits slightly.
-  The VerticalPodAutoscaler can run in _recommender_ mode to provide suggested
+  The [Vertical Pod Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler#readme) can run in _recommender_ mode to provide suggested
   figures for requests and limits.
 * Some addons run as one copy per node, controlled by a {{< glossary_tooltip text="DaemonSet"
   term_id="daemonset" >}}: for example, a node-level log aggregator. Similar to
   the case with horizontally-scaled addons, you may also need to raise CPU or memory
   limits slightly.
+
+## Prioritizing cluster-essential components
+
+To ensure cluster-essential components (such as CoreDNS, metrics-server, and other critical add-ons) are scheduled ahead of other workloads and are not preempted by lower-priority pods, run them with a system [PriorityClass](/docs/concepts/scheduling-eviction/pod-priority-preemption/), such as `system-cluster-critical` or `system-node-critical`.
 
 ## {{% heading "whatsnext" %}}
 
@@ -121,9 +125,7 @@ Learn more about [Vertical Pod Autoscaler](https://github.com/kubernetes/autosca
 and how you can use it to scale cluster
 components, including cluster-critical addons.
 
-* The [cluster autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler#readme)
-integrates with a number of cloud providers to help you run the right number of
-nodes for the level of resource demand in your cluster.
+* Read about [Node autoscaling](/docs/concepts/cluster-administration/node-autoscaling/)
 
 * The [addon resizer](https://github.com/kubernetes/autoscaler/tree/master/addon-resizer#readme)
 helps you in resizing the addons automatically as your cluster's scale changes.

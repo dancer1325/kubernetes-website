@@ -1,8 +1,12 @@
 ---
 title: Community
 layout: basic
+body_class: community
 cid: community
 community_styles_migrated: true
+menu:
+  main:
+    weight: 50
 ---
 <img
   id="banner"
@@ -48,6 +52,9 @@ community_styles_migrated: true
   </div>
   <div class="community-nav-item">
     <a href="/releases">Releases</a>
+  </div>
+  <div class="community-nav-item">
+    <a href="/case-studies">Case Studies</a>
   </div>
 </div>
 
@@ -120,12 +127,12 @@ community_styles_migrated: true
          troubleshooting, and so much&nbsp;more.</p>
     </div>
 
-    <div id="twitter" class="community-resource">
-      <a href="https://twitter.com/kubernetesio">
-        <img src="/images/community/twitter.png" alt="Twitter">
+    <div id="bluesky" class="community-resource">
+      <a href="https://bsky.app/profile/kubernetes.io">
+        <img src="/images/community/bluesky.png" alt="Bluesky">
       </a>
-      <a href="https://twitter.com/kubernetesio">Twitter&nbsp;&#9654;</a>
-      <p><em>#kubernetesio</em></p>
+      <a href="https://bsky.app/profile/kubernetes.io">Bluesky&nbsp;&#9654;</a>
+      <p><em>@kubernetes.io</em></p>
       <p>Real-time announcements of blog posts, events, news, ideas.</p>
     </div>
 
@@ -155,6 +162,15 @@ community_styles_migrated: true
         Visit <a href="https://slack.k8s.io/">https://slack.k8s.io/</a>
         for an invitation.</details>
     </div>
+
+    <div id="twitter" class="community-resource">
+      <a href="https://x.com/kubernetesio">
+        <img src="/images/community/x-org.png" alt="X">
+      </a>
+      <a href="https://x.com/kubernetesio">𝕏&nbsp;&#9654;</a>
+      <p><em>@kubernetesio</em></p>
+      <p>Real-time announcements of blog posts, events, news, ideas.</p>
+    </div>
   </div>
 </div>
 
@@ -178,6 +194,6 @@ community_styles_migrated: true
 <div class="community-section community-frame" id="news">
   <h2>Recent News</h2>
   <div class="twittercol1">
-    <a class="twitter-timeline" data-tweet-limit="1" href="https://twitter.com/kubernetesio?ref_src=twsrc%5Etfw">Tweets by kubernetesio</a>
+    <a class="twitter-timeline" data-tweet-limit="1" data-width="600" data-height="800" href="https://twitter.com/kubernetesio?ref_src=twsrc%5Etfw">Tweets by kubernetesio</a>
   </div>
 </div>

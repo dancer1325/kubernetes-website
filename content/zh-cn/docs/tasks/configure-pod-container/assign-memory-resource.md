@@ -519,13 +519,21 @@ kubectl delete namespace mem-example
 
 * [Assign CPU Resources to Containers and Pods](/docs/tasks/configure-pod-container/assign-cpu-resource/)
 
+* [Assign Pod-level CPU and memory resources](/docs/tasks/configure-pod-container/assign-pod-level-resources/)
+
 * [Configure Quality of Service for Pods](/docs/tasks/configure-pod-container/quality-service-pod/)
+
+* [Resize CPU and Memory Resources assigned to Containers](/docs/tasks/configure-pod-container/resize-container-resources/)
 -->
 ### 应用开发者扩展阅读    {#for-app-developers}
 
 * [为容器和 Pod 分配 CPU 资源](/zh-cn/docs/tasks/configure-pod-container/assign-cpu-resource/)
 
+* [分配 Pod 级别的 CPU 和内存资源](/zh-cn/docs/tasks/configure-pod-container/assign-pod-level-resources/)
+
 * [配置 Pod 的服务质量](/zh-cn/docs/tasks/configure-pod-container/quality-service-pod/)
+
+* [调整分配给容器的 CPU 和内存资源大小](/zh-cn/docs/tasks/configure-pod-container/resize-container-resources/)
 
 <!--
 ### For cluster administrators
@@ -555,4 +563,4 @@ kubectl delete namespace mem-example
 * [为命名空间配置内存和 CPU 配额](/zh-cn/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/)
 * [配置命名空间下 Pod 总数](/zh-cn/docs/tasks/administer-cluster/manage-resources/quota-pod-namespace/)
 * [配置 API 对象配额](/zh-cn/docs/tasks/administer-cluster/quota-api-object/)
-* [调整分配给容器的 CPU 和内存资源的大小](/docs/tasks/configure-pod-container/resize-container-resources/)
+* [调整分配给容器的 CPU 和内存资源的大小](/zh-cn/docs/tasks/configure-pod-container/resize-container-resources/)

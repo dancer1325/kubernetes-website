@@ -238,6 +238,17 @@ individual Pods, or the containers in those Pods. To achieve that kind of limiti
 可以使用 [LimitRange](/zh-cn/docs/tasks/administer-cluster/manage-resources/memory-constraint-namespace/)
 实现这类的功能。
 
+{{< note >}}
+<!--
+When using [in-place Pod resize](/docs/tasks/configure-pod-container/resize-container-resources/),
+ResourceQuota enforcement applies to the resized values. If a resize would cause the namespace
+to exceed its quota limits, the resize is rejected and the Pod's resources remain unchanged.
+-->
+使用[就地调整 Pod 大小](/zh-cn/docs/tasks/configure-pod-container/resize-container-resources/)时，
+资源配额限制将应用于调整后的值。
+如果调整大小会导致命名空间超出其配额限制，则调整操作将被拒绝，Pod 的资源将保持不变。
+{{< /note >}}
+
 <!--
 ## Clean up
 
@@ -282,10 +293,12 @@ kubectl delete namespace quota-mem-cpu-example
 
 * [Assign Memory Resources to Containers and Pods](/docs/tasks/configure-pod-container/assign-memory-resource/)
 * [Assign CPU Resources to Containers and Pods](/docs/tasks/configure-pod-container/assign-cpu-resource/)
+* [Assign Pod-level CPU and memory resources](/docs/tasks/configure-pod-container/assign-pod-level-resources/)
 * [Configure Quality of Service for Pods](/docs/tasks/configure-pod-container/quality-service-pod/)
 -->
 ### 应用开发者参考
 
 * [为容器和 Pod 分配内存资源](/zh-cn/docs/tasks/configure-pod-container/assign-memory-resource/)
+* [分配 Pod 级别的 CPU 和内存资源](/zh-cn/docs/tasks/configure-pod-container/assign-pod-level-resources/)
 * [为容器和 Pod 分配 CPU 资源](/zh-cn/docs/tasks/configure-pod-container/assign-cpu-resource/)
 * [为 Pod 配置服务质量](/zh-cn/docs/tasks/configure-pod-container/quality-service-pod/)

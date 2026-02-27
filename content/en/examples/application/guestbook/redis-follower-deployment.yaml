@@ -22,7 +22,8 @@ spec:
     spec:
       containers:
       - name: follower
-        image: gcr.io/google_samples/gb-redis-follower:v2
+        image: us-docker.pkg.dev/google-samples/containers/gke/gb-redis-follower:v2
+        #image: gcr.io/google_samples/gb-redis-follower:v2
         # https://console.cloud.google.com/gcr/images/google-samples/GLOBAL/gb-redis-follower:v2/details
         resources:
           requests:

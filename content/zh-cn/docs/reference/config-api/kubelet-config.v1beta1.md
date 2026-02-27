@@ -13,30 +13,505 @@ auto_generated: true
 <!--
 ## Resource Types
 -->
-## 资源类型
+## 资源类型   {#resource-types}
 
 - [CredentialProviderConfig](#kubelet-config-k8s-io-v1beta1-CredentialProviderConfig)
 - [KubeletConfiguration](#kubelet-config-k8s-io-v1beta1-KubeletConfiguration)
 - [SerializedNodeConfigSource](#kubelet-config-k8s-io-v1beta1-SerializedNodeConfigSource)
 
+## `FormatOptions`     {#FormatOptions}
+
+<!--
+**Appears in:**
+-->
+**出现在：**
+
+- [LoggingConfiguration](#LoggingConfiguration)
+
+<p>
+<!--
+FormatOptions contains options for the different logging formats.
+-->
+FormatOptions 包含为不同日志格式提供的选项。
+</p>
+
+<table class="table">
+<thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
+<tbody>
+
+<tr>
+<td>
+<code>text</code> <B><!-- [Required] -->[必需]</B><br/>
+<a href="#TextOptions"><code>TextOptions</code></a>
+</td>
+<td>
+<!--
+   <p>[Alpha] Text contains options for logging format &quot;text&quot;.
+Only available when the LoggingAlphaOptions feature gate is enabled.</p>
+-->
+   <p>[Alpha] 文本包含用于记录 &quot;text&quot; 格式的选项。
+仅当 LoggingAlphaOptions 特性门控被启用时可用。</p>
+</td>
+</tr>
+
+<tr><td><code>json</code> <B><!-- [Required] -->[必需]</B><br/>
+<a href="#JSONOptions"><code>JSONOptions</code></a>
+</td>
+<td>
+   <!--
+   [Alpha] JSON contains options for logging format &quot;json&quot;.
+Only available when the LoggingAlphaOptions feature gate is enabled.
+   -->
+   <p>[Alpha] <code>json</code> 包含 &quot;json&quot; 日志格式的选项。
+只有 LoggingAlphaOptions 特性门控被启用时才可用。</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## `JSONOptions`     {#JSONOptions}
+
+<!--
+**Appears in:**
+-->
+**出现在：**
+
+- [FormatOptions](#FormatOptions)
+
+<p>
+<!--
+JSONOptions contains options for logging format &quot;json&quot;.
+-->
+JSONOptions 包含为 &quot;json&quot; 日志格式提供的选项。
+</p>
+
+<table class="table">
+<thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
+<tbody>
+
+<tr>
+<td>
+<code>OutputRoutingOptions</code> <B><!-- [Required] -->[必需]</B><br/>
+<a href="#OutputRoutingOptions"><code>OutputRoutingOptions</code></a>
+ </td>
+<td>
+<!--
+(Members of <code>OutputRoutingOptions</code> are embedded into this type.)
+   <span class="text-muted">No description provided.</span>
+-->
+（<code>OutputRoutingOptions</code> 的成员嵌入到此类型中。）
+   <span class="text-muted">没有提供描述。</span>
+</td>
+</tr>
+</tbody>
+</table>
+
+## `LogFormatFactory`     {#LogFormatFactory}
+
+<p>
+<!--
+LogFormatFactory provides support for a certain additional,
+non-default log format.
+-->
+LogFormatFactory 提供了对某些附加的、非默认的日志格式的支持。
+</p>
+
+## `LoggingConfiguration`     {#LoggingConfiguration}
+
+<!--
+**Appears in:**
+-->
+**出现在：**
+
+- [KubeletConfiguration](#kubelet-config-k8s-io-v1beta1-KubeletConfiguration)
+
+<p>
+<!--
+LoggingConfiguration contains logging options.
+-->
+LoggingConfiguration 包含日志选项。
+</p>
+
+<table class="table">
+<thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
+<tbody>
+
+<tr><td><code>format</code> <B><!-- [Required] -->[必需]</B><br/>
+<code>string</code>
+</td>
+<td>
+  <p>
+  <!--
+  Format Flag specifies the structure of log messages.
+default value of format is `text`
+  -->
+  <code>format<code> 设置日志消息的结构。默认的格式取值为 <code>text</code>。
+  </p>
+</td>
+</tr>
+
+<tr><td><code>flushFrequency</code> <B><!-- [Required] -->[必需]</B><br/>
+<a href="#TimeOrMetaDuration"><code>TimeOrMetaDuration</code></a>
+</td>
+<td>
+  <p>
+  <!--
+   Maximum time between log flushes.
+If a string, parsed as a duration (i.e. &quot;1s&quot;)
+If an int, the maximum number of nanoseconds (i.e. 1s = 1000000000).
+Ignored if the selected logging backend writes log messages without buffering.
+  -->
+   日志清洗之间的最大时间间隔。
+如果是字符串，则解析为持续时间（例如 "1s"）。
+如果是整数，则表示为最大纳秒数（例如 1s = 1000000000）。
+如果所选的日志后端在写入日志消息时未缓冲，则被忽略。
+  </p>
+</td>
+</tr>
+
+<tr><td><code>verbosity</code> <B><!-- [Required] -->[必需]</B><br/>
+<a href="#VerbosityLevel"><code>VerbosityLevel</code></a>
+</td>
+<td>
+  <p>
+  <!--
+  Verbosity is the threshold that determines which log messages are
+logged. Default is zero which logs only the most important
+messages. Higher values enable additional messages. Error messages
+are always logged.
+  -->
+  <code>verbosity</code> 用来确定日志消息记录的详细程度阈值。默认值为 0，
+意味着仅记录最重要的消息。数值越大，额外的消息越多。出错消息总是会被记录下来。
+  </p>
+</td>
+</tr>
+
+<tr><td><code>vmodule</code> <B><!-- [Required] -->[必需]</B><br/>
+<a href="#VModuleConfiguration"><code>VModuleConfiguration</code></a>
+</td>
+<td>
+  <p>
+  <!--
+  VModule overrides the verbosity threshold for individual files.
+Only supported for &quot;text&quot; log format.
+  -->
+  <code>vmodule</code> 会在单个文件层面重载 verbosity 阈值的设置。
+这一选项仅支持 &quot;text&quot; 日志格式。
+  </p>
+</td>
+</tr>
+
+<tr><td><code>options</code> <B><!-- [Required] -->[必需]</B><br/>
+<a href="#FormatOptions"><code>FormatOptions</code></a>
+</td>
+<td>
+  <p>
+  <!--
+  [Alpha] Options holds additional parameters that are specific
+to the different logging formats. Only the options for the selected
+format get used, but all of them get validated.
+Only available when the LoggingAlphaOptions feature gate is enabled.
+  -->
+  [Alpha] <code>options</code> 中包含特定于不同日志格式的附加参数。
+只有针对所选格式的选项会被使用，但是合法性检查时会查看所有参数。
+只有 LoggingAlphaOptions 特性门控被启用时才可用。
+  </p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## `LoggingOptions`     {#LoggingOptions}
+
+<p>
+<!--
+LoggingOptions can be used with ValidateAndApplyWithOptions to override
+certain global defaults.
+-->
+<code>LoggingOptions</code> 可以与 <code>ValidateAndApplyWithOptions</code> 一起使用，以覆盖某些全局默认值。
+</p>
+
+<table class="table">
+<thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
+<tbody>
+      
+<tr><td><code>ErrorStream</code> <B><!--[Required]-->[必需]</B><br/>
+<a href="https://pkg.go.dev/io#Writer"><code>io.Writer</code></a>
+</td>
+<td>
+   <p>
+   <!--
+   ErrorStream can be used to override the os.Stderr default.
+   -->
+   <code>ErrorStream</code> 可用于覆盖默认值 <code>os.Stderr</code>。
+   </p>
+</td>
+</tr>
+<tr><td><code>InfoStream</code> <B><!--[Required]-->[必需]</B><br/>
+<a href="https://pkg.go.dev/io#Writer"><code>io.Writer</code></a>
+</td>
+<td>
+   <p>
+   <!--
+   InfoStream can be used to override the os.Stdout default.
+   -->
+   <code>InfoStream</code> 可用于覆盖默认值 <code>os.Stdout</code>。
+   </p>
+</td>
+</tr>
+</tbody>
+</table>
+
+<!--
+## `OutputRoutingOptions`     {#OutputRoutingOptions}
+
+**Appears in:**
+-->
+## `OutputRoutingOptions`     {#OutputRoutingOptions}
+
+- [JSONOptions](#JSONOptions)
+
+- [TextOptions](#TextOptions)
+
+<p>
+<!--
+OutputRoutingOptions contains options that are supported by both &quot;text&quot; and &quot;json&quot;.
+-->
+OutputRoutingOptions 包含 &quot;text&quot; 和 &quot;json&quot; 支持的选项。
+</p>
+
+<table class="table">
+<thead><tr><th width="30%">Field</th><th><!--Description-->描述<</th></tr></thead>
+
+<tbody>
+<tr><td><code>splitStream</code> <B><!--[Required]-->[必需]</B><br/>
+<code>bool</code>
+</td>
+<td>
+<!--
+   <p>[Alpha] SplitStream redirects error messages to stderr while
+info messages go to stdout, with buffering. The default is to write
+both to stdout, without buffering. Only available when
+the LoggingAlphaOptions feature gate is enabled.</p>
+-->
+   <p>[Alpha] SplitStream 将错误消息重定向到 stderr，而信息消息则转到 stdout，并进行缓冲。
+默认是将两者都写入 stdout，而不进行缓冲。仅在 LoggingAlphaOptions 特性门控启用时可用。</p>
+</td>
+</tr>
+<tr>
+<td><code>infoBufferSize</code> <B><!--[Required]-->[必需]</B><br/>
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#QuantityValue"><code>k8s.io/apimachinery/pkg/api/resource.QuantityValue</code></a>
+</td>
+<td>
+<!--
+   <p>[Alpha] InfoBufferSize sets the size of the info stream when
+using split streams. The default is zero, which disables buffering.
+Only available when the LoggingAlphaOptions feature gate is enabled.</p>
+-->
+   <p>[Alpha] InfoBufferSize 设置使用分割流时信息流的大小。默认值为零，表示禁用缓冲。
+仅在 LoggingAlphaOptions 特性门控启用时可用。</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## `TextOptions`     {#TextOptions}
+
+<!--
+**Appears in:**
+-->
+**出现在：**
+
+- [FormatOptions](#FormatOptions)
+
+<p>
+<!--
+TextOptions contains options for logging format &quot;text&quot;.
+-->
+TextOptions 包含用于记录 &quot;text&quot; 格式的选项。
+</p>
+
+<table class="table">
+<thead><tr><th width="30%">Field</th><th><!--Description-->描述</th></tr></thead>
+<tbody>
+    
+<tr>
+<td><code>OutputRoutingOptions</code> <B><!--[Required]-->[必需]</B><br/>
+<a href="#OutputRoutingOptions"><code>OutputRoutingOptions</code></a>
+</td>
+<td>
+<!--
+(Members of <code>OutputRoutingOptions</code> are embedded into this type.)
+   <span class="text-muted">No description provided.</span>
+-->
+（<code>OutputRoutingOptions</code> 的成员嵌入到此类型中。）
+   <span class="text-muted">未提供描述。</span>
+</td>
+</tr>
+</tbody>
+</table>
+
+## `TimeOrMetaDuration`     {#TimeOrMetaDuration}
+
+<!--
+**Appears in:**
+-->
+**出现在：**
+
+- [LoggingConfiguration](#LoggingConfiguration)
+
+<p>
+<!--
+TimeOrMetaDuration is present only for backwards compatibility for the
+flushFrequency field, and new fields should use metav1.Duration.
+-->
+<code>TimeOrMetaDuration</code> 仅出于向后兼容 <code>flushFrequency<code> 字段而存在，
+新字段应使用 <code>metav1.Duration<code>。
+</p>
+
+<table class="table">
+<thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
+<tbody>
+    
+<tr><td><code>Duration</code> <B><!--[Required]-->[必需]</B><br/>
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
+</td>
+<td>
+   <p>
+   <!--
+   Duration holds the duration
+   -->
+   <code>Duration<code> 保存持续时间。
+   </p>
+</td>
+</tr>
+<tr><td><code>-</code> <B><!--[Required]-->[必需]</B><br/>
+<code>bool</code>
+</td>
+<td>
+   <p>
+   <!--
+   SerializeAsString controls whether the value is serialized as a string or an integer
+   -->
+   <code>SerializeAsString</code> 控制此值是以字符串还是以整数进行序列化。
+   </p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## `TracingConfiguration`     {#TracingConfiguration}
+
+<!--
+**Appears in:**
+-->
+**出现在：**
+
+- [KubeletConfiguration](#kubelet-config-k8s-io-v1beta1-KubeletConfiguration)
+
+<p>
+<!--
+TracingConfiguration provides versioned configuration for OpenTelemetry tracing clients.
+-->
+TracingConfiguration 为 OpenTelemetry 追踪客户端提供版本化的配置信息。
+</p>
+
+<table class="table">
+<thead><tr><th width="30%">字段</th><th>描述</th></tr></thead>
+<tbody>
+
+<tr><td><code>endpoint</code><br/>
+<code>string</code>
+</td>
+<td>
+   <!--
+   Endpoint of the collector this component will report traces to.
+The connection is insecure, and does not currently support TLS.
+Recommended is unset, and endpoint is the otlp grpc default, localhost:4317.
+   -->
+   <p>采集器的端点，此组件将向其报告追踪链路。
+此连接不安全，目前不支持 TLS。推荐不设置，端点是 otlp grpc 默认值 localhost:4317。</p>
+</td>
+</tr>
+<tr><td><code>samplingRatePerMillion</code><br/>
+<code>int32</code>
+</td>
+<td>
+   <!--
+   SamplingRatePerMillion is the number of samples to collect per million spans.
+Recommended is unset. If unset, sampler respects its parent span's sampling
+rate, but otherwise never samples.
+   -->
+   <p><code>samplingRatePerMillion</code> 是每百万 span 要采集的样本数。推荐不设置。
+如果不设置，则采样器优先使用其父级 span 的采样率，否则不采样。</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+## `VModuleConfiguration`     {#VModuleConfiguration}
+
+<!--
+(Alias of `[]k8s.io/component-base/logs/api/v1.VModuleItem`)
+-->
+（`[]k8s.io/component-base/logs/api/v1.VModuleItem` 的别名）
+
+<!--
+**Appears in:**
+-->
+**出现在：**
+
+- [LoggingConfiguration](#LoggingConfiguration)
+
+<p>
+<!--
+VModuleConfiguration is a collection of individual file names or patterns
+and the corresponding verbosity threshold.
+-->
+VModuleConfiguration 是一个集合，其中包含一个个文件名（或文件名模式）
+及其对应的详细程度阈值。
+</p>
+
+## `VerbosityLevel`     {#VerbosityLevel}
+    
+<!--
+(Alias of `uint32`)
+-->
+（`uint32` 的别名）
+
+<!--
+**Appears in:**
+-->
+**出现在：**
+
+- [LoggingConfiguration](#LoggingConfiguration)
+
+<p>
+<!--
+VerbosityLevel represents a klog or logr verbosity threshold.
+-->
+VerbosityLevel 表示 klog 或 logr 的详细程度（verbosity）阈值。
+</p>
+
 ## `CredentialProviderConfig`     {#kubelet-config-k8s-io-v1beta1-CredentialProviderConfig}
 
+<p>
 <!--
 CredentialProviderConfig is the configuration containing information about
 each exec credential provider. Kubelet reads this configuration from disk and enables
 each provider as specified by the CredentialProvider type.
 -->
 CredentialProviderConfig 包含有关每个 exec 凭据提供者的配置信息。
-Kubelet 从磁盘上读取这些配置信息，并根据 CredentialProvider 类型启用各个提供者。
+kubelet 从磁盘上读取这些配置信息，并根据 CredentialProvider 类型启用各个提供者。
+</p>
 
 <table class="table">
 <thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
 <tbody>
-    
+
 <tr><td><code>apiVersion</code><br/>string</td><td><code>kubelet.config.k8s.io/v1beta1</code></td></tr>
 <tr><td><code>kind</code><br/>string</td><td><code>CredentialProviderConfig</code></td></tr>
-    
-  
+
 <tr><td><code>providers</code> <B><!--[Required]-->[必需]</B><br/>
 <a href="#kubelet-config-k8s-io-v1beta1-CredentialProvider"><code>[]CredentialProvider</code></a>
 </td>
@@ -46,13 +521,13 @@ providers is a list of credential provider plugins that will be enabled by the k
 Multiple providers may match against a single image, in which case credentials
 from all providers will be returned to the kubelet. If multiple providers are called
 for a single image, the results are combined. If providers return overlapping
-auth keys, the value from the provider earlier in this list is used.
+auth keys, the value from the provider earlier in this list is attempted first.
 -->
    <p>
    <code>providers</code> 是一组凭据提供者插件，这些插件会被 kubelet 启用。
    多个提供者可以匹配到同一镜像上，这时，来自所有提供者的凭据信息都会返回给 kubelet。
    如果针对同一镜像调用了多个提供者，则结果会被组合起来。如果提供者返回的认证主键有重复，
-   列表中先出现的提供者所返回的值将被使用。
+   列表中先出现的提供者所返回的值将被首先尝试。
    </p>
 </td>
 </tr>
@@ -61,10 +536,12 @@ auth keys, the value from the provider earlier in this list is used.
 
 ## `KubeletConfiguration`     {#kubelet-config-k8s-io-v1beta1-KubeletConfiguration}
 
+<p>
 <!--
 KubeletConfiguration contains the configuration for the Kubelet
 -->
-KubeletConfiguration 中包含 Kubelet 的配置。
+KubeletConfiguration 中包含 kubelet 的配置。
+</p>
 
 <table class="table">
 <thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
@@ -72,7 +549,7 @@ KubeletConfiguration 中包含 Kubelet 的配置。
 
 <tr><td><code>apiVersion</code><br/>string</td><td><code>kubelet.config.k8s.io/v1beta1</code></td></tr>
 <tr><td><code>kind</code><br/>string</td><td><code>KubeletConfiguration</code></td></tr>
-<tr><td><code>enableServer</code> <B>[必需]</B><br/>
+<tr><td><code>enableServer</code> <B><!-- [Required] -->[必需]</B><br/>
 <code>bool</code>
 </td>
 <td>
@@ -101,6 +578,23 @@ Default: &quot;&quot;
   <p>默认值：&quot;&quot;</p>
 </td>
 </tr>
+
+<tr><td><code>podLogsDir</code><br/>
+<code>string</code>
+</td>
+<td>
+<!--
+   <p>podLogsDir is a custom root directory path kubelet will use to place pod's log files.
+Default: &quot;/var/log/pods/&quot;
+Note: it is not recommended to use the temp folder as a log directory as it may cause
+unexpected behavior in many places.</p>
+-->
+   <p>podLogsDir 是 kubelet 用于放置 Pod 日志文件的自定义根目录路径。
+默认值：&quot;/var/log/pods/&quot;
+注意：不建议使用临时文件夹作为日志目录，因为它可能会在许多地方引起意外行为。</p>
+</td>
+</tr>
+
 
 <tr><td><code>syncFrequency</code><br/>
 <a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
@@ -242,7 +736,8 @@ Default:&quot;quot;
 <code>string</code>
 </td>
 <td>
-   <!--tlsPrivateKeyFile is the file containing x509 private key matching tlsCertFile.
+   <!--
+   tlsPrivateKeyFile is the file containing x509 private key matching tlsCertFile.
 Default: &quot;&quot;
    -->
    <p><code>tlsPrivateKeyFile</code> 是一个包含与 <code>tlsCertFile</code>
@@ -272,7 +767,8 @@ Default: &quot;&quot;
 <code>string</code>
 </td>
 <td>
-   <!--tlsMinVersion is the minimum TLS version supported.
+   <!--
+   tlsMinVersion is the minimum TLS version supported.
 Values are from tls package constants (https://golang.org/pkg/crypto/tls/#pkg-constants).
 Default: &quot;&quot;
    -->
@@ -286,7 +782,8 @@ Default: &quot;&quot;
 <code>bool</code>
 </td>
 <td>
-   <!--rotateCertificates enables client certificate rotation. The Kubelet will request a
+   <!--
+   rotateCertificates enables client certificate rotation. The Kubelet will request a
 new certificate from the certificates.k8s.io API. This requires an approver to approve the
 certificate signing requests.
 Default: false
@@ -395,6 +892,68 @@ Default: 10
 不过仍然不超过 <code>registryPullQPS</code> 所设置的约束。此值必须是非负值。
 只有 <code>registryPullQPS</code> 参数值大于 0 时才会使用此设置。</p>
   <p>默认值：10</p>
+</td>
+</tr>
+
+<tr><td><code>imagePullCredentialsVerificationPolicy</code><br/>
+<a href="#kubelet-config-k8s-io-v1beta1-ImagePullCredentialsVerificationPolicy"><code>ImagePullCredentialsVerificationPolicy</code></a>
+</td>
+<td>
+   <p>
+   <!--
+   imagePullCredentialsVerificationPolicy determines how credentials should be
+verified when pod requests an image that is already present on the node:
+-->
+<code>imagePullCredentialsVerificationPolicy</code> 决定当 Pod 请求节点上已存在的镜像时，凭据应被如何验证：
+</p>
+<ul>
+<li>NeverVerify
+<!--
+anyone on a node can use any image present on the node
+-->
+节点上的任何人都可以使用该节点上存在的所有镜像
+</li>
+<li>NeverVerifyPreloadedImages
+<!--
+images that were pulled to the node by something else than the kubelet
+can be used without reverifying pull credentials
+-->
+由 kubelet 以外的方式拉取到节点上的镜像可以在不重新验证凭据的情况下使用
+</li>
+<li>NeverVerifyAllowlistedImages
+<!--
+like &quot;NeverVerifyPreloadedImages&quot; but only node images from
+<code>preloadedImagesVerificationAllowlist</code> don't require reverification
+-->
+类似于 &quot;NeverVerifyPreloadedImages&quot;，但只有源于
+<code>preloadedImagesVerificationAllowlist</code> 的节点镜像无需重新验证
+</li>
+<li>AlwaysVerify
+<!--
+all images require credential reverification
+-->
+所有镜像都需要重新验证凭据
+</li>
+</ul>
+</td>
+</tr>
+<tr><td><code>preloadedImagesVerificationAllowlist</code><br/>
+<code>[]string</code>
+</td>
+<td>
+   <p>
+   <!--
+   preloadedImagesVerificationAllowlist specifies a list of images that are
+exempted from credential reverification for the &quot;NeverVerifyAllowlistedImages&quot;
+<code>imagePullCredentialsVerificationPolicy</code>.
+The list accepts a full path segment wildcard suffix &quot;/*&quot;.
+Only use image specs without an image tag or digest.
+-->
+<code>preloadedImagesVerificationAllowlist</code> 指定一个镜像列表，对于
+<code>imagePullCredentialsVerificationPolicy</code> 设置为
+&quot;NeverVerifyAllowlistedImages&quot; 时，这些镜像可免于重新验证凭据。
+此列表支持以 &quot;/*&quot; 结尾的路径通配符。请仅使用不带镜像标签或摘要的镜像规约。
+</p>
 </td>
 </tr>
 
@@ -542,13 +1101,17 @@ Default: nil
 <a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
 </td>
 <td>
+   <p>
    <!--
    streamingConnectionIdleTimeout is the maximum time a streaming connection
 can be idle before the connection is automatically closed.
+Deprecated: no longer has any effect.
 Default: &quot;4h&quot;
    -->
-   <p><code>streamingConnectionIdleTimeout</code> 设置流式连接在被自动关闭之前可以空闲的最长时间。</p>
-   <p>默认值：&quot;4h&quot;</p>
+   <code>streamingConnectionIdleTimeout</code> 设置流式连接在被自动关闭之前可以空闲的最长时间。
+   弃用：此字段不再有作用。
+   默认值：&quot;4h&quot;
+   </p>
 </td>
 </tr>
 
@@ -625,12 +1188,31 @@ Default: 40
 <a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
 </td>
 <td>
-   <!--imageMinimumGCAge is the minimum age for an unused image before it is
+   <!--
+   imageMinimumGCAge is the minimum age for an unused image before it is
 garbage collected. 
 Default: &quot;2m&quot;
    -->
-   <p><code>imageMinimumGCAge</code> 是对未使用镜像进行垃圾搜集之前允许其存在的时长。</p>
+   <p><code>imageMinimumGCAge</code> 是对未使用镜像进行垃圾收集之前允许其存在的时长。</p>
    <p>默认值：&quot;2m&quot;</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<code>imageMaximumGCAge</code><br/>
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
+</td>
+<td>
+   <!--
+   imageMaximumGCAge is the maximum age an image can be unused before it is garbage collected.
+The default of this field is &quot;0s&quot;, which disables this field--meaning images won't be garbage
+collected based on being unused for too long.
+Default: &quot;0s&quot; (disabled)
+   -->
+   <p><code>imageMaximumGCAge</code> 是对未使用镜像进行垃圾收集之前允许其存在的时长。
+   此字段的默认值为 &quot;0s&quot;，表示禁用此字段，这意味着镜像不会因为过长时间不使用而被垃圾收集。</p>
+   <p>默认值：&quot;0s&quot;（已禁用）</p>
 </td>
 </tr>
 
@@ -770,12 +1352,36 @@ Default: &quot;cgroupfs&quot;
 <td>
    <!--
    cpuManagerPolicy is the name of the policy to use.
-Requires the CPUManager feature gate to be enabled.
 Default: &quot;None&quot;
    -->
-   <p><code>cpuManagerPolicy</code> 是要使用的策略名称。需要启用 <code>CPUManager</code>
-特性门控。</p>
+   <p><code>cpuManagerPolicy</code> 是要使用的策略名称。</p>
    <p>默认值：&quot;None&quot;</p>
+</td>
+</tr>
+
+<tr><td><code>singleProcessOOMKill</code><br/>
+<code>bool</code>
+</td>
+<td>
+   <p>
+   <!--
+   singleProcessOOMKill, if true, will prevent the <code>memory.oom.group</code> flag from being set for container
+cgroups in cgroups v2. This causes processes in the container to be OOM killed individually instead of as
+a group. It means that if true, the behavior aligns with the behavior of cgroups v1.
+The default value is determined automatically when you don't specify.
+On non-linux such as windows, only null / absent is allowed.
+On cgroup v1 linux, only null / absent and true are allowed.
+On cgroup v2 linux, null / absent, true and false are allowed. The default value is false.
+-->
+如果 <code>singleProcessOOMKill</code> 为 true，将阻止在 cgroup v2 中为容器 cgroup
+设置 <code>memory.oom.group</code> 标志。
+这会导致容器中的单个进程因 OOM 被单独杀死，而不是作为一个组被杀死。
+这意味着如果为 true，其行为与 cgroup v1 的行为一致。
+当你未指定值时，默认值将被自动确定。
+在 Windows 这类非 Linux 系统上，仅允许 null（或不设置）。
+在 cgroup v1 Linux 上，仅允许 null（或不设置）和 true。
+在 cgroup v2 Linux 上，允许 null（或不设置）、true 和 false。默认值为 false。
+</p>
 </td>
 </tr>
 
@@ -786,12 +1392,10 @@ Default: &quot;None&quot;
    <!--
    cpuManagerPolicyOptions is a set of key=value which 	allows to set extra options
 to fine tune the behaviour of the cpu manager policies.
-Requires  both the &quot;CPUManager&quot; and &quot;CPUManagerPolicyOptions&quot; feature gates to be enabled.
 Default: nil
    -->
    <p><code>cpuManagerPolicyOptions</code> 是一组 <code>key=value</code> 键值映射，
-容许通过额外的选项来精细调整 CPU 管理器策略的行为。需要 <code>CPUManager</code> 和
-<code>CPUManagerPolicyOptions</code> 两个特性门控都被启用。</p>
+容许通过额外的选项来精细调整 CPU 管理器策略的行为。</p>
    <p>默认值：nil</p>
 </td>
 </tr>
@@ -800,12 +1404,12 @@ Default: nil
 <a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
 </td>
 <td>
-   <!--cpuManagerReconcilePeriod is the reconciliation period for the CPU Manager.
-Requires the CPUManager feature gate to be enabled.
+   <!--
+   cpuManagerReconcilePeriod is the reconciliation period for the CPU Manager.
 Default: &quot;10s&quot;
    -->
    <p><code>cpuManagerReconcilePeriod</code> 是 CPU 管理器的协调周期时长。
-要求启用 <code>CPUManager</code> 特性门控。默认值：&quot;10s&quot;</p>
+默认值：&quot;10s&quot;</p>
 </td>
 </tr>
 
@@ -953,7 +1557,7 @@ themselves if they should try to access their own Service. Values:</p>
    Generally, one must set <code>--hairpin-mode=hairpin-veth to</code> achieve hairpin NAT,
 because promiscuous-bridge assumes the existence of a container bridge named cbr0.
 Default: &quot;promiscuous-bridge&quot;
-    -->
+   -->
    <p>一般而言，用户必须设置 <code>--hairpin-mode=hairpin-veth</code> 才能实现发夹模式的网络地址转译
 （NAT），因为混杂模式的网桥要求存在一个名为 <code>cbr0</code> 的容器网桥。</p>
    <p>默认值：&quot;promiscuous-bridge&quot;</p>
@@ -1013,8 +1617,7 @@ If set to the empty string, will override the default and effectively disable DN
 Default: &quot;/etc/resolv.conf&quot;
    -->
    <p><code>resolvConf</code> 是一个域名解析配置文件，用作容器 DNS 解析配置的基础。</p>
-   <p>如果此值设置为空字符串，则会覆盖 DNS 解析的默认配置，
-本质上相当于禁用了 DNS 查询。</p>
+   <p>如果此值设置为空字符串，则会覆盖 DNS 解析的默认配置，本质上相当于禁用了 DNS 查询。</p>
    <p>默认值：&quot;/etc/resolv.conf&quot;</p>
 </td>
 </tr>
@@ -1165,10 +1768,10 @@ This field cannot be set if SerializeImagePulls is true.
 Setting it to nil means no limit.
 Default: nil
    -->
-   <p>maxParallelImagePulls 设置并行拉取镜像的最大数量。
-如果 serializeImagePulls 为 true，则无法设置此字段。
+   <p><code>maxParallelImagePulls</code> 设置并行拉取镜像的最大数量。
+如果 <code>serializeImagePulls</code> 为 true，则无法设置此字段。
 把它设置为 nil 意味着没有限制。</p>
-   <p>默认值：true</p>
+   <p>默认值：nil</p>
 </td>
 </tr>
 <tr><td><code>evictionHard</code><br/>
@@ -1202,7 +1805,8 @@ Default:
 <code>map[string]string</code>
 </td>
 <td>
-   <!--evictionSoft is a map of signal names to quantities that defines soft eviction thresholds.
+   <!--
+   evictionSoft is a map of signal names to quantities that defines soft eviction thresholds.
 For example: <code>{&quot;memory.available&quot;: &quot;300Mi&quot;}</code>.
 Default: nil
    -->
@@ -1216,7 +1820,8 @@ Default: nil
 <code>map[string]string</code>
 </td>
 <td>
-   <!--evictionSoftGracePeriod is a map of signal names to quantities that defines grace
+   <!--
+   evictionSoftGracePeriod is a map of signal names to quantities that defines grace
 periods for each soft eviction signal. For example: <code>{&quot;memory.available&quot;: &quot;30s&quot;}</code>.
 Default: nil
    -->
@@ -1233,10 +1838,11 @@ Default: nil
    <!--
    evictionPressureTransitionPeriod is the duration for which the kubelet has to wait
 before transitioning out of an eviction pressure condition.
+A duration of 0s will be converted to the default value of 5m
 Default: &quot;5m&quot;
    -->
    <p><code>evictionPressureTransitionPeriod</code> 设置 kubelet
-离开驱逐压力状况之前必须要等待的时长。</p>
+离开驱逐压力状况之前必须要等待的时长。0s 的时长将被转换为默认值 5m。</p>
    <p>默认值：&quot;5m&quot;</p>
 </td>
 </tr>
@@ -1245,22 +1851,24 @@ Default: &quot;5m&quot;
 <code>int32</code>
 </td>
 <td>
-   <!--
-   evictionMaxPodGracePeriod is the maximum allowed grace period (in seconds) to use
+<p>
+<!--
+evictionMaxPodGracePeriod is the maximum allowed grace period (in seconds) to use
 when terminating pods in response to a soft eviction threshold being met. This value
-effectively caps the Pod's terminationGracePeriodSeconds value during soft evictions.
-Note: Due to issue #64530, the behavior has a bug where this value currently just
-overrides the grace period during soft eviction, which can increase the grace
-period from what is set on the Pod. This bug will be fixed in a future release.
+effectively caps the Pod's terminationGracePeriodSeconds value during soft evictions. 
+The pod's effective grace period is calculated as:
+min(evictionMaxPodGracePeriod, pod.terminationGracePeriodSeconds).
+Note: A negative value will cause pods to be terminated immediately, as if the value was 0.
 Default: 0
-   -->
-   <p><code>evictionMaxPodGracePeriod</code> 是指达到软性逐出阈值而引起 Pod 终止时，
+-->
+<code>evictionMaxPodGracePeriod</code> 是指达到软性逐出阈值而引起 Pod 终止时，
 可以赋予的宽限期限最大值（按秒计）。这个值本质上限制了软性逐出事件发生时，
-Pod 可以获得的 <code>terminationGracePeriodSeconds</code>。</p>
-   <p>注意：由于 Issue #64530 的原因，系统中存在一个缺陷，即此处所设置的值会在软性逐出时覆盖
-Pod 的宽限期设置，从而有可能增加 Pod 上原本设置的宽限期限时长。
-这个缺陷会在未来版本中修复。</p>
-   <p>默认值：0</p>
+Pod 可以获得的 <code>terminationGracePeriodSeconds</code>。
+Pod 的有效宽限期计算为：
+min(evictionMaxPodGracePeriod, pod.terminationGracePeriodSeconds)。
+注意：负值将导致 Pod 立即被终止，就如同该值为 0 一样。
+默认值：0
+</p>
 </td>
 </tr>
 
@@ -1279,6 +1887,31 @@ Default: nil
 最小回收量指的是资源压力较大而执行 Pod 驱逐操作时，kubelet 对给定资源的最小回收量。
 例如：<code>{&quot;imagefs.available&quot;: &quot;2Gi&quot;}</code>。</p>
    <p>默认值：nil</p>
+</td>
+</tr>
+
+<tr><td><code>mergeDefaultEvictionSettings</code><br/>
+<code>bool</code>
+</td>
+<td>
+   <p>
+   <!--
+   mergeDefaultEvictionSettings indicates that defaults for the evictionHard, evictionSoft, evictionSoftGracePeriod, and evictionMinimumReclaim
+fields should be merged into values specified for those fields in this configuration.
+Signals specified in this configuration take precedence.
+Signals not specified in this configuration inherit their defaults.
+If false, and if any signal is specified in this configuration then other signals that
+are not specified in this configuration will be set to 0.
+It applies to merging the fields for which the default exists, and currently only evictionHard has default values.
+Default: false
+-->
+<code>mergeDefaultEvictionSettings</code> 表示是否应将 evictionHard、evictionSoft、
+evictionSoftGracePeriod 和 evictionMinimumReclaim 字段的默认值合并到此配置中为这些字段指定的取值中。
+在此配置中显式指定的信号优先生效。未在此配置中指定的信号将继承其默认值。
+如果设置为 false，并且此配置中指定了任一信号，则此配置中未指定的其他信号将被设置为 0。
+此字段适用于合并存在默认值的字段，目前仅 evictionHard 有默认值。
+默认值：false。
+</p>
 </td>
 </tr>
 
@@ -1453,6 +2086,40 @@ Default: 5
 </td>
 </tr>
 
+<tr><td><code>containerLogMaxWorkers</code><br/>
+<code>int32</code>
+</td>
+<td>
+<!--
+   <p>ContainerLogMaxWorkers specifies the maximum number of concurrent workers to spawn
+for performing the log rotate operations. Set this count to 1 for disabling the
+concurrent log rotation workflows
+Default: 1</p>
+-->
+   <p><code>containerLogMaxWorkers</code> 指定执行日志轮换操作所需的并发工作程序的最大数量。
+将此计数设置为 1，以禁用并发日志轮换工作流程。
+默认值：1</p>
+</td>
+</tr>
+<tr>
+<td><code>containerLogMonitorInterval</code><br/>
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
+</td>
+<td>
+<!--
+   <p>ContainerLogMonitorInterval specifies the duration at which the container logs are monitored
+for performing the log rotate operation. This defaults to 10 * time.Seconds. But can be
+customized to a smaller value based on the log generation rate and the size required to be
+rotated against
+Default: 10s</p>
+-->
+   <p><code>containerLogMonitorInterval</code> 指定监视容器日志以执行日志轮转操作的持续时间。
+默认为 10s，但可以根据日志生成率和需要轮换的大小定制为较小的值。
+默认值：10s
+</p>
+</td>
+</tr>
+
 <tr><td><code>configMapAndSecretChangeDetectionStrategy</code><br/>
 <a href="#kubelet-config-k8s-io-v1beta1-ResourceChangeDetectionStrategy"><code>ResourceChangeDetectionStrategy</code></a>
 </td>
@@ -1486,13 +2153,13 @@ managers are running. Valid values include:</p>
    systemReserved is a set of ResourceName=ResourceQuantity (e.g. cpu=200m,memory=150G)
 pairs that describe resources reserved for non-kubernetes components.
 Currently only cpu and memory are supported.
-See http://kubernetes.io/docs/user-guide/compute-resources for more detail.
+See https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources for more detail.
 Default: nil
    -->
    <p><code>systemReserved</code> 是一组<code>资源名称=资源数量</code>对，
 用来描述为非 Kubernetes 组件预留的资源（例如：'cpu=200m,memory=150G'）。</p>
    <p>目前仅支持 CPU 和内存。更多细节可参见
-   https://kubernetes.io/zh-cn/docs/concepts/configuration/manage-resources-containers/ 。</p>
+   https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/reserve-compute-resources</p>
    <p>默认值：Nil</p>
 </td>
 </tr>
@@ -1505,19 +2172,19 @@ Default: nil
    kubeReserved is a set of ResourceName=ResourceQuantity (e.g. cpu=200m,memory=150G) pairs
 that describe resources reserved for kubernetes system components.
 Currently cpu, memory and local storage for root file system are supported.
-See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+See https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources
 for more details.
 Default: nil
    -->
    <p><code>kubeReserved</code> 是一组<code>资源名称=资源数量</code>对，
 用来描述为 Kubernetes 系统组件预留的资源（例如：'cpu=200m,memory=150G'）。
 目前支持 CPU、内存和根文件系统的本地存储。
-更多细节可参见 https://kubernetes.io/zh/docs/concepts/configuration/manage-resources-containers/。</p>
+更多细节可参见 https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/reserve-compute-resources</p>
    <p>默认值：Nil</p>
 </td>
 </tr>
 
-<tr><td><code>reservedSystemCPUs</code> <B>[必需]</B><br/>
+<tr><td><code>reservedSystemCPUs</code> <B><!-- [Required] -->[必需]</B><br/>
 <code>string</code>
 </td>
 <td>
@@ -1570,8 +2237,7 @@ Default: &quot;&quot;
    -->
    <p><code>systemReservedCgroup</code> 帮助 kubelet 识别用来为 OS 系统级守护进程实施
 <code>systemReserved</code> 计算资源预留时使用的顶级控制组（CGroup）。
-参考 <a href="https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable">Node Allocatable</a>
-以了解详细信息。</p>
+更多细节参阅<a href="https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable">节点可分配资源</a>。</p>
    <p>默认值：&quot;&quot;</p>
 </td>
 </tr>
@@ -1590,8 +2256,7 @@ Default: &quot;&quot;
    -->
    <p><code>kubeReservedCgroup</code> 帮助 kubelet 识别用来为 Kubernetes 节点系统级守护进程实施
 <code>kubeReserved</code> 计算资源预留时使用的顶级控制组（CGroup）。
-参阅 <a href="https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable">Node Allocatable</a>
-了解进一步的信息。</p>
+更多细节参阅<a href="https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable">节点可分配资源</a></p>
    <p>默认值：&quot;&quot;</p>
 </td>
 </tr>
@@ -1619,8 +2284,7 @@ Default: [&quot;pods&quot;]
    <p>如果列表中包含 <code>system-reserved</code>，则必须设置 <code>systemReservedCgroup</code>。</p>
    <p>如果列表中包含 <code>kube-reserved</code>，则必须设置 <code>kubeReservedCgroup</code>。</p>
    <p>这个字段只有在 <code>cgroupsPerQOS</code>被设置为 <code>true</code> 才被支持。</p>
-   <p>参阅<a href="https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable">Node Allocatable</a>
-了解进一步的信息。</p>
+   <p>更多细节参阅<a href="https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable">节点可分配资源</a>。</p>
    <p>默认值：[&quot;pods&quot;]</p>
 </td>
 </tr>
@@ -1689,7 +2353,7 @@ memcg 通知机制来确定是否超出内存逐出阈值，而不是使用轮�
 </td>
 </tr>
 
-<tr><td><code>logging</code> <B>[必需]</B><br/>
+<tr><td><code>logging</code> <B><!-- [Required] -->[必需]</B><br/>
 <a href="#LoggingConfiguration"><code>LoggingConfiguration</code></a>
 </td>
 <td>
@@ -1700,7 +2364,7 @@ for more information.
 Default:
   Format: text
    -->
-   <p><code>logging</code>设置日志机制选项。更多的详细信息科参阅
+   <p><code>logging</code>设置日志机制选项。更多的详细信息可参阅
 <a href="https://github.com/kubernetes/component-base/blob/master/logs/options.go">日志选项</a>。</p>
    <p>默认值：</p>
    <code><pre>Format: text</pre></code>
@@ -1728,9 +2392,13 @@ Default: true
    <!--
    enableSystemLogQuery enables the node log query feature on the /logs endpoint.
 EnableSystemLogHandler has to be enabled in addition for this feature to work.
+Enabling this feature has security implications. The recommendation is to enable it on a need basis for debugging
+purposes and disabling otherwise.
    -->
    <p><code>enableSystemLogQuery</code> 启用在 /logs 端点上的节点日志查询功能。
-此外，还必须启用 enableSystemLogHandler 才能使此功能起作用。</p>
+此外，还必须启用 enableSystemLogHandler 才能使此功能起作用。
+启用此特性具有安全隐患。建议仅在调试需要时才启用，其他情况下应禁用。
+</p>
    <p>默认值：false</p>
 </td>
 </tr>
@@ -1738,7 +2406,8 @@ EnableSystemLogHandler has to be enabled in addition for this feature to work.
 <a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
 </td>
 <td>
-   <!--shutdownGracePeriod specifies the total duration that the node should delay the
+   <!--
+   shutdownGracePeriod specifies the total duration that the node should delay the
 shutdown and total grace period for pod termination during a node shutdown.
 Default: &quot;0s&quot;
    -->
@@ -1752,7 +2421,8 @@ Pod 提供的宽限期限的总时长。</p>
 <a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
 </td>
 <td>
-   <!--shutdownGracePeriodCriticalPods specifies the duration used to terminate critical
+   <!--
+   shutdownGracePeriodCriticalPods specifies the duration used to terminate critical
 pods during a node shutdown. This should be less than shutdownGracePeriod.
 For example, if shutdownGracePeriod=30s, and shutdownGracePeriodCriticalPods=10s,
 during a node shutdown the first 20 seconds would be reserved for gracefully
@@ -1820,10 +2490,25 @@ Default: nil
 </td>
 </tr>
 
+<tr><td><code>crashLoopBackOff</code><br/>
+<a href="#kubelet-config-k8s-io-v1beta1-CrashLoopBackOffConfig"><code>CrashLoopBackOffConfig</code></a>
+</td>
+<td>
+   <p>
+   <!--
+   CrashLoopBackOff contains config to modify node-level parameters for
+container restart behavior
+-->
+   <code>crashLoopBackOff</code> 包含修改节点级别参数的配置，用于容器重启行为。
+   </p>
+</td>
+</tr>
+
 <tr><td><code>reservedMemory</code><br/>
 <a href="#kubelet-config-k8s-io-v1beta1-MemoryReservation"><code>[]MemoryReservation</code></a>
 </td>
 <td>
+   <p>
    <!--
    reservedMemory specifies a comma-separated list of memory reservations for NUMA nodes.
 The parameter makes sense only in the context of the memory manager feature.
@@ -1837,32 +2522,37 @@ reserved memory from all NUMA nodes should be equal to the amount of memory spec
 by the <a href="https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable">node allocatable</a>.
 If at least one node allocatable parameter has a non-zero value, you will need
 to specify at least one NUMA node.
-Also, avoid specifying:</p>
-<ol>
-<li>Duplicates, the same NUMA node, and memory type, but with a different value.</li>
-<li>zero limits for any memory type.</li>
-<li>NUMAs nodes IDs that do not exist under the machine.</li>
-<li>memory types except for memory and hugepages-&lt;size&gt;</li>
-</ol>
-<p>Default: nil</p>
+Also, avoid specifying:
 -->
-   <p><code>reservedMemory</code> 给出一个逗号分隔的列表，为 NUMA 节点预留内存。</p>
-   <p>此参数仅在内存管理器功能特性语境下有意义。内存管理器不会为容器负载分配预留内存。
+   <code>reservedMemory</code> 给出一个逗号分隔的列表，为 NUMA 节点预留内存。
+   此参数仅在内存管理器功能特性语境下有意义。内存管理器不会为容器负载分配预留内存。
 例如，如果你的 NUMA0 节点内存为 10Gi，<code>reservedMemory</code> 设置为在 NUMA0
-上预留 1Gi 内存，内存管理器会认为其上只有 9Gi 内存可供分配。</p>
-   <p>你可以设置不同数量的 NUMA 节点和内存类型。你也可以完全忽略这个字段，不过你要清楚，
+上预留 1Gi 内存，内存管理器会认为其上只有 9Gi 内存可供分配。
+   你可以设置不同数量的 NUMA 节点和内存类型。你也可以完全忽略这个字段，不过你要清楚，
 所有 NUMA 节点上预留内存的总量要等于通过
-<a href="https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable">node allocatable</a>
-设置的内存量。</p>
-   <p>如果至少有一个节点可分配参数设置值非零，则你需要设置至少一个 NUMA 节点。</p>
-   <p>此外，避免如下设置：</p>
+<a href="https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/reserve-compute-resources/#node-allocatable">节点可分配资源</a>设置的内存量。
+   如果至少有一个节点可分配参数设置值非零，则你需要设置至少一个 NUMA 节点。
+   此外，避免如下设置：
+</p>
    <ol>
+   <!--
+   <li>Duplicates, the same NUMA node, and memory type, but with a different value.</li>
+   <li>zero limits for any memory type.</li>
+   <li>NUMAs nodes IDs that do not exist under the machine.</li>
+   <li>memory types except for memory and hugepages-&lt;size&gt;</li>
+   </ol>
+   -->
    <li>在配置值中存在重复项，NUMA 节点和内存类型相同，但配置值不同，这是不允许的。</li>
    <li>为任何内存类型设置限制值为零。</li>
    <li>NUMA 节点 ID 在宿主系统上不存在。/li>
    <li>除 <code>memory</code> 和 <code>hugepages-&lt;size&gt;</code> 之外的内存类型。</li>
    </ol>
-   <p>默认值：nil</p>
+   <p>
+   <!--
+   Default: nil
+   -->
+   默认值：nil
+   </p>
 </td>
 </tr>
 
@@ -1874,7 +2564,7 @@ Also, avoid specifying:</p>
    enableProfilingHandler enables profiling via web interface host:port/debug/pprof/
 Default: true
    -->
-   <p><code>enableProfilingHandler</code> 启用通过 host:port/debug/pprof/ 接口来执行性能分析。</p>
+   <p><code>enableProfilingHandler</code> 启用通过 <code>host:port/debug/pprof/</code> 接口来执行性能分析。</p>
    <p>默认值：true</p>
 </td>
 </tr>
@@ -1887,7 +2577,7 @@ Default: true
    enableDebugFlagsHandler enables flags endpoint via web interface host:port/debug/flags/v
 Default: true
    -->
-   <p><code>enableDebugFlagsHandler</code> 启用通过 host:port/debug/flags/v Web
+   <p><code>enableDebugFlagsHandler</code> 启用通过 <code>host:port/debug/flags/v Web</code>
 接口上的标志设置。</p>
    <p>默认值：true</p>
 </td>
@@ -1929,7 +2619,7 @@ Default: 0.8
 </tr>
 
 <tr><td><code>registerWithTaints</code><br/>
-<a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#taint-v1-core"><code>[]core/v1.Taint</code></a>
+<a href="https://kubernetes.io/zh-cn/docs/reference/generated/kubernetes-api/v1.34/#taint-v1-core"><code>[]core/v1.Taint</code></a>
 </td>
 <td>
    <!--
@@ -1961,8 +2651,10 @@ Default: true
 <a href="#TracingConfiguration"><code>TracingConfiguration</code></a>
 </td>
 <td>
-   <!-- Tracing specifies the versioned configuration for OpenTelemetry tracing clients.
-See https://kep.k8s.io/2832 for more details. -->
+   <!--
+   Tracing specifies the versioned configuration for OpenTelemetry tracing clients.
+See https://kep.k8s.io/2832 for more details.
+   -->
    <p>tracing 为 OpenTelemetry 追踪客户端设置版本化的配置信息。
 参阅 https://kep.k8s.io/2832 了解更多细节。</p>
 </td>
@@ -1990,7 +2682,7 @@ Default: true
 默认值：true</p>
 </td>
 </tr>
-<tr><td><code>containerRuntimeEndpoint</code> <B>[必需]</B><br/>
+<tr><td><code>containerRuntimeEndpoint</code> <B><!-- [Required] -->[必需]</B><br/>
 <code>string</code>
 </td>
 <td>
@@ -2001,7 +2693,7 @@ Examples:'unix:///path/to/runtime.sock', 'npipe:////./pipe/runtime'
    -->
    <p>containerRuntimeEndpoint 是容器运行时的端点。
 Linux 支持 UNIX 域套接字，而 Windows 支持命名管道和 TCP 端点。
-示例：'unix://path/to/runtime.sock', 'npipe:////./pipe/runtime'。</p>
+示例：'unix:///path/to/runtime.sock', 'npipe:////./pipe/runtime'。</p>
 </td>
 </tr>
 <tr><td><code>imageServiceEndpoint</code><br/>
@@ -2020,6 +2712,39 @@ Linux 支持 UNIX 域套接字，而 Windows 支持命名管道和 TCP 端点。
 如果未指定，则使用 containerRuntimeEndpoint 中的值。</p>
 </td>
 </tr>
+<tr><td><code>failCgroupV1</code><br/>
+<code>bool</code>
+</td>
+<td>
+   <p>
+   <!--
+   FailCgroupV1 prevents the kubelet from starting on hosts
+that use cgroup v1. By default, this is set to 'false', meaning
+the kubelet is allowed to start on cgroup v1 hosts unless this
+option is explicitly enabled.
+Default: false
+-->
+  <code>failCgroupV1</code> 防止 kubelet 在使用 cgroup v1 的主机上启动。
+默认情况下，此选项设置为 “false”，这意味着除非此选项被显式启用，
+否则 kubelet 被允许在 cgroup v1 主机上启动。  
+默认值：false
+</p>
+</td>
+</tr>
+
+<tr><td><code>userNamespaces</code><br/>
+<a href="#kubelet-config-k8s-io-v1beta1-UserNamespaces"><code>UserNamespaces</code></a>
+</td>
+<td>
+   <p>
+   <!--
+   UserNamespaces contains User Namespace configurations.
+   -->
+   <code>userNamespaces</code> 包含用户命名空间配置。
+   </p>
+</td>
+</tr>
+
 </tbody>
 </table>
 
@@ -2042,7 +2767,7 @@ SerializedNodeConfigSource 允许对 `v1.NodeConfigSource` 执行序列化操作
 <tr><td><code>kind</code><br/>string</td><td><code>SerializedNodeConfigSource</code></td></tr>
 
 <tr><td><code>source</code><br/>
-<a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#nodeconfigsource-v1-core"><code>core/v1.NodeConfigSource</code></a>
+<a href="https://kubernetes.io/zh-cn/docs/reference/generated/kubernetes-api/v1.34/#nodeconfigsource-v1-core"><code>core/v1.NodeConfigSource</code></a>
 </td>
 <td>
    <!--
@@ -2052,6 +2777,37 @@ SerializedNodeConfigSource 允许对 `v1.NodeConfigSource` 执行序列化操作
 </td>
 </tr>
 
+</tbody>
+</table>
+
+## `CrashLoopBackOffConfig`     {#kubelet-config-k8s-io-v1beta1-CrashLoopBackOffConfig}
+
+<!--
+**Appears in:**
+-->
+**出现在：**
+
+- [KubeletConfiguration](#kubelet-config-k8s-io-v1beta1-KubeletConfiguration)
+
+<table class="table">
+<thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
+<tbody>
+
+<tr><td><code>maxContainerRestartPeriod</code><br/>
+<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
+</td>
+<td>
+   <p>
+   <!--
+   maxContainerRestartPeriod is the maximum duration the backoff delay can accrue
+to for container restarts, minimum 1 second, maximum 300 seconds. If not set,
+defaults to the internal crashloopbackoff maximum (300s).
+-->
+<code>maxContainerRestartPeriod</code> 是容器重启时回退延迟可以累积的最长持续时间，最短为 1 秒，最长为 300 秒。
+如果不设置，则默认为内部 crashloopbackoff 的最大值（300 秒）。
+</p>
+</td>
+</tr>
 </tbody>
 </table>
 
@@ -2079,22 +2835,25 @@ CredentialProvider 代表的是要被 kubelet 调用的一个 exec 插件。
 <code>string</code>
 </td>
 <td>
+<p>
 <!--
 name is the required name of the credential provider. It must match the name of the
 provider executable as seen by the kubelet. The executable must be in the kubelet's
 bin directory (set by the --image-credential-provider-bin-dir flag).
+Required to be unique across all providers.
 -->
-   <p>
-   <code>name</code> 是凭据提供者的名称（必需）。此名称必须与 kubelet
-   所看到的提供者可执行文件的名称匹配。可执行文件必须位于 kubelet 的 
-   <code>bin</code> 目录（通过 <code>--image-credential-provider-bin-dir</code> 设置）下。
-   </p>
+<code>name</code> 是凭据提供者的名称（必需）。此名称必须与 kubelet
+所看到的提供者可执行文件的名称匹配。可执行文件必须位于 kubelet 的 
+<code>bin</code> 目录（通过 <code>--image-credential-provider-bin-dir</code> 设置）下。
+在所有提供程序中，名称是唯一的。
+</p>
 </td>
 </tr>
 <tr><td><code>matchImages</code> <B><!--[Required]-->[必需]</B><br/>
 <code>[]string</code>
 </td>
 <td>
+<p>
 <!--
 matchImages is a required list of strings used to match against images in order to
 determine if this provider should be invoked. If one of the strings matches the
@@ -2102,39 +2861,46 @@ requested image from the kubelet, the plugin will be invoked and given a chance
 to provide credentials. Images are expected to contain the registry domain
 and URL path.
 -->
-<p><code>matchImages</code> 是一个必须设置的字符串列表，用来匹配镜像以便确定是否要调用此提供者。
+<code>matchImages</code> 是一个必须设置的字符串列表，用来匹配镜像以便确定是否要调用此提供者。
 如果字符串之一与 kubelet 所请求的镜像匹配，则此插件会被调用并给予提供凭证的机会。
-镜像应该包含镜像库域名和 URL 路径。</p>
+镜像应该包含镜像库域名和 URL 路径。
+</p>
+<p>
 <!--
 Each entry in matchImages is a pattern which can optionally contain a port and a path.
 Globs can be used in the domain, but not in the port or the path. Globs are supported
-as subdomains like '&ast;.k8s.io' or 'k8s.&ast;.io', and top-level-domains such as 'k8s.&ast;'.
-Matching partial subdomains like 'app&ast;.k8s.io' is also supported. Each glob can only match
-a single subdomain segment, so &ast;.io does not match &ast;.k8s.io.
+as subdomains like '<em>.k8s.io' or 'k8s.</em>.io', and top-level-domains such as 'k8s.<em>'.
+Matching partial subdomains like 'app</em>.k8s.io' is also supported. Each glob can only match
+a single subdomain segment, so *.io does not match *.k8s.io.
 -->
-<p><code>matchImages</code> 中的每个条目都是一个模式字符串，其中可以包含端口号和路径。
+<code>matchImages</code> 中的每个条目都是一个模式字符串，其中可以包含端口号和路径。
 域名部分可以包含统配符，但端口或路径部分不可以。通配符可以用作子域名，例如
-<code>&ast;.k8s.io</code> 或 <code>k8s.&ast;.io</code>，以及顶级域名，如 <code>k8s.&ast;</code>。</p>
-<p>对类似 <code>app&ast;.k8s.io</code> 这类部分子域名的匹配也是支持的。
-每个通配符只能用来匹配一个子域名段，所以 <code>&ast;.io</code> 不会匹配 <code>&ast;.k8s.io</code>。</p>
+<code>&ast;.k8s.io</code> 或 <code>k8s.&ast;.io</code>，以及顶级域名，如 <code>k8s.&ast;</code>。
+对类似 <code>app&ast;.k8s.io</code> 这类部分子域名的匹配也是支持的。
+每个通配符只能用来匹配一个子域名段，所以 <code>&ast;.io</code> 不会匹配 <code>&ast;.k8s.io</code>。
+</p>
+<p>
 <!--
 A match exists between an image and a matchImage when all of the below are true:
 -->
-<p>镜像与 <code>matchImages</code> 之间存在匹配时，以下条件都要满足：</p>
+镜像与 <code>matchImages</code> 之间存在匹配时，以下条件都要满足：
+</p>
 <ul>
 <!--
 <li>Both contain the same number of domain parts and each part matches.</li>
 <li>The URL path of an imageMatch must be a prefix of the target image URL path.</li>
 <li>If the imageMatch contains a port, then the port must match in the image as well.</li>
 -->
-  <li>二者均包含相同个数的域名部分，并且每个域名部分都对应匹配；</li>
-  <li><code>matchImages</code> 条目中的 URL 路径部分必须是目标镜像的 URL 路径的前缀；</li>
-  <li>如果 <code>matchImages</code> 条目中包含端口号，则端口号也必须与镜像端口号匹配。</li>
+<li>二者均包含相同个数的域名部分，并且每个域名部分都对应匹配；</li>
+<li><code>matchImages</code> 条目中的 URL 路径部分必须是目标镜像的 URL 路径的前缀；</li>
+<li>如果 <code>matchImages</code> 条目中包含端口号，则端口号也必须与镜像端口号匹配。</li>
 </ul>
+<p>
 <!--
 Example values of matchImages:
 -->
-<p><code>matchImages</code> 的一些示例如下：</p>
+<code>matchImages</code> 的一些示例如下：
+</p>
 <ul>
 <li>123456789.dkr.ecr.us-east-1.amazonaws.com</li>
 <li>&ast;.azurecr.io</li>
@@ -2148,28 +2914,28 @@ Example values of matchImages:
 <a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
 </td>
 <td>
+   <p>
 <!--
 defaultCacheDuration is the default duration the plugin will cache credentials in-memory
 if a cache duration is not provided in the plugin response. This field is required.
 -->
-   <p>
-   <code>defaultCacheDuration</code> 是插件在内存中缓存凭据的默认时长，
-   在插件响应中没有给出缓存时长时，使用这里设置的值。此字段是必需的。
-   </p>
+<code>defaultCacheDuration</code> 是插件在内存中缓存凭据的默认时长，
+在插件响应中没有给出缓存时长时，使用这里设置的值。此字段是必需的。
+</p>
 </td>
 </tr>
 <tr><td><code>apiVersion</code> <B><!--[Required]-->[必需]</B><br/>
 <code>string</code>
 </td>
 <td>
+<p>
 <!--
 Required input version of the exec CredentialProviderRequest. The returned CredentialProviderResponse
 MUST use the same encoding version as the input. Current supported values are:
 -->
-   <p>
-   要求 exec 插件 CredentialProviderRequest 请求的输入版本。
-   所返回的 CredentialProviderResponse 必须使用与输入相同的编码版本。当前支持的值有：
-   </p>
+要求 exec 插件 CredentialProviderRequest 请求的输入版本。
+所返回的 CredentialProviderResponse 必须使用与输入相同的编码版本。当前支持的值有：
+</p>
 <ul>
 <li>credentialprovider.kubelet.k8s.io/v1beta1</li>
 </ul>
@@ -2179,26 +2945,28 @@ MUST use the same encoding version as the input. Current supported values are:
 <code>[]string</code>
 </td>
 <td>
+<p>
 <!--
 Arguments to pass to the command when executing it.
 -->
-   <p>在执行插件可执行文件时要传递给命令的参数。</p>
+在执行插件可执行文件时要传递给命令的参数。
+</p>
 </td>
 </tr>
 <tr><td><code>env</code><br/>
 <a href="#kubelet-config-k8s-io-v1beta1-ExecEnvVar"><code>[]ExecEnvVar</code></a>
 </td>
 <td>
+<p>
 <!--
 Env defines additional environment variables to expose to the process. These
 are unioned with the host's environment, as well as variables client-go uses
 to pass argument to the plugin.
 -->
-   <p>
-   <code>env</code> 定义要提供给插件进程的额外的环境变量。
-   这些环境变量会与主机上的其他环境变量以及 client-go 所使用的环境变量组合起来，
-   一起传递给插件。
-   </p>
+<code>env</code> 定义要提供给插件进程的额外的环境变量。
+这些环境变量会与主机上的其他环境变量以及 client-go 所使用的环境变量组合起来，
+一起传递给插件。
+</p>
 </td>
 </tr>
 </tbody>
@@ -2231,7 +2999,7 @@ ExecEnvVar 用来在执行基于 exec 的凭据插件时设置环境变量。
    <!--
    No description provided.
    -->
-   无描述。
+   环境变量的名称。
    </span>
 </td>
 </tr>
@@ -2243,13 +3011,33 @@ ExecEnvVar 用来在执行基于 exec 的凭据插件时设置环境变量。
    <!--
    No description provided.
    -->
-   无描述。
+   环境变量的取值。
    </span>
 </td>
 </tr>
 </tbody>
 </table>
 
+## `ImagePullCredentialsVerificationPolicy`     {#kubelet-config-k8s-io-v1beta1-ImagePullCredentialsVerificationPolicy}
+    
+<!--
+(Alias of `string`)
+
+**Appears in:**
+-->
+（`string` 的别名）
+
+**出现在：**
+
+- [KubeletConfiguration](#kubelet-config-k8s-io-v1beta1-KubeletConfiguration)
+
+<p>
+<!--
+ImagePullCredentialsVerificationPolicy is an enum for the policy that is enforced
+when pod is requesting an image that appears on the system
+-->
+ImagePullCredentialsVerificationPolicy 是一个枚举类型，用于指定在 Pod 请求系统上已存在的镜像时所强制执行的策略。
+</p>
 
 ## `KubeletAnonymousAuthentication`     {#kubelet-config-k8s-io-v1beta1-KubeletAnonymousAuthentication}
 
@@ -2489,7 +3277,7 @@ presenting a client certificate signed by one of the authorities in the bundle
 is authenticated with a username corresponding to the CommonName,
 and groups corresponding to the Organization in the client certificate.
    -->
-   <p><code>clientCAFile</code> 是一个指向 PEM 编发的证书包的路径。
+   <p><code>clientCAFile</code> 是一个指向 PEM 编码的证书包的路径。
 如果设置了此字段，则能够提供由此证书包中机构之一所签名的客户端证书的请求会被成功认证，
 并且其用户名对应于客户端证书的 <code>CommonName</code>、组名对应于客户端证书的
 <code>Organization</code>。</p>
@@ -2516,7 +3304,7 @@ MemoryReservation 为每个 NUMA 节点设置不同类型的内存预留。
 <thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
 <tbody>
 
-<tr><td><code>numaNode</code> <B>[必需]</B><br/>
+<tr><td><code>numaNode</code> <B><!-- [Required] -->[必需]</B><br/>
 <code>int32</code>
 </td>
 <td>
@@ -2525,8 +3313,8 @@ MemoryReservation 为每个 NUMA 节点设置不同类型的内存预留。
 </td>
 </tr>
 
-<tr><td><code>limits</code> <B>[必需]</B><br/>
-<a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#resourcelist-v1-core"><code>core/v1.ResourceList</code></a>
+<tr><td><code>limits</code> <B><!-- [Required] -->[必需]</B><br/>
+<a href="https://kubernetes.io/zh-cn/docs/reference/generated/kubernetes-api/v1.34/#resourcelist-v1-core"><code>core/v1.ResourceList</code></a>
 </td>
 <td>
    <!--span class="text-muted">No description provided.</span-->
@@ -2586,7 +3374,7 @@ MemoryReservation 为每个 NUMA 节点设置不同类型的内存预留。
 ResourceChangeDetectionStrategy denotes a mode in which internal
 managers (secret, configmap) are discovering object changes.
 -->
-ResourceChangeDetectionStrategy 给出的是内部管理器（ConfigMap、Secret）
+ResourceChangeDetectionStrategy 给出的是内部管理器（Secret、ConfigMap）
 用来发现对象变化的模式。
 
 ## `ShutdownGracePeriodByPodPriority`     {#kubelet-config-k8s-io-v1beta1-ShutdownGracePeriodByPodPriority}
@@ -2607,7 +3395,7 @@ ShutdownGracePeriodByPodPriority 基于 Pod 关联的优先级类数值来为其
 <thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
 <tbody>
 
-<tr><td><code>priority</code> <B>[必需]</B><br/>
+<tr><td><code>priority</code> <B><!-- [Required] -->[必需]</B><br/>
 <code>int32</code>
 </td>
 <td>
@@ -2618,7 +3406,7 @@ ShutdownGracePeriodByPodPriority 基于 Pod 关联的优先级类数值来为其
 </td>
 </tr>
 
-<tr><td><code>shutdownGracePeriodSeconds</code> <B>[必需]</B><br/>
+<tr><td><code>shutdownGracePeriodSeconds</code> <B><!-- [Required] -->[必需]</B><br/>
 <code>int64</code>
 </td>
 <td>
@@ -2631,105 +3419,7 @@ ShutdownGracePeriodByPodPriority 基于 Pod 关联的优先级类数值来为其
 </tbody>
 </table>
 
-## `FormatOptions`     {#FormatOptions}
-
-<!--
-**Appears in:**
--->
-**出现在：**
-
-- [LoggingConfiguration](#LoggingConfiguration)
-
-<p>
-<!--
-FormatOptions contains options for the different logging formats.
--->
-FormatOptions 包含为不同日志格式提供的选项。
-</p>
-
-<table class="table">
-<thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
-<tbody>
-
-<tr><td><code>json</code> <B>[必需]</B><br/>
-<a href="#JSONOptions"><code>JSONOptions</code></a>
-</td>
-<td>
-   <!--
-   [Alpha] JSON contains options for logging format &quot;json&quot;.
-Only available when the LoggingAlphaOptions feature gate is enabled.
-   -->
-   <p>[Alpha] JSON 包含记录 &quot;json&quot; 格式日志的选项。
-只有 LoggingAlphaOptions 特性门控被启用时才可用。</p>
-</td>
-</tr>
-</tbody>
-</table>
-
-## `JSONOptions`     {#JSONOptions}
-
-<!--
-**Appears in:**
--->
-**出现在：**
-
-- [FormatOptions](#FormatOptions)
-
-<p>
-<!--
-JSONOptions contains options for logging format &quot;json&quot;.
--->
-JSONOptions 包含为 &quot;json&quot; 日志格式提供的选项。
-</p>
-
-<table class="table">
-<thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
-<tbody>
-<tr><td><code>splitStream</code> <B>[必需]</B><br/>
-<code>bool</code>
-</td>
-<td>
-   <p>
-   <!--[Alpha] SplitStream redirects error messages to stderr while
-info messages go to stdout, with buffering. The default is to write
-both to stdout, without buffering. Only available when
-the LoggingAlphaOptions feature gate is enabled.
-   -->
-   [Alpha] <code>splitStream</code> 将错误信息重定向到标准错误输出（stderr），
-而将提示信息重定向到标准输出（stdout），并为二者提供缓存。
-默认设置是将二者都写出到标准输出，并且不提供缓存。
-只有 LoggingAlphaOptions 特性门控被启用时才可用。
-   </p>
-</td>
-</tr>
-
-<tr><td><code>infoBufferSize</code> <B>[必需]</B><br/>
-<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/api/resource#QuantityValue"><code>k8s.io/apimachinery/pkg/api/resource.QuantityValue</code></a>
-</td>
-<td>
-   <p>
-   <!--
-   [Alpha] InfoBufferSize sets the size of the info stream when
-using split streams. The default is zero, which disables buffering.
-Only available when the LoggingAlphaOptions feature gate is enabled.
-   -->
-   [Alpha] <code>infoBufferSize</code> 在分离数据流时用来设置提示数据流的大小。
-默认值为 0，相当于禁止缓存。只有 LoggingAlphaOptions 特性门控被启用时才可用。
-   </p>
-</td>
-</tr>
-</tbody>
-</table>
-
-## `LogFormatFactory`     {#LogFormatFactory}
-
-<!--
-LogFormatFactory provides support for a certain additional,
-non-default log format.
--->
-<p>LogFormatFactory 提供了对某些附加的、非默认的日志格式的支持。</p>
-
-## `LoggingConfiguration`     {#LoggingConfiguration}
+## `UserNamespaces`     {#kubelet-config-k8s-io-v1beta1-UserNamespaces}
 
 <!--
 **Appears in:**
@@ -2738,275 +3428,36 @@ non-default log format.
 
 - [KubeletConfiguration](#kubelet-config-k8s-io-v1beta1-KubeletConfiguration)
 
-<!--
-LoggingConfiguration contains logging options.
--->
-LoggingConfiguration 包含日志选项。
-
-<table class="table">
-<thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
-<tbody>
-
-<tr><td><code>format</code> <B>[必需]</B><br/>
-<code>string</code>
-</td>
-<td>
-  <p>
-  <!--
-  Format Flag specifies the structure of log messages.
-default value of format is `text`
-  -->
-  <code>format<code> 设置日志消息的结构。默认的格式取值为 <code>text</code>。
-  </p>
-</td>
-</tr>
-
-<tr><td><code>flushFrequency</code> <B>[必需]</B><br/>
-<a href="#TimeOrMetaDuration"><code>TimeOrMetaDuration</code></a>
-</td>
-<td>
-  <p>
-  <!--
-   Maximum time between log flushes.
-If a string, parsed as a duration (i.e. &quot;1s&quot;)
-If an int, the maximum number of nanoseconds (i.e. 1s = 1000000000).
-Ignored if the selected logging backend writes log messages without buffering.
-  -->
-   日志清洗之间的最大时间间隔。
-如果是字符串，则解析为持续时间（例如 "1s"）。
-如果是整数，则表示为最大纳秒数（例如 1s = 1000000000）。
-如果所选的日志后端在写入日志消息时未缓冲，则被忽略。
-  </p>
-</td>
-</tr>
-
-<tr><td><code>verbosity</code> <B>[必需]</B><br/>
-<a href="#VerbosityLevel"><code>VerbosityLevel</code></a>
-</td>
-<td>
-  <p>
-  <!--
-  Verbosity is the threshold that determines which log messages are
-logged. Default is zero which logs only the most important
-messages. Higher values enable additional messages. Error messages
-are always logged.
-  -->
-  <code>verbosity</code> 用来确定日志消息记录的详细程度阈值。默认值为 0，
-意味着仅记录最重要的消息。数值越大，额外的消息越多。出错消息总是会被记录下来。
-  </p>
-</td>
-</tr>
-
-<tr><td><code>vmodule</code> <B>[必需]</B><br/>
-<a href="#VModuleConfiguration"><code>VModuleConfiguration</code></a>
-</td>
-<td>
-  <p>
-  <!--
-  VModule overrides the verbosity threshold for individual files.
-Only supported for &quot;text&quot; log format.
-  -->
-  <code>vmodule</code> 会在单个文件层面重载 verbosity 阈值的设置。
-这一选项仅支持 &quot;text&quot; 日志格式。
-  </p>
-</td>
-</tr>
-
-<tr><td><code>options</code> <B>[必需]</B><br/>
-<a href="#FormatOptions"><code>FormatOptions</code></a>
-</td>
-<td>
-  <p>
-  <!--
-  [Alpha] Options holds additional parameters that are specific
-to the different logging formats. Only the options for the selected
-format get used, but all of them get validated.
-Only available when the LoggingAlphaOptions feature gate is enabled.
-  -->
-  [Alpha] <code>options</code> 中包含特定于不同日志格式的附加参数。
-只有针对所选格式的选项会被使用，但是合法性检查时会查看所有参数。
-只有 LoggingAlphaOptions 特性门控被启用时才可用。
-  </p>
-</td>
-</tr>
-</tbody>
-</table>
-
-## `LoggingOptions`     {#LoggingOptions}
-
 <p>
 <!--
-LoggingOptions can be used with ValidateAndApplyWithOptions to override
-certain global defaults.
+UserNamespaces contains User Namespace configurations.
 -->
-<code>LoggingOptions</code> 可以与 <code>ValidateAndApplyWithOptions</code> 一起使用，以覆盖某些全局默认值。
+<code>UserNamespaces</code> 包含用户命名空间配置。
 </p>
+
 
 <table class="table">
 <thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
-<tbody>
-      
-<tr><td><code>ErrorStream</code> <B><!--[Required]-->[必需]</B><br/>
-<a href="https://pkg.go.dev/io#Writer"><code>io.Writer</code></a>
-</td>
-<td>
-   <p>
-   <!--
-   ErrorStream can be used to override the os.Stderr default.
-   -->
-   <code>ErrorStream</code> 可用于覆盖默认值 <code>os.Stderr</code>。
-   </p>
-</td>
-</tr>
-<tr><td><code>InfoStream</code> <B><!--[Required]-->[必需]</B><br/>
-<a href="https://pkg.go.dev/io#Writer"><code>io.Writer</code></a>
-</td>
-<td>
-   <p>
-   <!--
-   InfoStream can be used to override the os.Stdout default.
-   -->
-   <code>InfoStream</code> 可用于覆盖默认值 <code>os.Stdout</code>。
-   </p>
-</td>
-</tr>
-</tbody>
-</table>
-
-## `TimeOrMetaDuration`     {#TimeOrMetaDuration}
-
-<!--
-**Appears in:**
--->
-**出现在：**
-
-- [LoggingConfiguration](#LoggingConfiguration)
-
-<p>
-<!--
-TimeOrMetaDuration is present only for backwards compatibility for the
-flushFrequency field, and new fields should use metav1.Duration.
--->
-<code>TimeOrMetaDuration</code> 仅出于向后兼容 <code>flushFrequency<code> 字段而存在，
-新字段应使用 <code>metav1.Duration<code>。
-</p>
-
-<table class="table">
-<thead><tr><th width="30%"><!--Field-->字段</th><th><!--Description-->描述</th></tr></thead>
-<tbody>
-    
-<tr><td><code>Duration</code> <B><!--[Required]-->[必需]</B><br/>
-<a href="https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Duration"><code>meta/v1.Duration</code></a>
-</td>
-<td>
-   <p>
-   <!--
-   Duration holds the duration
-   -->
-   <code>Duration<code> 保存持续时间。
-   </p>
-</td>
-</tr>
-<tr><td><code>-</code> <B><!--[Required]-->[必需]</B><br/>
-<code>bool</code>
-</td>
-<td>
-   <p>
-   <!--
-   SerializeAsString controls whether the value is serialized as a string or an integer
-   -->
-   <code>SerializeAsString</code> 控制此值是以字符串还是以整数进行序列化。
-   </p>
-</td>
-</tr>
-</tbody>
-</table>
-
-## `TracingConfiguration`     {#TracingConfiguration}
-
-<!--
-**Appears in:**
--->
-**出现在：**
-
-- [KubeletConfiguration](#kubelet-config-k8s-io-v1beta1-KubeletConfiguration)
-
-<!--
-TracingConfiguration provides versioned configuration for OpenTelemetry tracing clients.
--->
-<p>TracingConfiguration 为 OpenTelemetry 追踪客户端提供版本化的配置信息。</p>
-
-
-<table class="table">
-<thead><tr><th width="30%">字段</th><th>描述</th></tr></thead>
 <tbody>
     
   
-<tr><td><code>endpoint</code><br/>
-<code>string</code>
+<tr><td><code>idsPerPod</code><br/>
+<code>int64</code>
 </td>
 <td>
    <!--
-   Endpoint of the collector this component will report traces to.
-The connection is insecure, and does not currently support TLS.
-Recommended is unset, and endpoint is the otlp grpc default, localhost:4317.
-   -->
-   <p>采集器的 endpoint，此组件将向其报告追踪链路。
-此连接不安全，目前不支持 TLS。推荐不设置，endpoint 是 otlp grpc 默认值，localhost:4317。</p>
-</td>
-</tr>
-<tr><td><code>samplingRatePerMillion</code><br/>
-<code>int32</code>
-</td>
-<td>
-   <!--
-   SamplingRatePerMillion is the number of samples to collect per million spans.
-Recommended is unset. If unset, sampler respects its parent span's sampling
-rate, but otherwise never samples.
-   -->
-   <p>samplingRatePerMillion 是每百万 span 要采集的样本数。推荐不设置。
-如果不设置，则采样器优先使用其父级 span 的采样率，否则不采样。</p>
+   <p>IDsPerPod is the mapping length of UIDs and GIDs.
+The length must be a multiple of 65536, and must be less than 1&lt;&lt;32.
+On non-linux such as windows, only null / absent is allowed.</p>
+<p>Changing the value may require recreating all containers on the node.</p>
+<p>Default: 65536</p>
+-->
+<p><code>idsPerPod</code> 是 UID 和 GID 的映射长度。
+长度值必须是 65536 的倍数，且必须小于 1&lt;&lt;32。
+在非 Linux 系统（如 Windows）上，仅允许空或不设置。</p>
+<p>更改此值可能需要重新创建节点上的所有容器。</p>
+<p>默认值：65536</p>
 </td>
 </tr>
 </tbody>
 </table>
-
-## `VModuleConfiguration`     {#VModuleConfiguration}
-
-<!--
-(Alias of `[]k8s.io/component-base/logs/api/v1.VModuleItem`)
--->
-（`[]k8s.io/component-base/logs/api/v1.VModuleItem` 的别名）
-
-<!--
-**Appears in:**
--->
-**出现在：**
-
-- [LoggingConfiguration](#LoggingConfiguration)
-
-<!--
-VModuleConfiguration is a collection of individual file names or patterns
-and the corresponding verbosity threshold.
--->
-VModuleConfiguration 是一个集合，其中包含一个个文件名（或文件名模式）
-及其对应的详细程度阈值。
-
-## `VerbosityLevel`     {#VerbosityLevel}
-    
-<!--
-(Alias of `uint32`)
--->
-（`uint32` 的别名）
-
-<!--
-**Appears in:**
--->
-**出现在：**
-
-- [LoggingConfiguration](#LoggingConfiguration)
-
-<!--
-VerbosityLevel represents a klog or logr verbosity threshold.
--->
-<p>VerbosityLevel 表示 klog 或 logr 的详细程度（verbosity）阈值。</p>

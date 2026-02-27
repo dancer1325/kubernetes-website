@@ -18,7 +18,7 @@ particular PersistentVolumeClaim and PersistentVolume.
 
 <!-- body -->
 
-Some application need additional storage but don't care whether that
+Some applications need additional storage but don't care whether that
 data is stored persistently across restarts. For example, caching
 services are often limited by memory size and can move infrequently
 used data into storage that is slower than memory with little impact
@@ -46,16 +46,17 @@ different purposes:
   [downwardAPI](/docs/concepts/storage/volumes/#downwardapi),
   [secret](/docs/concepts/storage/volumes/#secret): inject different
   kinds of Kubernetes data into a Pod
+- [image](/docs/concepts/storage/volumes/#image): allows mounting container image files or artifacts,
+  directly to a Pod.
 - [CSI ephemeral volumes](#csi-ephemeral-volumes):
-  similar to the previous volume kinds, but provided by special
-  [CSI drivers](https://github.com/container-storage-interface/spec/blob/master/spec.md)
+  similar to the previous volume kinds, but provided by special {{< glossary_tooltip text="CSI" term_id="csi" >}} drivers
   which specifically [support this feature](https://kubernetes-csi.github.io/docs/ephemeral-local-volumes.html)
 - [generic ephemeral volumes](#generic-ephemeral-volumes), which
   can be provided by all storage drivers that also support persistent volumes
 
+
 `emptyDir`, `configMap`, `downwardAPI`, `secret` are provided as
-[local ephemeral
-storage](/docs/concepts/configuration/manage-resources-containers/#local-ephemeral-storage).
+[local ephemeral storage](/docs/concepts/storage/ephemeral-storage/).
 They are managed by kubelet on each node.
 
 CSI ephemeral volumes *must* be provided by third-party CSI storage
@@ -262,7 +263,7 @@ it to circumvent other policies.
 
 ### Ephemeral volumes managed by kubelet
 
-See [local ephemeral storage](/docs/concepts/configuration/manage-resources-containers/#local-ephemeral-storage).
+See [local ephemeral storage](/docs/concepts/storage/ephemeral-storage/).
 
 ### CSI ephemeral volumes
 

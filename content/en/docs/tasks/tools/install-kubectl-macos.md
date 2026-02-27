@@ -123,10 +123,10 @@ The following methods exist for installing kubectl on macOS:
    kubectl version --client --output=yaml
    ```
 
-1. After installing the plugin, clean up the installation files:
+1. After installing and validating kubectl, delete the checksum file:
 
    ```bash
-   rm kubectl kubectl.sha256
+   rm kubectl.sha256
    ```
 
 ### Install with Homebrew on macOS
@@ -188,6 +188,10 @@ Below are the procedures to set up autocompletion for Bash, Fish, and Zsh.
 {{< tab name="Fish" include="included/optional-kubectl-configs-fish.md" />}}
 {{< tab name="Zsh" include="included/optional-kubectl-configs-zsh.md" />}}
 {{< /tabs >}}
+
+### Configure kuberc
+
+See [kuberc](/docs/reference/kubectl/kuberc) for more information.
 
 ### Install `kubectl convert` plugin
 

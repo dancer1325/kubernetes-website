@@ -230,6 +230,13 @@ The maximum and minimum memory constraints imposed on a namespace by a LimitRang
 when a Pod is created or updated. If you change the LimitRange, it does not affect
 Pods that were created previously.
 
+{{< note >}}
+When using [in-place Pod resize](/docs/tasks/configure-pod-container/resize-container-resources/),
+the memory constraints are also enforced. If a resize would cause the Pod's memory values
+to violate the LimitRange constraints (either exceeding the maximum or falling below the minimum),
+the resize will be rejected and the Pod's resources remain at their previous values.
+{{< /note >}}
+
 ## Motivation for minimum and maximum memory constraints
 
 As a cluster administrator, you might want to impose restrictions on the amount of memory that Pods can use.
@@ -274,6 +281,8 @@ kubectl delete namespace constraints-mem-example
 * [Assign Memory Resources to Containers and Pods](/docs/tasks/configure-pod-container/assign-memory-resource/)
 
 * [Assign CPU Resources to Containers and Pods](/docs/tasks/configure-pod-container/assign-cpu-resource/)
+
+* [Assign Pod-level CPU and memory resources](/docs/tasks/configure-pod-container/assign-pod-level-resources/)
 
 * [Configure Quality of Service for Pods](/docs/tasks/configure-pod-container/quality-service-pod/)
 

@@ -11,7 +11,7 @@ ServiceAccount menyediakan identitas untuk proses yang sedang berjalan dalam seb
 Dokumen ini digunakan sebagai pengenalan untuk pengguna terhadap ServiceAccount dan menjelaskan bagaimana perilaku ServiceAccount dalam konfigurasi klaster seperti yang direkomendasikan Kubernetes. Pengubahan perilaku yang bisa saja dilakukan administrator klaster terhadap klaster tidak menjadi bagian pembahasan dokumentasi ini.
 {{< /note >}}
 
-Ketika kamu mengakses klaster (contohnya menggunakan `kubectl`), kamu terautentikasi oleh apiserver sebagai sebuah akun pengguna (untuk sekarang umumnya sebagai `admin`, kecuali jika administrator klustermu telah melakukan pengubahan). Berbagai proses yang ada di dalam kontainer dalam Pod juga dapat mengontak apiserver. Ketika itu terjadi, mereka akan diautentikasi sebagai sebuah ServiceAccount (contohnya sebagai `default`).
+Ketika kamu mengakses klaster (contohnya menggunakan `kubectl`), kamu terautentikasi oleh apiserver sebagai sebuah akun pengguna (untuk sekarang umumnya sebagai `admin`, kecuali jika administrator klastermu telah melakukan pengubahan). Berbagai proses yang ada di dalam kontainer dalam Pod juga dapat mengontak apiserver. Ketika itu terjadi, mereka akan diautentikasi sebagai sebuah ServiceAccount (contohnya sebagai `default`).
 
 
 
@@ -174,7 +174,7 @@ Isi dari `token` tidak dirinci di sini.
 - Membuat sebuah imagePullSecret, seperti yang dijelaskan pada [Menentukan ImagePullSecret pada Pod](/id/docs/concepts/containers/images/#tentukan-imagepullsecrets-pada-sebuah-pod).
 
     ```shell
-    kubectl create secret docker-registry myregistrykey --docker-server=DUMMY_SERVER \
+    kubectl create secret docker-registry myregistrykey --docker-server=<registry name> \
             --docker-username=DUMMY_USERNAME --docker-password=DUMMY_DOCKER_PASSWORD \
             --docker-email=DUMMY_DOCKER_EMAIL
     ```
@@ -250,7 +250,7 @@ kubectl replace serviceaccount default -f ./sa.yaml
 Ketika Pod baru dibuat dalam Namespace yang sedang aktif dan menggunakan ServiceAccount, Pod baru akan memiliki _field_ `spec.imagePullSecrets` yang ditentukan secara otomatis:
 
 ```shell
-kubectl run nginx --image=nginx --restart=Never
+kubectl run nginx --image=<registry name>/nginx --restart=Never
 kubectl get pod nginx -o=jsonpath='{.spec.imagePullSecrets[0].name}{"\n"}'
 ```
 
@@ -282,7 +282,7 @@ Kubelet juga dapat memproyeksikan _token_ ServiceAccount ke Pod. Kamu dapat mene
 
 Perilaku ini diatur pada PodSpec menggunakan tipe ProjectedVolume yaitu [ServiceAccountToken](/id/docs/concepts/storage/volumes/#projected). Untuk memungkinkan Pod dengan _token_ dengan pengguna bertipe _"vault"_ dan durasi validitas selama dua jam, kamu harus mengubah bagian ini pada PodSpec:
 
-{{< codenew file="pods/pod-projected-svc-token.yaml" >}}
+{{% codenew file="pods/pod-projected-svc-token.yaml" %}}
 
 Buat Pod:
 
@@ -292,7 +292,7 @@ kubectl create -f https://k8s.io/examples/pods/pod-projected-svc-token.yaml
 
 _Token_ yang mewakili Pod akan diminta dan disimpan kubelet, lalu kubelet akan membuat _token_ yang dapat diakses oleh Pod pada _file path_ yang ditentukan, dan melakukan _refresh_ _token_ ketika telah mendekati waktu berakhir. _Token_ akan diganti oleh kubelet jika _token_ telah melewati 80% dari total TTL, atau jika _token_ telah melebihi waktu 24 jam.
 
-Aplikasi bertanggung jawab untuk memuat ulang _token_ ketika terjadi penggantian. Pemuatan ulang teratur (misalnya sekali setiap 5 menit) cukup untuk mencakup kebanyakan kasus. 
+Aplikasi bertanggung jawab untuk memuat ulang _token_ ketika terjadi penggantian. Pemuatan ulang teratur (misalnya sekali setiap 5 menit) cukup untuk mencakup kebanyakan kasus.
 
 ## ServiceAccountIssuerDiscovery
 
@@ -326,7 +326,7 @@ Pada banyak kasus, server API Kubernetes tidak tersedia di internet publik, namu
 
 Lihat juga:
 
-- [Panduan Admin Kluster mengenai ServiceAccount](/docs/reference/access-authn-authz/service-accounts-admin/)
+- [Panduan Admin klaster mengenai ServiceAccount](/docs/reference/access-authn-authz/service-accounts-admin/)
 - [ServiceAccount Signing Key Retrieval KEP](https://github.com/kubernetes/enhancements/blob/master/keps/sig-auth/20190730-oidc-discovery.md)
 - [OIDC Discovery Spec](https://openid.net/specs/openid-connect-discovery-1_0.html)
 

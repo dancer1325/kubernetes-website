@@ -146,7 +146,7 @@ En el ejemplo de abajo, el tráfico se dirige al único Endpoint definido en el 
 
 {{< note >}}
 El servidor de API de Kubernetes no permite hacer proxy a Endpoints que no están mapeados a Pods.
-Acciones como `kubectl proxy <service-name>` donde el servicio no tiene un selector fallará debido a esta restricción.
+Acciones como `kubectl port-forward service/<service-name> forwardedPort:servicePort` donde el servicio no tiene un selector fallará debido a esta restricción.
 Esto previene que el servidor API de Kubernetes sea utilizado como proxy a endpoints a los que quien llama no tenga acceso autorizado.
 {{< /note >}}
 
@@ -543,7 +543,7 @@ metadata:
 metadata:
     name: my-service
     annotations:
-        service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+        service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
 [...]
 ```
 
@@ -881,7 +881,7 @@ spec:
 ```
 
 {{< note >}}
-ExternalName acepta una cadena de texto IPv4, pero como un nombre DNS compuesto de dígitos, no como una dirección IP. ExternalNames que se parecen a direcciones IPv4 no se resuelven por el CoreDNS o ingress-nginx, ya que ExternalName se usa para especificar un nombre DNS canónico. Al fijar una dirección IP, considera usar [headless Services](#headless-services).
+ExternalName acepta una cadena de texto IPv4, pero como un nombre DNS compuesto de dígitos, no como una dirección IP. ExternalNames que se parecen a direcciones IPv4 no se resuelven por el CoreDNS, ya que ExternalName se usa para especificar un nombre DNS canónico. Al fijar una dirección IP, considera usar [headless Services](#headless-services).
 {{< /note >}}
 
 Cuando busca el host `mi-servicio.prod.svc.cluster.local`, el Service DNS del clúster devuelve un registro `CNAME` con el valor `my.database.example.com`. Acceder a `mi-servicio` funciona de la misma manera que otros Services, pero con la diferencia crucial de que la redirección ocurre a nivel del DNS en lugar reenviarlo o redirigirlo. Si posteriormente decides mover tu base de datos al clúster, puedes iniciar sus Pods, agregar selectores apropiados o endpoints, y cambiar el `type` del Service.

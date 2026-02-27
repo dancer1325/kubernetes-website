@@ -37,7 +37,7 @@ is a Pod that has one container:
 
 下面是具有两个副本的 Deployment 的配置文件。每个副本是一个 Pod，有一个容器：
 
-{{% code file="application/deployment-patch.yaml" %}}
+{{% code_sample file="application/deployment-patch.yaml" %}}
 
 <!--
 Create the Deployment:
@@ -354,7 +354,7 @@ spec:
     spec:
       containers:
       - name: patch-demo-ctr-3
-        image: gcr.io/google-samples/node-hello:1.0
+        image: gcr.io/google-samples/hello-app:2.0
 ```
 
 <!--
@@ -385,7 +385,7 @@ patch 中指定的 `containers` 列表只有一个 Container。
 ```yaml
 spec:
   containers:
-  - image: gcr.io/google-samples/node-hello:1.0
+  - image: gcr.io/google-samples/hello-app:2.0
     ...
     name: patch-demo-ctr-3
 ```
@@ -418,7 +418,7 @@ Here's the configuration file for a Deployment that uses the `RollingUpdate` str
 -->
 ## 使用带 retainKeys 策略的策略合并 patch 更新 Deployment    {#use-strategic-merge-patch-to-update-a-deployment-using-the-retainkeys-strategy}
 
-{{% code file="application/deployment-retainkeys.yaml" %}}
+{{% code_sample file="application/deployment-retainkeys.yaml" %}}
 
 <!--
 Create the deployment:
@@ -637,21 +637,26 @@ kubectl patch deployment patch-demo --patch '{"spec": {"template": {"spec": {"co
 
 <!--
 The flag `--subresource=[subresource-name]` is used with kubectl commands like get, patch,
-edit and replace to fetch and update `status` and `scale` subresources of the resources
-(applicable for kubectl version v1.24 or more). This flag is used with all the API resources
-(built-in and CRs) that have `status` or `scale` subresource. Deployment is one of the
-examples which supports these subresources.
+edit, apply and replace to fetch and update `status`, `scale` and `resize` subresource of the
+resources you specify. You can specify a subresource for any of the Kubernetes API resources
+(built-in and CRs) that have `status`, `scale` or `resize` subresource.
+
+For example, a Deployment has a `status` subresource and a `scale` subresource, so you can
+use `kubectl` to get or modify just the `status` subresource of a Deployment.
 
 Here's a manifest for a Deployment that has two replicas:
 -->
-使用 kubectl 命令（如 get、patch、edit 和 replace）时带上 `--subresource=[subresource-name]` 标志，
-可以获取和更新资源的 `status` 和 `scale` 子资源（适用于 kubectl v1.24 或更高版本）。
-这个标志可用于带有 `status` 或 `scale` 子资源的所有 API 资源 (内置资源和 CR 资源)。
-Deployment 是支持这些子资源的其中一个例子。
+使用 kubectl 命令（如 get、patch、edit、apply 和 replace）时带上 `--subresource=[subresource-name]` 标志，
+可以获取和更新你所指定资源的 `status`、`scale` 和 `resize` 子资源。
+你可以为任何具有 `status`、`scale` 或 `resize` 子资源的 Kubernetes API 资源（内置资源和 CR 资源）
+指定子资源。
 
-下面是有两个副本的 Deployment 的清单。
+例如，Deployment 具有 `status` 子资源和 `scale` 子资源，因此你可以使用 `kubectl` 来获取或修改
+Deployment 的 `status` 子资源。
 
-{{% code file="application/deployment.yaml" %}}
+以下是一个具有两个副本的 Deployment 的清单示例：
+
+{{% code_sample file="application/deployment.yaml" %}}
 
 <!--
 Create the Deployment:
@@ -794,4 +799,3 @@ Strategic merge patch is not supported for custom resources.
 * [使用指令式命令管理 Kubernetes 对象](/zh-cn/docs/tasks/manage-kubernetes-objects/imperative-command/)
 * [使用配置文件对 Kubernetes 对象进行命令式管理](/zh-cn/docs/tasks/manage-kubernetes-objects/imperative-config/)
 * [使用配置文件对 Kubernetes 对象进行声明式管理](/zh-cn/docs/tasks/manage-kubernetes-objects/declarative-config/)
-

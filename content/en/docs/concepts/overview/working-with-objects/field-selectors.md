@@ -32,6 +32,28 @@ kubectl get ingress --field-selector foo.bar=baz
 Error from server (BadRequest): Unable to find "ingresses" that match label selector "", field selector "foo.bar=baz": "foo.bar" is not a known field selector: only "metadata.name", "metadata.namespace"
 ```
 
+### List of supported fields
+
+| Kind                      | Fields                                                                                                                                                                                                                                                          |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pod                       | `spec.nodeName`<br>`spec.restartPolicy`<br>`spec.schedulerName`<br>`spec.serviceAccountName`<br>`spec.hostNetwork`<br>`status.phase`<br>`status.podIP`<br>`status.podIPs`<br>`status.nominatedNodeName`                                                                            |
+| Event                     | `involvedObject.kind`<br>`involvedObject.namespace`<br>`involvedObject.name`<br>`involvedObject.uid`<br>`involvedObject.apiVersion`<br>`involvedObject.resourceVersion`<br>`involvedObject.fieldPath`<br>`reason`<br>`reportingComponent`<br>`source`<br>`type` |
+| Secret                    | `type`                                                                                                                                                                                                                                                          |
+| Namespace                 | `status.phase`                                                                                                                                                                                                                                                  |
+| ReplicaSet                | `status.replicas`                                                                                                                                                                                                                                               |
+| ReplicationController     | `status.replicas`                                                                                                                                                                                                                                               |
+| Job                       | `status.successful`                                                                                                                                                                                                                                             |
+| Node                      | `spec.unschedulable`                                                                                                                                                                                                                                            |
+| CertificateSigningRequest | `spec.signerName`                                                                                                                                                                                                                                               |
+
+### Custom resources fields
+
+All custom resource types support the `metadata.name` and `metadata.namespace` fields.
+
+Additionally, the `spec.versions[*].selectableFields` field of a {{< glossary_tooltip term_id="CustomResourceDefinition" text="CustomResourceDefinition" >}}
+declares which other fields in a custom resource may be used in field selectors. See [selectable fields for custom resources](/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#crd-selectable-fields)
+for more information about how to use field selectors with CustomResourceDefinitions.
+
 ## Supported operators
 
 You can use the `=`, `==`, and `!=` operators with field selectors (`=` and `==` mean the same thing). This `kubectl` command, for example, selects all Kubernetes Services that aren't in the `default` namespace:

@@ -111,25 +111,25 @@ Kubernetes 还可以根据集群的当前状态，使用 Pod 水平自动扩缩�
 <!--
 Kubernetes is designed to work with [OpenMetrics](https://openmetrics.io/), 
 which is one of the
-[CNCF Observability and Analysis - Monitoring Projects](https://landscape.cncf.io/card-mode?category=monitoring&project=graduated,incubating,member,no&grouping=category&sort=stars),
+[CNCF Observability and Analysis - Monitoring Projects](https://landscape.cncf.io/?group=projects-and-products&view-mode=card#observability-and-analysis--monitoring),
 built upon and carefully extending [Prometheus exposition format](https://prometheus.io/docs/instrumenting/exposition_formats/)
 in almost 100% backwards-compatible ways.
 -->
 Kubernetes 在设计上保证能够与 [OpenMetrics](https://openmetrics.io/) 一同使用，
-OpenMetrics 是 
-[CNCF 可观测性和分析 - 监控项目](https://landscape.cncf.io/card-mode?category=monitoring&project=graduated,incubating,member,no&grouping=category&sort=stars)之一，
+OpenMetrics 是
+[CNCF 可观测性和分析 - 监控项目](https://landscape.cncf.io/?group=projects-and-products&view-mode=card#observability-and-analysis--monitoring)之一，
 它构建于 [Prometheus 暴露格式](https://prometheus.io/docs/instrumenting/exposition_formats/)之上，
 并对其进行了扩展，这些扩展几乎 100% 向后兼容。
 
 <!--
 If you glance over at the
-[CNCF Landscape](https://landscape.cncf.io/card-mode?category=monitoring&project=graduated,incubating,member,no&grouping=category&sort=stars), 
+[CNCF Landscape](https://landscape.cncf.io/?group=projects-and-products&view-mode=card#observability-and-analysis--monitoring),
 you can see a number of monitoring projects that can work with Kubernetes by _scraping_
 metric data and using that to help you observe your cluster. It is up to you to select the tool
 or tools that suit your needs. The CNCF landscape for observability and analytics includes a
 mix of open-source software, paid-for software-as-a-service, and other commercial products.
 -->
-如果你浏览 [CNCF Landscape](https://landscape.cncf.io/card-mode?category=monitoring&project=graduated,incubating,member,no&grouping=category&sort=stars)，
+如果你浏览 [CNCF Landscape](https://landscape.cncf.io/?group=projects-and-products&view-mode=card#observability-and-analysis--monitoring)，
 你可以看到许多监控项目，它们可以用在 Kubernetes 上，**抓取**指标数据并利用这些数据来观测你的集群，
 选择哪种工具或哪些工具可以满足你的需求，这完全取决于你自己。 
 CNCF 的可观测性和分析景观包括了各种开源软件、付费的软件即服务（SaaS）以及其他混合商业产品。
@@ -148,9 +148,9 @@ the scope of Kubernetes documentation because of the very wide scope of possible
 solutions.
 
 The choice of monitoring platform depends heavily on your needs, budget, and technical resources.
-Kubernetes does not recommend any specific metrics pipeline; [many options](https://landscape.cncf.io/card-mode?category=monitoring&project=graduated,incubating,member,no&grouping=category&sort=stars) are available.
+Kubernetes does not recommend any specific metrics pipeline; [many options](https://landscape.cncf.io/?group=projects-and-products&view-mode=card#observability-and-analysis--monitoring) are available.
 Your monitoring system should be capable of handling the [OpenMetrics](https://openmetrics.io/) metrics
-transmission standard, and needs to chosen to best fit in to your overall design and deployment of
+transmission standard and needs to be chosen to best fit into your overall design and deployment of
 your infrastructure platform. 
 -->
 将完整的指标管道集成到 Kubernetes 实现中超出了 Kubernetes
@@ -158,7 +158,7 @@ your infrastructure platform.
 
 监控平台的选择在很大程度上取决于你的需求、预算和技术资源。
 Kubernetes 不推荐任何特定的指标管道；
-可使用[许多选项](https://landscape.cncf.io/card-mode?category=monitoring&project=graduated,incubating,member,no&grouping=category&sort=stars)。
+可使用[许多选项](https://landscape.cncf.io/?group=projects-and-products&view-mode=card#observability-and-analysis--monitoring)。
 你的监控系统应能够处理 [OpenMetrics](https://openmetrics.io/) 指标传输标准，
 并且需要选择最适合基础设施平台的整体设计和部署。
 
@@ -168,7 +168,6 @@ Kubernetes 不推荐任何特定的指标管道；
 Learn about additional debugging tools, including:
 
 * [Logging](/docs/concepts/cluster-administration/logging/)
-* [Monitoring](/docs/tasks/debug/debug-cluster/resource-usage-monitoring/)
 * [Getting into containers via `exec`](/docs/tasks/debug/debug-application/get-shell-running-container/)
 * [Connecting to containers via proxies](/docs/tasks/extend-kubernetes/http-proxy-access-api/)
 * [Connecting to containers via port forwarding](/docs/tasks/access-application-cluster/port-forward-access-application-cluster/)
@@ -177,7 +176,6 @@ Learn about additional debugging tools, including:
 了解其他调试工具，包括：
 
 * [日志记录](/zh-cn/docs/concepts/cluster-administration/logging/)
-* [监控](/zh-cn/docs/tasks/debug/debug-cluster/resource-usage-monitoring/)
 * [通过 `exec` 进入容器](/zh-cn/docs/tasks/debug/debug-application/get-shell-running-container/)
 * [通过代理连接到容器](/zh-cn/docs/tasks/extend-kubernetes/http-proxy-access-api/)
 * [通过端口转发连接到容器](/zh-cn/docs/tasks/access-application-cluster/port-forward-access-application-cluster/)

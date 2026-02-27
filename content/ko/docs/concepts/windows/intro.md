@@ -333,26 +333,23 @@ containerd와 GMSA 사용 시 윈도우 네트워크 공유 접근에 대한
 
 ### Mirantis Container Runtime {#mcr}
 
-[Mirantis Container Runtime](https://docs.mirantis.com/mcr/20.10/overview.html)(MCR)은 
+[Mirantis Container Runtime](https://docs.mirantis.com/mcr/25.0/overview.html)(MCR)은 
 Windows Server 2019 및 이후 버전을 지원하는 컨테이너 런타임이다.
 
-더 많은 정보는 [Windows Server에 MCR 설치하기](https://docs.mirantis.com/mcr/20.10/install/mcr-windows.html)를 참고한다.
+더 많은 정보는 [Windows Server에 MCR 설치하기](https://docs.mirantis.com/mcr/25.0/install/mcr-windows.html)를 참고한다.
 
 ## 윈도우 운영 체제 버전 호환성 {#windows-os-version-support}
 
 윈도우에는 호스트 OS 버전이 컨테이너 베이스 이미지 OS 버전과 일치해야 한다는 
 엄격한 호환성 규칙이 있다. 
-컨테이너 운영 체제가 Windows Server 2019인 윈도우 컨테이너만이 완전히 지원된다.
+컨테이너 운영 체제가 Windows Server 2022인 윈도우 컨테이너만이 완전히 지원된다.
 
 쿠버네티스 v{{< skew currentVersion >}}에서, 
 윈도우 노드(및 파드)에 대한 운영 체제 호환성은 다음과 같다.
 
 Windows Server LTSC 릴리스
-: Windows Server 2019
 : Windows Server 2022
-
-Windows Server SAC 릴리스
-:  Windows Server 버전 20H2
+: Windows Server 2025
 
 쿠버네티스 [버전 차이 정책](/ko/releases/version-skew-policy/) 또한 적용된다.
 
