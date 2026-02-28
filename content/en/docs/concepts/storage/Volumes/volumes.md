@@ -465,67 +465,6 @@ accessible by root. You then either need to run your process as root in a
 [privileged container](/docs/tasks/configure-pod-container/security-context/)
 or modify the file permissions on the host to read from or write to a `hostPath` volume.
 
-#### hostPath configuration example
-
-{{< tabs name="hostpath_examples" >}}
-{{< tab name="Linux node" codelang="yaml" >}}
----
-# This manifest mounts /data/foo on the host as /foo inside the
-# single container that runs within the hostpath-example-linux Pod.
-#
-# The mount into the container is read-only.
-apiVersion: v1
-kind: Pod
-metadata:
-  name: hostpath-example-linux
-spec:
-  os: { name: linux }
-  nodeSelector:
-    kubernetes.io/os: linux
-  containers:
-  - name: example-container
-    image: registry.k8s.io/test-webserver
-    volumeMounts:
-    - mountPath: /foo
-      name: example-volume
-      readOnly: true
-  volumes:
-  - name: example-volume
-    # mount /data/foo, but only if that directory already exists
-    hostPath:
-      path: /data/foo # directory location on host
-      type: Directory # this field is optional
-{{< /tab >}}
-{{< tab name="Windows node" codelang="yaml" >}}
----
-# This manifest mounts C:\Data\foo on the host as C:\foo, inside the
-# single container that runs within the hostpath-example-windows Pod.
-#
-# The mount into the container is read-only.
-apiVersion: v1
-kind: Pod
-metadata:
-  name: hostpath-example-windows
-spec:
-  os: { name: windows }
-  nodeSelector:
-    kubernetes.io/os: windows
-  containers:
-  - name: example-container
-    image: microsoft/windowsservercore:1709
-    volumeMounts:
-    - name: example-volume
-      mountPath: "C:\\foo"
-      readOnly: true
-  volumes:
-    # mount C:\Data\foo from the host, but only if that directory already exists
-  - name: example-volume
-    hostPath:
-      path: "C:\\Data\\foo" # directory location on host
-      type: Directory       # this field is optional
-{{< /tab >}}
-{{< /tabs >}}
-
 #### hostPath FileOrCreate configuration example {#hostpath-fileorcreate-example}
 
 The following manifest defines a Pod that mounts `/var/local/aaa`

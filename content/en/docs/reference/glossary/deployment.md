@@ -13,5 +13,9 @@ tags:
 ---
 
 * Deployment
-  * == API object / manages stateless replicated (== SAME container spec) pods
+  * == API object / manages -- , through ReplicaSets, -- stateless replicated pods
     * if you need local state -> use [StatefulSet](statefulset.md)
+  * == workload object
+
+* replicated pods
+  * == SAME container spec 

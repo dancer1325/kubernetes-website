@@ -12,6 +12,7 @@ tags:
 
 * control plane
   * == container orchestration layer /
+    * manage the overall state of the cluster
     * exposes, about lifecycle of containers (define + deploy + manage), 
       * API 
       * interfaces

@@ -3,4 +3,4 @@ title: kubectl Commands
 weight: 20
 ---
 
-[kubectl Command Reference](/docs/reference/kubectl/generated/kubectl/)
+* [here](https://github.com/dancer1325/kubernetes/tree/master/staging/src/k8s.io/kubectl/pkg/cmd)

@@ -30,39 +30,35 @@ no_list: true
 - Features
   - Automated rollouts & rollbacks
     - rolls out 
-      - == gradual changes of
+      - := gradual changes of
         - application
         - configuration
     - rollback
-      - ️if something goes wrong | rollout → AUTOMATIC rollback
-        - monitors application health
-          - == ensure NOT ALL instances are killed | same time
+      - 👀️if something goes wrong | rollout → AUTOMATIC rollback👀
+        - Reason: 🧠thanks to monitor application health /
+          - ensure NOT ALL instances are killed | same time🧠
   - Service discovery & load balancing
-    - own IP address / Pod
-    - single DNS / set of Pods
-    - load balance across the Pods
-    - 👀→ no need to use an unfamiliar service discovery mechanism for your application 👀
-    - [Services, Load Balancing and Networking](Kubernetes/Documentation/Concepts/Services,%20Load%20Balancing%20and%20Networking%2093f52609b9cd4c7a924b63a2c5f80cab.md)
+    - own IP address / pod
+    - 1! DNS / set of pods
+    - load balance ACROSS the pods
+    - service discovery provided natively
+      - == ❌NO need to use an unfamiliar service discovery mechanism❌
   - Storage orchestration
-    - [Storage](Kubernetes/Documentation/Concepts/Storage%2009dc7dd9918d4329a80650ffc25a03dc.md)
-    - ⚠️ you choose the storage system to mount ⚠️
+    - you choose the storage system / mount 
       - local
       - public cloud provider
-        *Example:* AWS, GCP
+        - _Example:_ AWS, GCP
       - network
-        *Example:* NFS, Cinder, Ceph, iSCSI
-    - [Persistent Volumes](Kubernetes/Documentation/Concepts/Storage/Persistent%20Volumes%200a48441fe4c74b1fa02a87876d821de1.md)
+        - _Example:_ NFS, Cinder, Ceph, iSCSI
   - Self-healing
     - about
       - if containers fail → restart
       - if nodes die → replace / reschedule containers
-      - if containers don’t respond to user-defined health-check → kill
-    - [ReplicaSet](Kubernetes/Documentation/Concepts/Workloads/Workload%20Resources/ReplicaSet%20f7ae4db36bb84a6f97aff658327bb112.md)
+      - if containers do NOT respond to user-defined health-check → kill
   - Secret and configuration management
-    - Secrets and application configuration are updated /deployed without
+    - are updated/deployed WITHOUT
       - rebuilding the image
       - exposing secrets
-    - [ReplicaSet](Kubernetes/Documentation/Concepts/Workloads/Workload%20Resources/ReplicaSet%20f7ae4db36bb84a6f97aff658327bb112.md)
   - Automatic bin packing
     - Containers are placed automatically based on
       **Note:** without sacrificing availability
@@ -90,15 +86,8 @@ no_list: true
 
 Kubernetes provides you with:
 
-* **Service discovery and load balancing**
-  Kubernetes can expose a container using a DNS name or its own IP address.
-  If traffic to a container is high, Kubernetes is able to load balance and distribute
-  the network traffic so that the deployment is stable.
 * **Storage orchestration**
-  Kubernetes allows you to automatically mount a storage system of your choice, such as
-  local storage, public cloud providers, and more.
-* **Automated rollouts and rollbacks**
-
+  
 * **Automatic bin packing**
   You provide Kubernetes with a cluster of nodes that it can use to run containerized tasks.
   You tell Kubernetes how much CPU and memory (RAM) each container needs. Kubernetes can fit
@@ -122,13 +111,16 @@ Kubernetes provides you with:
 
 ## What Kubernetes is not
 
-Kubernetes is not a traditional, all-inclusive PaaS (Platform as a Service) system.
-Since Kubernetes operates at the container level rather than at the hardware level,
-it provides some generally applicable features common to PaaS offerings, such as
-deployment, scaling, load balancing, and lets users integrate their logging, monitoring,
-and alerting solutions. However, Kubernetes is not monolithic, and these default solutions
-are optional and pluggable. Kubernetes provides the building blocks for building developer
-platforms, but preserves user choice and flexibility where it is important.
+* Kubernetes
+  * != PaaS (Platform as a Service) system
+    * traditional
+    * all-inclusive 
+    Since Kubernetes operates at the container level rather than at the hardware level,
+    it provides some generally applicable features common to PaaS offerings, such as
+    deployment, scaling, load balancing, and lets users integrate their logging, monitoring,
+    and alerting solutions. However, Kubernetes is not monolithic, and these default solutions
+    are optional and pluggable. Kubernetes provides the building blocks for building developer
+    platforms, but preserves user choice and flexibility where it is important.
 
 Kubernetes:
 

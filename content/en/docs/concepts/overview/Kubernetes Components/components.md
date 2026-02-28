@@ -12,28 +12,21 @@ card:
   weight: 20
 ---
 
-<!-- overview -->
+* goal
+  * Kubernetes cluster' essential components 
 
-This page provides a high-level overview of the essential components that make up a Kubernetes cluster.
+![](/static/images/docs/components-of-kubernetes.svg)
 
-{{< figure src="/images/docs/components-of-kubernetes.svg" alt="Components of Kubernetes" caption="The components of a Kubernetes cluster" class="diagram-large" clicktozoom="true" >}}
+## Kubernetes core components
 
-<!-- body -->
-
-## Core Components
-
-A Kubernetes cluster consists of a control plane and one or more worker nodes.
-Here's a brief overview of the main components:
+* 👀control plane OR master node + \>=1 worker nodes👀
 
 ### Control Plane Components
-
-Manage the overall state of the cluster:
 
 [kube-apiserver](/docs/concepts/architecture/#kube-apiserver)
 : The core component server that exposes the Kubernetes HTTP API.
 
-[etcd](/docs/concepts/architecture/#etcd)
-: Consistent and highly-available key value store for all API server data.
+* [etcd](../../architecture/_index.md#etcd)
 
 [kube-scheduler](/docs/concepts/architecture/#kube-scheduler)
 : Looks for Pods not yet bound to a node, and assigns each Pod to a suitable node.
@@ -49,7 +42,6 @@ Manage the overall state of the cluster:
 Run on every node, maintaining running pods and providing the Kubernetes runtime environment:
 
 [kubelet](/docs/concepts/architecture/#kubelet)
-: Ensures that Pods are running, including their containers.
 
 [kube-proxy](/docs/concepts/architecture/#kube-proxy) (optional)
 : Maintains network rules on nodes to implement {{< glossary_tooltip text="Services" term_id="service" >}}.

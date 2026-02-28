@@ -15,22 +15,9 @@ weight: 30
 ---
 
 <!-- overview -->
-
-A Secret is an object that contains a small amount of sensitive data such as
-a password, a token, or a key. Such information might otherwise be put in a
-{{< glossary_tooltip term_id="pod" >}} specification or in a
-{{< glossary_tooltip text="container image" term_id="image" >}}. Using a
-Secret means that you don't need to include confidential data in your
-application code.
-
-Because Secrets can be created independently of the Pods that use them, there
-is less risk of the Secret (and its data) being exposed during the workflow of
-creating, viewing, and editing Pods. Kubernetes, and applications that run in
+Kubernetes, and applications that run in
 your cluster, can also take additional precautions with Secrets, such as avoiding
 writing sensitive data to nonvolatile storage.
-
-Secrets are similar to {{< glossary_tooltip text="ConfigMaps" term_id="configmap" >}}
-but are specifically intended to hold confidential data.
 
 {{< caution >}}
 Kubernetes Secrets are, by default, stored unencrypted in the API server's underlying data store
@@ -130,7 +117,7 @@ the exact mechanisms for issuing and refreshing those session tokens.
 
 ## Types of Secret {#secret-types}
 
-When creating a Secret, you can specify its type using the `type` field of
+* `.type`
 the [Secret](/docs/reference/kubernetes-api/config-and-storage-resources/secret-v1/)
 resource, or certain equivalent `kubectl` command line flags (if available).
 The Secret type is used to facilitate programmatic handling of the Secret data.

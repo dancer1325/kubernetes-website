@@ -10,17 +10,28 @@ tags:
 - core-object
 - security
 ---
- Stores sensitive information, such as passwords, OAuth tokens, and SSH keys.
 
-<!--more-->
-
-Secrets give you more control over how sensitive information is used and reduces
-the risk of accidental exposure. Secret values are encoded as base64 strings and
-are stored unencrypted by default, but can be configured to be
-[encrypted at rest](/docs/tasks/administer-cluster/encrypt-data/#ensure-all-secrets-are-encrypted).
-
-A {{< glossary_tooltip text="Pod" term_id="pod" >}} can reference the Secret in
-a variety of ways, such as in a volume mount or as an environment variable.
-Secrets are designed for confidential data and
-[ConfigMaps](/docs/tasks/configure-pod-container/configure-pod-configmap/) are
-designed for non-confidential data.
+* secret
+  * := API object /
+    * enable you,
+      * more control about how to use sensitive information /
+        * reduces the risk of accidental exposure | create OR view OR edit pods
+          * Reason: 🧠secrets can be created INDEPENDENTLY of the pods / use them🧠
+        * ALTERNATIVE to store | 
+          * pod specification, OR
+          * container image
+    * 's values
+      * ⚠️by default,⚠️
+        * encoded -- as -- base64 strings
+        * stored unencrypted
+      * you can [encrypt at rest](../../tasks/administer-cluster/encrypt-data.md#ensure-all-relevant-data-are-encrypted-ensure-all-secrets-are-encrypted)
+    * can be reused ACROSS MULTIPLE containers 
+  * ways / pod can reference a secret
+    * volume mount
+    * environment variable
+  * use cases
+    * store sensitive information
+      * _Example:_ passwords, OAuth tokens, SSH keys
+  * vs [ConfigMaps](configmap.md)
+    * configMaps use cases
+      * NON-confidential data

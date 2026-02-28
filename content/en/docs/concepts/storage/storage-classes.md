@@ -12,8 +12,6 @@ content_type: concept
 weight: 40
 ---
 
-<!-- overview -->
-
 * goal
   * StorageClass | Kubernetes
 
@@ -45,11 +43,12 @@ weight: 40
       * by users, to request a particular class
     * | create StorageClass objects, set by cluster administrators
 
+* TODO:
 As an administrator, you can specify a default StorageClass that applies to any PVCs that
 don't request a specific class. For more details, see the
 [PersistentVolumeClaim concept](/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims).
 
-* _Example:_ [here](storageClass.yaml)
+* _Example:_ [here](examples/storageClass/storageClass.yaml)
 
 ### Default StorageClass
 

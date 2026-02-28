@@ -15,6 +15,9 @@ tags:
   * == worker machine | Kubernetes
   * | Kubernetes early versions,
     * "Minions"
+  * types
+    * [control plane / master node](control-plane.md)
+    * worker node
 
 * worker node
   * types 

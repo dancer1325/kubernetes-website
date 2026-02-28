@@ -11,10 +11,14 @@ tags:
 - core-object
 - workload
 ---
- A ReplicaSet (aims to) maintain a set of replica Pods running at any given time.
 
-<!--more-->
+* ReplicaSet
+  * == workload resource
+  * goal
+    * maintain a set of replica pods running | ANY given time
+  * uses
+    * by [deployment](deployment.md)
 
-Workload objects such as {{< glossary_tooltip term_id="deployment" >}} make use of ReplicaSets
-to ensure that the configured number of {{< glossary_tooltip term_id="pod" text="Pods" >}} are
-running in your cluster, based on the spec of that ReplicaSet.
+* Child ReplicaSets
+  * := ReplicaSets / created by a deployment 
+    * | rollout a deployment -> NEW ReplicaSet

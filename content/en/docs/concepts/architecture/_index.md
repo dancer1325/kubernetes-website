@@ -47,7 +47,7 @@ for an example control plane setup that runs across multiple machines.
 
 ### etcd
 
-{{< glossary_definition term_id="etcd" length="all" >}}
+* [here](../../reference/glossary/etcd.md)
 
 ### kube-scheduler
 
@@ -93,7 +93,7 @@ Node components run on every node, maintaining running pods and providing the Ku
 
 ### kubelet
 
-{{< glossary_definition term_id="kubelet" length="all" >}}
+* [here](../../reference/glossary/kubelet.md)
 
 ### kube-proxy (optional) {#kube-proxy}
 

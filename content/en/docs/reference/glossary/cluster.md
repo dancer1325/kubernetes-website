@@ -14,6 +14,6 @@ tags:
 * cluster
   * := set of [nodes](node.md) / run containerized applications
     * | production environments,
-      * NORMALLY runs MULTIPLE nodes
+      * NORMALLY runs MULTIPLE (>=3) nodes
         * Reason: 🧠provide fault-tolerance & high availability🧠
   * exist >= 1 [worker node](node.md) / EACH cluster
