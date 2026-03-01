@@ -31,12 +31,7 @@ sitemap:
     - never outgrow
       - Reason: 🧠flexible growing🧠
       - _Example:_ [small startups / 3-5 nodes, big companies / run 1xx nodes]
-    - run K8s | ANYWHERE
-      - ===
-        - on-premises
-        - hybrid
-        - public cloud
-        - …
+    - run K8s | ANYWHERE (on-premises, hybrid, cloud, ..., any OS, ...)
   - [features](docs/concepts/overview/_index.md)
 
 - containers

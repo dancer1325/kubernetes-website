@@ -10,9 +10,7 @@ tags:
 - core-object
 - workload
 ---
- Manages a [Job](/docs/concepts/workloads/controllers/job/) that runs on a periodic schedule.
 
-<!--more-->
-
-Similar to a line in a *crontab* file, a CronJob object specifies a schedule using the [cron](https://en.wikipedia.org/wiki/Cron) format.
-
+* == line | crontab file /
+  * manages a [job](job.md) / runs | periodic schedule
+  * specifies a schedule -- via -- [cron format](https://en.wikipedia.org/wiki/Cron)

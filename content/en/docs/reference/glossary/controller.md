@@ -10,20 +10,30 @@ tags:
 - architecture
 - fundamental
 ---
-In Kubernetes, controllers are control loops that watch the state of your
-{{< glossary_tooltip term_id="cluster" text="cluster">}}, then make or request
-changes where needed.
-Each controller tries to move the current cluster state closer to the desired
-state.
 
-<!--more-->
+* controller
+  * == control loops / 
+    * responsible for
+      * watch -- , through the [kube-apiserver](kube-apiserver.md), -- the cluster's state
+      * desired state == current state
+  * == separate process / EACH controller
+  * SOME run | [kube-controller-manager](kube-controller-manager.md)
+    * _Examples:_ 
+      * deployment controller
+      * daemonset controller
+      * namespace controller
+      * persistent volume controller
 
-Controllers watch the shared state of your cluster through the
-{{< glossary_tooltip text="apiserver" term_id="kube-apiserver" >}} (part of the
-{{< glossary_tooltip term_id="control-plane" >}}).
+* ALL controllers
+  * are compiled | 1! binary
+  * run | 1! process
 
-Some controllers also run inside the control plane, providing control loops that
-are core to Kubernetes' operations. For example: the deployment controller, the
-daemonset controller, the namespace controller, and the persistent volume
-controller (and others) all run within the
-{{< glossary_tooltip term_id="kube-controller-manager" >}}.
+- types of controllers
+  - Node controller
+    - if nodes go down → notice & replies
+  - Job controller
+    - watches job objects
+  - EndpointSlice controller
+    - populates [EndpointSlices](endpoint-slice.md)
+  - ServiceAccount controller
+    - create default [ServiceAccounts](service-account.md) / new namespaces

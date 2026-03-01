@@ -17,3 +17,4 @@ tags:
       * NORMALLY runs MULTIPLE (>=3) nodes
         * Reason: 🧠provide fault-tolerance & high availability🧠
   * exist >= 1 [worker node](node.md) / EACH cluster
+    * Reason: 🧠they run pods🧠

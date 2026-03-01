@@ -10,11 +10,16 @@ tags:
 - fundamental
 ---
 
-* Stored instance of a {{< glossary_tooltip term_id="container" >}} /
-  * holds a set of software needed to run an application.
+* == way of packaging software /
+  * hold a software / run an application
+  * can be
+    * stored | container registry
+    * pulled -- to a -- local system
+    * run -- as an -- application
+  * 's metadata
+    * _Example:_
+      * what executable to run
+      * who built it
 
-<!--more-->
-
-A way of packaging software that allows it to be stored in a container registry, pulled to a local system, and run as an application
-* Meta data is included in the image that can indicate what executable to run, who built it, and other information.
-
+* images / run | Kubernetes
+  * accept ALL OS (ALSO Windows)

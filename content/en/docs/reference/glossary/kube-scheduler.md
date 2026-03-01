@@ -9,14 +9,14 @@ aka:
 tags:
 - architecture
 ---
-Control plane component that watches for newly created
-{{< glossary_tooltip term_id="pod" text="Pods" >}} with no assigned
-{{< glossary_tooltip term_id="node" text="node">}}, and selects a node for them
-to run on.
 
-<!--more-->
-
-Factors taken into account for scheduling decisions include:
-individual and collective {{< glossary_tooltip text="resource" term_id="infrastructure-resource" >}}
-requirements, hardware/software/policy constraints, affinity and anti-affinity specifications,
-data locality, inter-workload interference, and deadlines.
+* == Control plane's component /
+  * responsible for
+    * watch for NEWLY created pods / NO assigned node
+    * selects a node | run the pods -- based on --
+      * individual & collective [resource](infrastructure-resource.md) requirements
+      * hardware/software/policy constraints
+      * affinity & anti-affinity specifications
+      * data locality
+      * inter-workload interference
+      * deadlines

@@ -11,9 +11,21 @@ tags:
 - core-object
 - workload
 ---
- A finite or batch task that runs to completion.
 
-<!--more--> 
-
-Creates one or more {{< glossary_tooltip term_id="pod" >}} objects and ensures that a specified number of them successfully terminate. As Pods successfully complete, the Job tracks the successful completions.
-
+* == task / runs till be completed
+  * finite
+    * == if task was succeed -> end
+  * batch
+    * == AUTOMATICALLY 
+      * != MANUAL
+  * how does it work?
+    * creates >=1 pod
+    * pods execute the task
+    * pods end successfully
+      * if some pod fail meantime -> create a NEW one
+    * if specific number of successful completions is reached -> job marked as "completed"
+    * job ends
+  * if you 
+    * delete a job -> clean up the pods created
+    * suspend a job -> TILL resume the job,
+      * delete its active pods

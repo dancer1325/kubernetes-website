@@ -8,56 +8,21 @@ weight: 10
 
 ## {{% heading "prerequisites" %}}
 
-You must use a kubectl version that is within one minor version difference of
-your cluster. For example, a v{{< skew currentVersion >}} client can communicate
-with v{{< skew currentVersionAddMinor -1 >}}, v{{< skew currentVersionAddMinor 0 >}},
-and v{{< skew currentVersionAddMinor 1 >}} control planes.
-Using the latest compatible version of kubectl helps avoid unforeseen issues.
+* kubectl version = [yourKubernetesClusterVersion - 1, yourKubernetesClusterVersion + 1]
+  * recommendation
+    * use yourKubernetesClusterVersion + 1
 
-## Install kubectl on macOS
+## how to install kubectl | macOS?
 
-The following methods exist for installing kubectl on macOS:
+### -- via -- curl
 
-- [Install kubectl on macOS](#install-kubectl-on-macos)
-  - [Install kubectl binary with curl on macOS](#install-kubectl-binary-with-curl-on-macos)
-  - [Install with Homebrew on macOS](#install-with-homebrew-on-macos)
-  - [Install with Macports on macOS](#install-with-macports-on-macos)
-- [Verify kubectl configuration](#verify-kubectl-configuration)
-- [Optional kubectl configurations and plugins](#optional-kubectl-configurations-and-plugins)
-  - [Enable shell autocompletion](#enable-shell-autocompletion)
-  - [Install `kubectl convert` plugin](#install-kubectl-convert-plugin)
-
-### Install kubectl binary with curl on macOS
-
-1. Download the latest release:
-
-   {{< tabs name="download_binary_macos" >}}
-   {{< tab name="Intel" codelang="bash" >}}
-   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"
-   {{< /tab >}}
-   {{< tab name="Apple Silicon" codelang="bash" >}}
-   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/arm64/kubectl"
-   {{< /tab >}}
-   {{< /tabs >}}
-
-   {{< note >}}
-   To download a specific version, replace the `$(curl -L -s https://dl.k8s.io/release/stable.txt)`
-   portion of the command with the specific version.
-
-   For example, to download version {{< skew currentPatchVersion >}} on Intel macOS, type:
-
-   ```bash
-   curl -LO "https://dl.k8s.io/release/v{{< skew currentPatchVersion >}}/bin/darwin/amd64/kubectl"
-   ```
-
-   And for macOS on Apple Silicon, type:
-
-   ```bash
-   curl -LO "https://dl.k8s.io/release/v{{< skew currentPatchVersion >}}/bin/darwin/arm64/kubectl"
-   ```
-
-   {{< /note >}}
-
+1. download the latest release
+  * | Intel,
+    * `curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"`
+    * if you want to download a specific version -> `curl -LO "https://dl.k8s.io/release/v{{SomeSpecificVersion}}/bin/darwin/amd64/kubectl"`
+  * | Apple Silicon
+    * `curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/arm64/kubectl"`
+    * if you want to download a specific version -> `curl -LO "https://dl.k8s.io/release/v{{SomeSpecificVersion}}/bin/darwin/arm64/kubectl"`
 1. Validate the binary (optional)
 
    Download the kubectl checksum file:
@@ -129,30 +94,20 @@ The following methods exist for installing kubectl on macOS:
    rm kubectl.sha256
    ```
 
-### Install with Homebrew on macOS
+### -- via -- Homebrew
 
-If you are on macOS and using [Homebrew](https://brew.sh/) package manager,
-you can install kubectl with Homebrew.
+```bash
+# 1. install
+# 1.1 
+brew install kubectl
+# 1.2
+brew install kubernetes-cli
 
-1. Run the installation command:
+# 2. check 
+kubectl version --client
+```
 
-   ```bash
-   brew install kubectl
-   ```
-
-   or
-
-   ```bash
-   brew install kubernetes-cli
-   ```
-
-1. Test to ensure the version you installed is up-to-date:
-
-   ```bash
-   kubectl version --client
-   ```
-
-### Install with Macports on macOS
+### -- via -- Macports
 
 If you are on macOS and using [Macports](https://macports.org/) package manager,
 you can install kubectl with Macports.

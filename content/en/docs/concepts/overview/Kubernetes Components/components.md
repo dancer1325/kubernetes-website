@@ -23,13 +23,11 @@ card:
 
 ### Control Plane Components
 
-[kube-apiserver](/docs/concepts/architecture/#kube-apiserver)
-: The core component server that exposes the Kubernetes HTTP API.
+* [kube-apiserver](../../architecture/_index.md#kube-apiserver)
 
 * [etcd](../../architecture/_index.md#etcd)
 
-[kube-scheduler](/docs/concepts/architecture/#kube-scheduler)
-: Looks for Pods not yet bound to a node, and assigns each Pod to a suitable node.
+* [kube-scheduler](../../architecture/_index.md#kube-scheduler)
 
 [kube-controller-manager](/docs/concepts/architecture/#kube-controller-manager)
 : Runs {{< glossary_tooltip text="controllers" term_id="controller" >}} to implement Kubernetes API behavior.

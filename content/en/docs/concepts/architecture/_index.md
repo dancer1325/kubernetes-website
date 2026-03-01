@@ -5,10 +5,9 @@ description: >
   The architectural concepts behind Kubernetes.
 ---
 
-A Kubernetes cluster consists of a control plane plus a set of worker machines, called nodes,
-that run containerized applications. Every cluster needs at least one worker node in order to run Pods.
+* [Kubernetes cluster](.././../reference/glossary/cluster.md)
+* [Kubernetes components](../overview/Kubernetes%20Components/components.md)
 
-The worker node(s) host the Pods that are the components of the application workload.
 The control plane manages the worker nodes and the Pods in the cluster. In production
 environments, the control plane usually runs across multiple computers and a cluster
 usually runs multiple nodes, providing fault-tolerance and high availability.
@@ -43,7 +42,7 @@ for an example control plane setup that runs across multiple machines.
 
 ### kube-apiserver
 
-{{< glossary_definition term_id="kube-apiserver" length="all" >}}
+* [here](../../reference/glossary/kube-apiserver.md)
 
 ### etcd
 
@@ -51,7 +50,7 @@ for an example control plane setup that runs across multiple machines.
 
 ### kube-scheduler
 
-{{< glossary_definition term_id="kube-scheduler" length="all" >}}
+* [here](../../reference/glossary/kube-scheduler.md)
 
 ### kube-controller-manager
 
@@ -155,7 +154,7 @@ While the core components of Kubernetes remain consistent, the way they are depl
 managed can vary. Understanding these variations is crucial for designing and maintaining
 Kubernetes clusters that meet specific operational needs.
 
-### ways to deploy the control plane components
+### 👀ways to deploy the control plane components👀
 
 * Traditional deployment
   * Control plane components run directly | dedicated machines OR VMs (often managed -- as -- systemd services)

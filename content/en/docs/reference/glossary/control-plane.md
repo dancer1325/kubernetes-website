@@ -25,6 +25,8 @@ tags:
     * ...
   * | production environments, 
     * NORMALLY runs ACROSS MULTIPLE computers
+  * by design,
+    * ⚠️to run | Linux⚠️
 
 * ways / control plane's components can be run
   * daemons OR

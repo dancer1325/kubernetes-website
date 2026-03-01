@@ -11,28 +11,19 @@ card:
     title: Install kubectl
 ---
 
-{{< note >}}
-See the [Learning environment](/docs/setup/learning-environment/) page to set up a practice environment.
-{{< /note >}}
+* goal
+  * install tools | your computer -- to -- experiment & learn
 
 ## kubectl
 
-<!-- overview -->
-The Kubernetes command-line tool, [kubectl](/docs/reference/kubectl/kubectl/), allows
-you to run commands against Kubernetes clusters.
-You can use kubectl to deploy applications, inspect and manage cluster resources,
-and view logs. For more information including a complete list of kubectl operations, see the
-[`kubectl` reference documentation](/docs/reference/kubectl/).
-
-kubectl is installable on a variety of Linux platforms, macOS and Windows.
-Find your preferred operating system below.
-
-- [Install kubectl on Linux](/docs/tasks/tools/install-kubectl-linux)
-- [Install kubectl on macOS](/docs/tasks/tools/install-kubectl-macos)
-- [Install kubectl on Windows](/docs/tasks/tools/install-kubectl-windows)
+* how to install | 
+  - [Linux](install-kubectl-linux)
+  - [macOS](install-kubectl-macos)
+  - [Windows](install-kubectl-windows)
 
 ## kind
 
+* TODO: 
 [`kind`](https://kind.sigs.k8s.io/) lets you run Kubernetes on
 your local computer. This tool requires that you have either
 [Docker](https://www.docker.com/) or [Podman](https://podman.io/) installed.

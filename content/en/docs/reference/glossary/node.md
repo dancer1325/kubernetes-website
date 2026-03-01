@@ -37,3 +37,5 @@ tags:
       * [kube-proxy](kube-proxy.md)
       * container runtime / implement the [CRI](cri.md)
         * _Example:_ [docker](docker.md)
+
+![Untitled](/static/images/docs/node.png)

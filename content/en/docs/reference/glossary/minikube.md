@@ -11,17 +11,21 @@ tags:
 - tool
 ---
 
-- := lightweight Kubernetes implementation /
+- == lightweight Kubernetes implementation /
   - creates a VM | your local machine
   - deploys a 1-node cluster
-- AVAILABLE |
-  - Linux
-  - macOS
-  - Windows
-- CLI
-  - allows making cluster-operations
-    - start
-    - stop
-    - status
-    - delete
-
+  - AVAILABLE |
+    - Linux
+    - macOS
+    - Windows
+  - provide
+    - CLI
+      - allows making cluster-operations
+        - start
+        - stop
+        - status
+        - delete
+  - [documentation](https://minikube.sigs.k8s.io/docs/)
+  - uses
+    - development
+    - testing
