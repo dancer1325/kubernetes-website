@@ -8,7 +8,12 @@ aka:
 tags:
 - fundamental
 ---
- Legacy term, used as synonym for {{< glossary_tooltip text="nodes" term_id="node" >}} hosting the {{< glossary_tooltip text="control plane" term_id="control-plane" >}}.
 
-<!--more-->
-The term is still being used by some provisioning tools, such as {{< glossary_tooltip text="kubeadm" term_id="kubeadm" >}}, and managed services, to {{< glossary_tooltip text="label" term_id="label" >}} {{< glossary_tooltip text="nodes" term_id="node" >}} with `kubernetes.io/role` and control placement of {{< glossary_tooltip text="control plane" term_id="control-plane" >}} {{< glossary_tooltip text="pods" term_id="pod" >}}.
+* master/master node
+  * == ⚠️legacy term ⚠️
+    * ALTHOUGH STILL used by some provisioning tools
+      * _Examples:_ [kubeadm](kubeadm.md), managed services
+      * -- to --
+        * label nodes -- with -- `kubernetes.io/role`
+        * control control plane pods location 
+  * := node / hosts the control plane

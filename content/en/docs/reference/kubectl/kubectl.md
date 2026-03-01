@@ -4,6 +4,8 @@ content_type: tool-reference
 weight: 30
 ---
 
+TODO: check vs [kubectl-cmds](kubectl-cmds.md)
+
 ## {{% heading "synopsis" %}}
 
 kubectl controls the Kubernetes cluster manager.

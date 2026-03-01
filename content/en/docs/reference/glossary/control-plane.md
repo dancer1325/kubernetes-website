@@ -31,4 +31,3 @@ tags:
   * containers
 
 * [master](master.md)
-  * := hosts / run control plane's components

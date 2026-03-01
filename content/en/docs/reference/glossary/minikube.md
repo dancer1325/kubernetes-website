@@ -10,10 +10,18 @@ tags:
 - fundamental
 - tool
 ---
- A tool for running Kubernetes locally.
 
-<!--more--> 
+- := lightweight Kubernetes implementation /
+  - creates a VM | your local machine
+  - deploys a 1-node cluster
+- AVAILABLE |
+  - Linux
+  - macOS
+  - Windows
+- CLI
+  - allows making cluster-operations
+    - start
+    - stop
+    - status
+    - delete
 
-Minikube runs an all-in-one or a multi-node local Kubernetes cluster inside a VM on your computer.
-You can use Minikube to
-[try Kubernetes in a learning environment](/docs/tasks/tools/#minikube).

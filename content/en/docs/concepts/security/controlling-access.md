@@ -7,6 +7,11 @@ content_type: concept
 weight: 50
 ---
 
+* goal
+  * how clients 
+    * can authenticate -- to the -- Kubernetes API server
+    * ' requests are authorized
+
 <!-- overview -->
 This page provides an overview of controlling access to the Kubernetes API.
 

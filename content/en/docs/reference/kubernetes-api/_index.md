@@ -9,4 +9,4 @@ card:
 
 <!-- overview -->
 
-{{< glossary_definition prepend="Kubernetes' API is" term_id="kubernetes-api" length="all" >}}
+* [Kubernetes API](../../reference/glossary/kubernetes-api.md)

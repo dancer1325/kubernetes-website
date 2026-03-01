@@ -8,7 +8,8 @@ aka:
 tags:
 - architecture
 ---
-Capabilities provided to one or more {{< glossary_tooltip text="nodes" term_id="node" >}} (CPU, memory, GPUs, etc), and made available for consumption by
+
+* Capabilities provided to one or more {{< glossary_tooltip text="nodes" term_id="node" >}} (CPU, memory, GPUs, etc), and made available for consumption by
 {{< glossary_tooltip text="Pods" term_id="pod" >}} running on those nodes.
 
 Kubernetes also uses the term _resource_ to describe an {{< glossary_tooltip text="API resource" term_id="api-resource" >}}.

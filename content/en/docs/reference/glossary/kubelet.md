@@ -14,11 +14,16 @@ tags:
   - runs | 👁️EACH cluster's node 👁
   - ensures that containers & pods are running & healthy
     - EXCEPTION: ⚠️containers / NOT created -- by -- Kubernetes⚠️
-  - acts as bridge between master node < - > rest of nodes
-  - TODO: fetches individual container statistics from the [`Container Runtime`](Kubernetes%20Components%20cc7b751f553341049dd7c054085c18f7.md) — via — Container Runtime Interface
-      - if you use a CR / uses Linux cgroups & namespaces to implement containers + CR does NOT publish usage statistics → kubelet can look up the statistics directly via [cAdvisor](../../Reference/Glossary/Tool%20d2e30e74acaf4ac094ae1ae0be053a2d.md)
+  - acts as bridge BETWEEN master node & rest of nodes
+  - fetches individual container statistics — , via CRI, from the -- [`Container Runtime`](container-runtime.md) 
+    - if you use a CR / implement containers using Linux cgroups & namespaces + CR does NOT publish usage statistics → kubelet can look up the statistics -- via -- [cAdvisor](cadvisor.md)
 
-It can register the node with the apiserver using one of: the hostname; a flag to
+      **Note1:** 🧠 described via PodSpecs 🧠
+      **Note2:** 👀 just containers created by Kubernetes (Not others created directly by Docker or whatever CRI ) 👀
+      - communicate [Node](Fundamental%201b539731819447e9bb29496daac805c8.md) with [Control Plane](Fundamental%201b539731819447e9bb29496daac805c8.md)
+        **Note:** 👀 via [Kubernetes API](../../Concepts/Overview/The%20Kubernetes%20API%2097bf23415fa241baa9be88dd9cf9f617.md) 👀
+
+TODO: It can register the node with the apiserver using one of: the hostname; a flag to
 override the hostname; or specific logic for a cloud provider.
 
 The kubelet works in terms of a PodSpec. A PodSpec is a YAML or JSON object

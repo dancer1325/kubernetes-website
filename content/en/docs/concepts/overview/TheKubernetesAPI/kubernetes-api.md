@@ -12,15 +12,10 @@ card:
   weight: 30
 ---
 
-<!-- overview -->
-
-The core of Kubernetes' {{< glossary_tooltip text="control plane" term_id="control-plane" >}}
-is the {{< glossary_tooltip text="API server" term_id="kube-apiserver" >}}. The API server
-exposes an HTTP API that lets end users, different parts of your cluster, and
-external components communicate with one another.
-
-The Kubernetes API lets you query and manipulate the state of API objects in Kubernetes
-(for example: Pods, Namespaces, ConfigMaps, and Events).
+* see
+  * [control plane](../../../reference/glossary/control-plane.md)
+  * [kube-apiserver](../../../reference/glossary/kube-apiserver.md)
+  * [Kubernetes API](../../../reference/glossary/kubernetes-api.md)
 
 Most operations can be performed through the [kubectl](/docs/reference/kubectl/)
 command-line interface or other command-line tools, such as

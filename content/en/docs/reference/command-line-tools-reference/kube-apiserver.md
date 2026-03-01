@@ -17,18 +17,19 @@ guide. You can file document formatting bugs against the
 [reference-docs](https://github.com/kubernetes-sigs/reference-docs/) project.
 -->
 
+* 💡[source code](https://github.com/dancer1325/kubernetes/tree/master/cmd/kube-apiserver)💡
+* ⚠️this code is auto-generated⚠️ 
 
 ## {{% heading "synopsis" %}}
 
+```
+kube-apiserver [flags]
+```
 
 The Kubernetes API server validates and configures data
 for the api objects which include pods, services, replicationcontrollers, and
 others. The API Server services REST operations and provides the frontend to the
 cluster's shared state through which all other components interact.
-
-```
-kube-apiserver [flags]
-```
 
 ## {{% heading "options" %}}
 

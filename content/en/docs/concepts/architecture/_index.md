@@ -155,22 +155,23 @@ While the core components of Kubernetes remain consistent, the way they are depl
 managed can vary. Understanding these variations is crucial for designing and maintaining
 Kubernetes clusters that meet specific operational needs.
 
-### Control plane deployment options
+### ways to deploy the control plane components
 
-The control plane components can be deployed in several ways:
+* Traditional deployment
+  * Control plane components run directly | dedicated machines OR VMs (often managed -- as -- systemd services)
 
-Traditional deployment
-: Control plane components run directly on dedicated machines or VMs, often managed as systemd services.
+* Static Pods
+  * Control plane components are deployed -- as -- static Pods / 
+    * managed by the kubelet | specific nodes
+  * uses
+    * by tools
+      * _Example:_ kubeadm
 
-Static Pods
-: Control plane components are deployed as static Pods, managed by the kubelet on specific nodes.
-  This is a common approach used by tools like kubeadm.
-
-Self-hosted
+* Self-hosted
 : The control plane runs as Pods within the Kubernetes cluster itself, managed by Deployments
   and StatefulSets or other Kubernetes primitives.
 
-Managed Kubernetes services
+* Managed Kubernetes services
 : Cloud providers often abstract away the control plane, managing its components as part of their service offering.
 
 ### Workload placement considerations

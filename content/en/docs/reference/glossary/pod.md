@@ -21,3 +21,5 @@ tags:
       * if you want to run > 1 container == sidecar containers
         * _Example of use cases:_ logging
   * managed NORMALLY -- by a -- [deployment](deployment.md)
+
+![](/content/en/docs/images/pod.png)

@@ -13,27 +13,19 @@ card:
   title: Overview of API
 ---
 
-<!-- overview -->
-
-This section provides reference information for the Kubernetes API.
-
-The REST API is the fundamental fabric of Kubernetes. All operations and
-communications between components, and external user commands are REST API
-calls that the API Server handles. Consequently, everything in the Kubernetes
-platform is treated as an API object and has a corresponding entry in the
-[API](/docs/reference/generated/kubernetes-api/{{< param "version" >}}/).
-
-The [Kubernetes API reference](/docs/reference/generated/kubernetes-api/{{< param "version" >}}/)
-lists the API for Kubernetes version {{< param "version" >}}.
-
-For general background information, read
-[The Kubernetes API](/docs/concepts/overview/kubernetes-api/).
-[Controlling Access to the Kubernetes API](/docs/concepts/security/controlling-access/)
-describes how clients can authenticate to the Kubernetes API server, and how their
-requests are authorized.
-
+* goal
+  * Kubernetes API
 
 ## API versioning
+
+- multiple are supported
+    - different API path / each version
+    *Example:* `/api/v1`, `/apis/rbac.authorization.k8s.io/v1alpha1`, …
+    - ⚠️ if your objects are using a version ⚠️
+        - in deprecation period → transition to the stable one
+        - already no served → forced to replace to the new API version
+- done | API-level
+**Note:** ⚠️ not done at resource-level or field-level ⚠️
 
 The JSON and Protobuf serialization schemas follow the same guidelines for
 schema changes. The following descriptions cover both formats.
@@ -86,10 +78,12 @@ Here's a summary of each level:
   - Stable API versions remain available for all future releases within a Kubernetes major version,
     and there are no current plans for a major version revision of Kubernetes that removes stable APIs.
 
-## API groups
+## [API groups](https://git.k8s.io/design-proposals-archive/api-machinery/api-group.md)
 
-[API groups](https://git.k8s.io/design-proposals-archive/api-machinery/api-group.md)
-make it easier to extend the Kubernetes API.
+* allows
+  * extend easily the Kubernetes API
+* can be enabled OR disabled
+
 The API group is specified in a REST path and in the `apiVersion` field of a
 serialized object.
 
