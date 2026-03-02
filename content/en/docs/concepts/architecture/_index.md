@@ -8,7 +8,8 @@ description: >
 * [Kubernetes cluster](.././../reference/glossary/cluster.md)
 * [Kubernetes components](../overview/Kubernetes%20Components/components.md)
 
-The control plane manages the worker nodes and the Pods in the cluster. In production
+The control plane manages the worker nodes and the Pods in the cluster
+In production
 environments, the control plane usually runs across multiple computers and a cluster
 usually runs multiple nodes, providing fault-tolerance and high availability.
 
@@ -54,37 +55,11 @@ for an example control plane setup that runs across multiple machines.
 
 ### kube-controller-manager
 
-{{< glossary_definition term_id="kube-controller-manager" length="all" >}}
-
-There are many different types of controllers. Some examples of them are:
-
-- Node controller: Responsible for noticing and responding when nodes go down.
-- Job controller: Watches for Job objects that represent one-off tasks, then creates Pods to run those tasks to completion.
-- EndpointSlice controller: Populates EndpointSlice objects (to provide a link between Services and Pods).
-- ServiceAccount controller: Create default ServiceAccounts for new namespaces.
-
-The above is not an exhaustive list.
+* [here](../../reference/glossary/kube-controller-manager.md)
 
 ### cloud-controller-manager
 
-{{< glossary_definition term_id="cloud-controller-manager" length="short" >}}
-
-The cloud-controller-manager only runs controllers that are specific to your cloud provider.
-If you are running Kubernetes on your own premises, or in a learning environment inside your
-own PC, the cluster does not have a cloud controller manager.
-
-As with the kube-controller-manager, the cloud-controller-manager combines several logically
-independent control loops into a single binary that you run as a single process. You can scale
-horizontally (run more than one copy) to improve performance or to help tolerate failures.
-
-The following controllers can have cloud provider dependencies:
-
-- Node controller: For checking the cloud provider to determine if a node has been
-  deleted in the cloud after it stops responding
-- Route controller: For setting up routes in the underlying cloud infrastructure
-- Service controller: For creating, updating and deleting cloud provider load balancers
-
----
+* [here](../../reference/glossary/cloud-controller-manager.md)
 
 ## Node components
 

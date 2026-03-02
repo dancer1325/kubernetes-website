@@ -30,9 +30,9 @@ tags:
 
 - types of controllers
   - Node controller
-    - if nodes go down → notice & replies
+    - if nodes go down → notice & respond
   - Job controller
-    - watches job objects
+    - watches [job](job.md) objects
   - EndpointSlice controller
     - populates [EndpointSlices](endpoint-slice.md)
   - ServiceAccount controller

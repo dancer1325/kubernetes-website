@@ -7,6 +7,4 @@ card:
   weight: 40
 ---
 
-<!-- overview -->
-
 * [Kubernetes API](../../reference/glossary/kubernetes-api.md)

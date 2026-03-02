@@ -29,11 +29,9 @@ card:
 
 * [kube-scheduler](../../architecture/_index.md#kube-scheduler)
 
-[kube-controller-manager](/docs/concepts/architecture/#kube-controller-manager)
-: Runs {{< glossary_tooltip text="controllers" term_id="controller" >}} to implement Kubernetes API behavior.
+* [kube-controller-manager](../../architecture/_index.md#kube-controller-manager)
 
-[cloud-controller-manager](/docs/concepts/architecture/#cloud-controller-manager) (optional)
-: Integrates with underlying cloud provider(s).
+* [cloud-controller-manager](../../architecture/_index.md#cloud-controller-manager)
 
 ### Node Components
 

@@ -10,10 +10,13 @@ tags:
 - fundamental
 ---
 
-A {{< glossary_tooltip text="pod" term_id="pod" >}} managed directly by the {{< glossary_tooltip text="kubelet" term_id="kubelet" >}}
- daemon on a specific node,
-<!--more-->
-
-without the API server observing it.
-
-Static Pods do not support {{< glossary_tooltip text="ephemeral containers" term_id="ephemeral-container" >}}.
+* static pod
+  * == pod / ⚠️managed directly -- by the -- [kubelet](kubelet.md) daemon | specific node⚠️  
+    * -> ⚠️ALWAYS bound -- to -- 1 Kubelet | specific node⚠️
+    * WITHOUT being observed -- by the -- API server
+    * if the kubelet finds a static pod | its configuration -> AUTOMATICALLY tries to create a Pod object | Kubernetes API server
+      * -> visible | API server
+        * ❌BUT NOT controller | API server❌
+  * ❌NOT support [ephemeral containers](ephemeral-container.md)❌
+  * vs non-static pods
+    * pods are managed -- by the -- [control plane](control-plane.md)

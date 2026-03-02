@@ -14,7 +14,7 @@ tags:
 * API resource
   * := entity | Kubernetes / 👀correspond -- to a -- Kubernetes API's endpoint👀
     * can represent
-      * objects
+      * [objects](object.md)
         * _ExampleS:_ 
           * /api/v1/<resource-type>
           * /api/v1/namespaces/<namespace>/<resource-type>
