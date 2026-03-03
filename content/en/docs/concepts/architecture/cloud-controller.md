@@ -35,11 +35,12 @@ You can also run the cloud controller manager as a Kubernetes
 of the control plane.
 {{< /note >}}
 
-## Cloud controller manager functions {#functions-of-the-ccm}
-
-The controllers inside the cloud controller manager include:
+## controllers | cloud controller manager {#functions-of-the-ccm}
 
 ### Node controller
+
+For checking the cloud provider to determine if a node has been
+deleted in the cloud after it stops responding
 
 The node controller is responsible for updating {{< glossary_tooltip text="Node" term_id="node" >}} objects
 when new servers are created in your cloud infrastructure. The node controller obtains information about the
@@ -57,8 +58,11 @@ hosts running inside your tenancy with the cloud provider. The node controller p
 Some cloud provider implementations split this into a node controller and a separate node
 lifecycle controller.
 
+- if a node has stopped responding === been deleted → cloud provider can check it
+
 ### Route controller
 
+For setting up routes in the underlying cloud infrastructure
 The route controller is responsible for configuring routes in the cloud
 appropriately so that containers on different nodes in your Kubernetes
 cluster can communicate with each other.
@@ -66,13 +70,18 @@ cluster can communicate with each other.
 Depending on the cloud provider, the route controller might also allocate blocks
 of IP addresses for the Pod network.
 
+- set up routes in the cloud infrastructure
+
 ### Service controller
 
+For creating, updating and deleting cloud provider load balancers
 {{< glossary_tooltip text="Services" term_id="service" >}} integrate with cloud
 infrastructure components such as managed load balancers, IP addresses, network
 packet filtering, and target health checking. The service controller interacts with your
 cloud provider's APIs to set up load balancers and other infrastructure components
 when you declare a Service resource that requires them.
+
+- CRUD operations with cloud provider load balancers
 
 ## Authorization
 

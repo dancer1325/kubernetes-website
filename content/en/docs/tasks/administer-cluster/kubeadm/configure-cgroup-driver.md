@@ -4,17 +4,14 @@ content_type: task
 weight: 50
 ---
 
-<!-- overview -->
+* goal
+  * | EXISTING kubeadm managed clusters,
+    * how to migrate -- to the -- `systemd` cgroup driver
+    * kubelet's cgroup driver == kubelet's CR's cgroup driver
 
-This page explains how to configure the kubelet's cgroup driver to match the container
-runtime cgroup driver for kubeadm clusters.
+## prerequisites
 
-## {{% heading "prerequisites" %}}
-
-You should be familiar with the Kubernetes
-[container runtime requirements](/docs/setup/production-environment/container-runtimes).
-
-<!-- steps -->
+* [cgroup & cgroup drivers](../../../reference/glossary/cgroup.md)
 
 ## Configuring the container runtime cgroup driver
 

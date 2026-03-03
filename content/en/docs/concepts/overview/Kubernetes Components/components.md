@@ -24,27 +24,19 @@ card:
 ### Control Plane Components
 
 * [kube-apiserver](../../architecture/_index.md#kube-apiserver)
-
 * [etcd](../../architecture/_index.md#etcd)
-
 * [kube-scheduler](../../architecture/_index.md#kube-scheduler)
-
 * [kube-controller-manager](../../architecture/_index.md#kube-controller-manager)
-
 * [cloud-controller-manager](../../architecture/_index.md#cloud-controller-manager)
+  * OPTIONAL
 
 ### Node Components
 
-Run on every node, maintaining running pods and providing the Kubernetes runtime environment:
+* [kubelet](../../architecture/_index.md#kubelet)
+* [kube-proxy](../../architecture/_index.md#kube-proxy-kube-proxy)
+  * OPTIONAL
+* [container runtime](../../architecture/_index.md#container-runtime)
 
-[kubelet](/docs/concepts/architecture/#kubelet)
-
-[kube-proxy](/docs/concepts/architecture/#kube-proxy) (optional)
-: Maintains network rules on nodes to implement {{< glossary_tooltip text="Services" term_id="service" >}}.
-
-[Container runtime](/docs/concepts/architecture/#container-runtime)
-: Software responsible for running containers. Read
-  [Container Runtimes](/docs/setup/production-environment/container-runtimes/) to learn more.
 
 {{% thirdparty-content single="true" %}}
 
@@ -67,11 +59,9 @@ Addons extend the functionality of Kubernetes. A few important examples include:
 [Cluster-level Logging](/docs/concepts/architecture/#cluster-level-logging)
 : For saving container logs to a central log store.
 
-## Flexibility in Architecture
+## Flexibility | Architecture
 
-Kubernetes allows for flexibility in how these components are deployed and managed.
-The architecture can be adapted to various needs, from small development environments
-to large-scale production deployments.
+* flexibility | deploy & manage these components
+  * _Example:_ [small development environments, large-scale production deployments]
 
-For more detailed information about each component and various ways to configure your
-cluster architecture, see the [Cluster Architecture](/docs/concepts/architecture/) page.
+* [here](../../architecture/_index.md#architecture-variations)

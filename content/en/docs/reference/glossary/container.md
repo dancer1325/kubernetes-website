@@ -23,6 +23,9 @@ tags:
         * scaling
   * allows
     * bundle & run your applications
+  * == OS-level virtualization
+  * vs virtual machines (VMs)
+    * avoid overhead | start & maintain
 
 * containerized applications
   * == applications / run | containers 

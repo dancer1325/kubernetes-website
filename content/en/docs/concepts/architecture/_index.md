@@ -63,22 +63,25 @@ for an example control plane setup that runs across multiple machines.
 
 ## Node components
 
-Node components run on every node, maintaining running pods and providing the Kubernetes runtime environment.
+* run | EVERY node
 
 ### kubelet
 
 * [here](../../reference/glossary/kubelet.md)
 
-### kube-proxy (optional) {#kube-proxy}
+### kube-proxy {#kube-proxy}
 
-{{< glossary_definition term_id="kube-proxy" length="all" >}}
+* [here](../../reference/glossary/kube-proxy.md)
+
+TODO:
 If you use a [network plugin](#network-plugins) that implements packet forwarding for Services
 by itself, and providing equivalent behavior to kube-proxy, then you do not need to run
 kube-proxy on the nodes in your cluster.
 
 ### Container runtime
 
-{{< glossary_definition term_id="container-runtime" length="all" >}}
+* [here](../../reference/glossary/container-runtime.md)
+* [here](../../setup/production-environment/container%20runtimes)
 
 ## Addons
 
@@ -118,7 +121,7 @@ for saving container logs to a central log store with a search/browsing interfac
 
 ### Network plugins
 
-[Network plugins](/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins)
+[Network plugins](../../concepts/extend-kubernetes/compute-storage-net/network-plugins)
 are software components that implement the container network interface (CNI) specification.
 They are responsible for allocating IP addresses to pods and enabling them to communicate
 with each other within the cluster.

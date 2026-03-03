@@ -60,7 +60,7 @@ no_list: true
       - rebuilding the image
       - exposing secrets
   - Automatic bin packing
-    - Containers are placed automatically based on
+    - TODO: Containers are placed automatically based on
       **Note:** without sacrificing availability
       - resource requirements &
       - other constraints
@@ -80,9 +80,7 @@ no_list: true
       - Pods &
       - Services
     - [**IPv4/IPv6 dual-stack**](Kubernetes/Documentation/Concepts/Services,%20Load%20Balancing%20and%20Networking/IPv4%20IPv6%20dual-stack%20d9b71fc134c84c4bbae1a430fc1d5f77.md)
-  - Designed for extensibility
-    - ⚠️ Features can be added to your Kubernetes cluster ⚠️
-    - [Extending Kubernetes](Kubernetes/Documentation/Concepts/Extending%20Kubernetes%20465ae404131c433295cee5c74cf656d9.md)
+  - [extendable](../extend-kubernetes)
 
 Kubernetes provides you with:
 

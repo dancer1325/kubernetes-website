@@ -15,14 +15,29 @@ content_type: concept
 no_list: true
 ---
 
-<!-- overview -->
+* goal
+  * how to customize a Kubernetes cluster
 
-Kubernetes is highly configurable and extensible. As a result, there is rarely a need to fork or
-submit patches to the Kubernetes project code.
+* Kubernetes
+  * HIGHLY configurable & extensible
+    * -> rare need to 
+      * fork OR
+      * submit patches
 
-This guide describes the options for customizing a Kubernetes cluster. It is aimed at
+TODO:
+- extensible
+  - plugin architecture
+    - way to extend it’s functionality via
+      - controllers
+      - operators
+      - …
+  - define custom resources
+  - extensions to the API
+
+* It is aimed at
 {{< glossary_tooltip text="cluster operators" term_id="cluster-operator" >}} who want to understand
-how to adapt their Kubernetes cluster to the needs of their work environment. Developers who are
+how to adapt their Kubernetes cluster to the needs of their work environment
+* Developers who are
 prospective {{< glossary_tooltip text="Platform Developers" term_id="platform-developer" >}} or
 Kubernetes Project {{< glossary_tooltip text="Contributors" term_id="contributor" >}} will also
 find it useful as an introduction to what extension points and patterns exist, and their
@@ -33,7 +48,7 @@ involves changing command line arguments, local configuration files, or API reso
 which involve running additional programs, additional network services, or both.
 This document is primarily about _extensions_.
 
-<!-- body -->
+- ⚠️ Features can be added to your Kubernetes cluster ⚠️
 
 ## Configuration
 
@@ -298,6 +313,14 @@ For plugin configuration details, see
 [Configure a kubelet image credential provider](/docs/tasks/administer-cluster/kubelet-credential-provider/).
 
 ## Scheduling extensions
+
+- [Scheduling](Scheduling,%20Preemption%20and%20Eviction%2011a13fe1aaf54bcfa09ecf21179846c1.md) extensions
+  - [Schedulers](Scheduling,%20Preemption%20and%20Eviction/Kubernetes%20Scheduler%2028b495fc09a54694a371e5c85524eb1e.md)
+  - == webhook which permits a remote HTTP backend
+    **Note:** 👁️ Check [textProposal](https://github.com/kubernetes/design-proposals-archive/blob/main/scheduling/scheduler_extender.md) 👁️
+  - available configurations
+    - [Scheduling plugins](../Reference/Scheduling/Scheduler%20Configuration%207400516594184fb4b4ff406c9642a662.md)
+    - [Scheduling Profile](../Reference/Scheduling/Scheduler%20Configuration%207400516594184fb4b4ff406c9642a662.md)
 
 The scheduler is a special type of controller that watches pods, and assigns
 pods to nodes. The default scheduler can be replaced entirely, while

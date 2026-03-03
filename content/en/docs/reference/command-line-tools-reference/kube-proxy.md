@@ -17,6 +17,8 @@ guide. You can file document formatting bugs against the
 [reference-docs](https://github.com/kubernetes-sigs/reference-docs/) project.
 -->
 
+* 💡[source code](https://github.com/dancer1325/kubernetes/tree/master/cmd/kube-proxy)💡
+* ⚠️this code is auto-generated⚠️
 
 ## {{% heading "synopsis" %}}
 

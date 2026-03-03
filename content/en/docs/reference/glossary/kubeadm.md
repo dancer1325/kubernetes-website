@@ -12,6 +12,11 @@ tags:
 ---
 
 - == CL tool /
-  - allows, quickly
+  - allows, 👀quickly👀
     - installing Kubernetes
     - setting up a secure cluster
+  - ONLY care
+    - bootstrapping
+  - ❌NOT care about == out of the scope❌
+    - provision machines
+    - install addons OR monitoring solutions

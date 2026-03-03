@@ -18,6 +18,12 @@ tags:
   * types
     * [control plane / master node](control-plane.md)
     * worker node
+  * 👀contains👀
+    * [kubelet](kubelet.md)
+    * [kube-proxy](kube-proxy.md)
+      * OPTIONAL
+    * container runtime / implement the [CRI](cri.md)
+      * _Example:_ [docker](docker.md)
 
 * worker node
   * types 
@@ -31,11 +37,5 @@ tags:
 
 * daemons
   * := OS services
-  * | node
-    * 👀include👀
-      * [kubelet](kubelet.md)
-      * [kube-proxy](kube-proxy.md)
-      * container runtime / implement the [CRI](cri.md)
-        * _Example:_ [docker](docker.md)
 
 ![Untitled](/static/images/docs/node.png)

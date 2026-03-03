@@ -11,6 +11,7 @@ sitemap:
   - == 💡container orchestrator💡
     - production-grade
     - open-source
+      - by CNCF
     - allows, about containerized applications,
       - automatic deployments
         - _Example:_ canary
@@ -23,7 +24,8 @@ sitemap:
   - k8s
     - 8
       - 8 letters BETWEEN “k” -- & -- “s” | “kubernetes”
-  - 👀[origin: Google](https://queue.acm.org/detail.cfm?id=2898444)👀
+  - 👀[Borg: origin | Google](blog/_posts/2015/borg-predecessor-to-kubernetes.md)👀
+    - 2014
   - 👀characteristics👀
     - planet scale
       - === can scale WITHOUT increasing your DevOps team
@@ -31,7 +33,7 @@ sitemap:
     - never outgrow
       - Reason: 🧠flexible growing🧠
       - _Example:_ [small startups / 3-5 nodes, big companies / run 1xx nodes]
-    - run K8s | ANYWHERE (on-premises, hybrid, cloud, ..., any OS, ...)
+    - can run | ANYWHERE (on-premises, hybrid, cloud, ..., any OS, ...)
   - [features](docs/concepts/overview/_index.md)
 
 - containers

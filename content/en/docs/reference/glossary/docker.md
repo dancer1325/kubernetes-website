@@ -9,8 +9,12 @@ aka:
 tags:
 - fundamental
 ---
-Docker (specifically, Docker Engine) is a software technology providing operating-system-level virtualization also known as {{< glossary_tooltip text="containers" term_id="container" >}}.
 
-<!--more-->
-
-Docker uses the resource isolation features of the Linux kernel such as cgroups and kernel namespaces, and a union-capable file system such as OverlayFS and others to allow independent containers to run within a single Linux instance, avoiding the overhead of starting and maintaining virtual machines (VMs).
+- Docker (specifically, Docker Engine)
+  - == software technology
+  - provide 
+    - containers
+  - let run independent containers | 1! Linux instance 
+    - thanks -- to -- Linux kernel's
+      - resource isolation features (_Examples:_ cgroups & kernel namespaces)
+      - union-capable file system (_Examples:_ OverlayFS)

@@ -9,10 +9,16 @@ aka:
 tags:
 - tool
 ---
- A container runtime with an emphasis on simplicity, robustness and portability
 
-<!--more-->
-
-containerd is a {{< glossary_tooltip text="container" term_id="container" >}} runtime
-that runs as a daemon on Linux or Windows. containerd takes care of fetching and
-storing container images, executing containers, providing network access, and more.
+* == container runtime /
+  * 's design:
+    * simplicity
+    * robustness
+    * portability
+  * runs -- as a -- daemon | Linux OR Windows
+    * ❌NOT POSSIBLE | MAC ❌   
+  * responsible for
+    * fetching and storing container images
+    * executing containers
+    * providing network access
+    * ... 

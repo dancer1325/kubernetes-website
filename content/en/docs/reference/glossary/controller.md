@@ -26,7 +26,7 @@ tags:
 
 * ALL controllers
   * are compiled | 1! binary
-  * run | 1! process
+  * ⚠️run -- as -- 1! process⚠️
 
 - types of controllers
   - Node controller

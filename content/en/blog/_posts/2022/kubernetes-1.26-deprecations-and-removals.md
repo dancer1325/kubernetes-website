@@ -19,7 +19,7 @@ The Kubernetes project has a [well-documented deprecation policy](/docs/referenc
 
 Whether an API is removed as a result of a feature graduating from beta to stable or because that API simply did not succeed, all removals comply with this deprecation policy. Whenever an API is removed, migration options are communicated in the documentation.
 
-## A note about the removal of the CRI `v1alpha2` API and containerd 1.5 support {#cri-api-removal}
+## remove of CRI `v1alpha2` API & containerd 1.5 support {#cri-api-removal}
 
 Following the adoption of the [Container Runtime Interface](/docs/concepts/architecture/cri/) (CRI) and the [removal of dockershim] in v1.24 , the CRI is the supported and documented way through which Kubernetes interacts with different container runtimes. Each kubelet negotiates which version of CRI to use with the container runtime on that node.
 

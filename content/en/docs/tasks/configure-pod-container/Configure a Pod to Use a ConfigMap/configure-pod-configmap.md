@@ -237,6 +237,19 @@ allow.textmode=true
 how.nice.to.look=fairlyNice
 ```
 
+- Env-files
+  - := files which contain a list of environment variables
+  - `variableName1=variableValue1
+
+  variableName2=variableValue2`
+    `#Commentary`
+    `…`
+        - syntax
+            - 👀 blank lines are ignored 👀
+            - `“QuotationMarksAreNotHandledSpecial”`
+            `'QuotationMarksAreNotHandledSpecial'`
+  ``QuotationMarksAreNotHandledSpecial``
+
 Use the option `--from-env-file` to create a ConfigMap from an env-file, for example:
 
 ```shell

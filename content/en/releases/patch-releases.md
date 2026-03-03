@@ -3,8 +3,6 @@ title: Patch Releases
 type: docs
 ---
 
-Schedule and team contact information for Kubernetes patch releases.
-
 For general information about Kubernetes release cycle, see the
 [release process description].
 
