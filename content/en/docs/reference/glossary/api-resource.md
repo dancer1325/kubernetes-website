@@ -12,7 +12,7 @@ tags:
 ---
 
 * API resource
-  * := entity | Kubernetes / 👀correspond -- to a -- Kubernetes API's endpoint👀
+  * := Kubernetes entity / 👀correspond -- to a -- Kubernetes API's endpoint👀
     * can represent
       * [objects](object.md)
         * _ExampleS:_ 

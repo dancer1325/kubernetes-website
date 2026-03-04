@@ -16,3 +16,5 @@ tags:
     - manages, about containers,
       - execution
       - lifecycle
+    - 1 is configured by default | ANY Kubernetes cluster
+  - if you need to use >1 CR | Kubernetes cluster -> specify [RuntimeClass](../../concepts/containers/runtime-class.md)

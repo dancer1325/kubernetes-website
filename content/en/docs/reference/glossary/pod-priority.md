@@ -9,8 +9,11 @@ aka:
 tags:
 - operation
 ---
- Pod Priority indicates the importance of a {{< glossary_tooltip term_id="pod" >}} relative to other Pods.
 
-<!--more-->
-
-[Pod Priority](/docs/concepts/scheduling-eviction/pod-priority-preemption/#pod-priority) gives the ability to set scheduling priority of a Pod to be higher and lower than other Pods — an important feature for production clusters workload.
+* Pod Priority
+  * == pod's importance vs other pods
+  * uses
+    * set pod's scheduling priority
+  * use cases
+    * production clusters workload
+  * [MORE](../../concepts/scheduling-eviction/pod-priority-preemption.md#pod-priority)  

@@ -9,9 +9,10 @@ short_description: >
 tags:
 - tool
 ---
-A check that the {{< glossary_tooltip text="kubelet" term_id="kubelet" >}} periodically performs against a container that is 
-running in a pod, that will define container's state and health and informing container's lifecycle.
 
-<!--more-->
- 
-To learn more, read [container probes](/docs/concepts/workloads/pods/pod-lifecycle/#container-probes).
+- := diagnostic performed PERIODICALLY
+  - ️by [kubelet](kubelet.md)
+  - -- against -- a container / running | a pod, to check
+    - container's state
+    - container's health
+  - [MORE](../../concepts/workloads/pods/pod-lifecycle.md#container-probes)

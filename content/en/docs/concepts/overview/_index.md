@@ -109,16 +109,24 @@ Kubernetes provides you with:
 
 ## What Kubernetes is not
 
-* Kubernetes
-  * != PaaS (Platform as a Service) system
+* != PaaS (Platform as a Service) system
     * traditional
     * all-inclusive 
-    Since Kubernetes operates at the container level rather than at the hardware level,
-    it provides some generally applicable features common to PaaS offerings, such as
-    deployment, scaling, load balancing, and lets users integrate their logging, monitoring,
-    and alerting solutions. However, Kubernetes is not monolithic, and these default solutions
+
+TODO: 
+However, Kubernetes is not monolithic, and these default solutions
     are optional and pluggable. Kubernetes provides the building blocks for building developer
     platforms, but preserves user choice and flexibility where it is important.
+
+- != ❌all-inclusive PaaS❌
+  - 👀ALTHOUGH provide SOME PaaS' feature👀
+    - Reason:🧠Kubernetes 
+      - operates | container level
+      - NOT operate | hardware level🧠
+    - _Examples:_ deployment, scaling, load balancing, integrate with logging + monitoring + alerting solutions
+  - no PaaS features
+    - ≠ monolithic
+      - === [Extending Kubernetes](Extending%20Kubernetes%20465ae404131c433295cee5c74cf656d9.md)
 
 Kubernetes:
 
@@ -146,45 +154,78 @@ Kubernetes:
   It shouldn't matter how you get from A to C. Centralized control is also not required. This
   results in a system that is easier to use and more powerful, robust, resilient, and extensible.
 
+- Kubernetes
+  - allows
+    - running distributed systems resiliently
+      - scaling
+      - failover
+  - [features](../../../Kubernetes%208bb068da389f426783032ff97a9bb3af.md)
+
+
+
+- ⚠️ Kubernetes does **NOT** ⚠️
+  - limit the types of supported applications
+    *Example:* variety of [Workloads](Workloads%207f133c71ced8439a97de8ca6b4c88026.md)
+  - deploy source code
+  - build your application
+  - provide application-level services
+    *Example:* middleware, databases, …
+  - dictate logging / monitoring / alerting
+    **Note:** 👁️ provide some integrations as proof of concepts 👁️
+  - mandate a configuration language-system
+    **Note:** 👁️ Kubernetes API can be targeted by many declarative specifications 👁️
+  - provide / adopt systems of
+    - maintenance
+    - management
+    - self-healing
+  - merely an orchestration system
+    - orchestrator
+      - := executor of a defined workflow
+    - control processes to drive from current state → desired state
+
 ## Historical context for Kubernetes {#going-back-in-time}
 
-Let's take a look at why Kubernetes is so useful by going back in time.
+![Deployment evolution](/static/images/docs/Container_Evolution.svg)
 
-![Deployment evolution](/images/docs/Container_Evolution.svg)
+### Traditional deployment era
 
-**Traditional deployment era:**
+- applications running | physical servers
+- problems
+  - ❌NO way to define applications' resource boundaries❌
+    - -> resource allocation issues
+    - _Example1:_ if >1 applications run | SAME physical server → some instances could take most of the resources → others would underperform
+      - _Attempt1:_ 1 application / physical server → 
+        - DIFFICULT to scale resources (expensive, maintenance)
+        - underuse resources
+      - _Solution1:_ virtualization
 
-Early on, organizations ran applications on physical servers. There was no way to define
-resource boundaries for applications in a physical server, and this caused resource
-allocation issues. For example, if multiple applications run on a physical server, there
-can be instances where one application would take up most of the resources, and as a result,
-the other applications would underperform. A solution for this would be to run each application
-on a different physical server. But this did not scale as resources were underutilized, and it
-was expensive for organizations to maintain many physical servers.
+### Virtualized deployment era
 
-**Virtualized deployment era:**
+- VM
+  - := FULL machine
+    - == run ALL components (⚠️even own OS⚠️) | virtual hardware
 
-As a solution, virtualization was introduced. It allows you
-to run multiple Virtual Machines (VMs) on a single physical server's CPU. Virtualization
-allows applications to be isolated between VMs and provides a level of security as the
-information of one application cannot be freely accessed by another application.
+- virtualization
+  - allows
+    - set of physical resources == cluster of VM
+    - MULTIPLE VM / 1 physical server
+    - 👀VM1’s applicationX — is isolated from — VM2’s applicationY👀
+      - -> application1’s information — can NOT be FREELY accessed by — application2’s information
+    - better
+      - use of physical server's resources 
+        - == reduce hardware costs
+        - set of physical resources — are presented as a — cluster of VM
+      - scalability
+        - Reason:🧠an application can be added OR updated EASILY🧠
+  - cons
+    - ❌NOT portable❌
+      - Reason:🧠coupled -- , due to Hypervisor, to the -- underlying infrastructure🧠
+        - _ExampleS:_ 
+          - AWS hypervisor: Xen
+          - Azure hypervisor: Hyper-V
+          - ...
 
-Virtualization allows better utilization of resources in a physical server and allows
-better scalability because an application can be added or updated easily, reduces
-hardware costs, and much more. With virtualization you can present a set of physical
-resources as a cluster of disposable virtual machines.
-
-Each VM is a full machine running all the components, including its own operating
-system, on top of the virtualized hardware.
-
-**Container deployment era:**
-
-Containers are similar to VMs, but they have relaxed
-isolation properties to share the Operating System (OS) among the applications.
-Therefore, containers are considered lightweight. Similar to a VM, a container
-has its own filesystem, share of CPU, memory, process space, and more. As they
-are decoupled from the underlying infrastructure, they are portable across clouds
-and OS distributions.
+### Container deployment era
 
 Containers have become popular because they provide extra benefits, such as:
 
@@ -210,6 +251,21 @@ Containers have become popular because they provide extra benefits, such as:
 * Resource isolation: predictable application performance.
 * Resource utilization: high efficiency and density.
 
+- Container deployment era
+    - agile application creation and deployment
+      **Note:** vs VM
+    - CD / CI / Continuous Deployment
+    - Dev vs Ops separation
+    - Observability
+      - OS-level information
+      - application-level information
+    - [portable](../../Documentation%202e1fbf09afca4abca8f42170786a36be.md)
+    - application-centric management
+      **Reason:** 🧠 VM’s focus is to run an OS  — vs — Container’s focus is to run an application on an OS 🧠
+  - in a production environment, you need to
+    **Note:** 👁️ an alternative is to use Kubernetes 👁️
+    - manage the containers which run
+    - ensure no downtime
 
 ## {{% heading "whatsnext" %}}
 

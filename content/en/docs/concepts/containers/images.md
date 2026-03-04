@@ -8,16 +8,8 @@ weight: 10
 hide_summary: true # Listed separately in section index
 ---
 
-<!-- overview -->
-
-A container image represents binary data that encapsulates an application and all its
-software dependencies. Container images are executable software bundles that can run
-standalone and that make very well-defined assumptions about their runtime environment.
-
-You typically create a container image of your application and push it to a registry
-before referring to it in a {{< glossary_tooltip text="Pod" term_id="pod" >}}.
-
-This page provides an outline of the container image concept.
+* goal
+  * container image
 
 {{< note >}}
 If you are looking for the container images for a Kubernetes
@@ -26,6 +18,16 @@ visit [Download Kubernetes](https://kubernetes.io/releases/download/).
 {{< /note >}}
 
 <!-- body -->
+
+- := Software package ready-to-run
+  - contains
+    - code &
+    - any required runtime
+  - intended to be
+    - stateless
+    - immutable
+      **Note:** 👁️ := if code runs in a container → it shouldn’t be changed 👁️
+      **Note2:** 👁️ if you want to make changes → build a new image and recreate the container with the updated image 👁️
 
 ## Image names
 

@@ -257,6 +257,22 @@ privileged container might be able to use the `CAP_SYS_ADMIN` and
 `CAP_NET_ADMIN` capabilities on the node, bypassing the runtime seccomp
 configuration and other restrictions.
 
+- Privileged mode
+  - valid for
+    - any container in a pod
+  - allows
+    - using OS’s administrative capabilities
+      - manipulate the network stack
+      - access hardware devices
+      - …
+  - available for
+    - Windows
+      - [`PodSpec.securityContext.windowsOptions.hostProcess`](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#podspec-v1-core)
+        - configured for 👁️ all containers in the pod 👁️
+        - run directly on the host
+    - Linux
+      - [`Container.securityContext.privileged`](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#container-v1-core)
+
 In most cases, you should avoid using privileged containers, and instead grant
 the specific capabilities required by your container using the `capabilities`
 field in the `securityContext` field. Only use privileged mode if you have a
