@@ -11,9 +11,7 @@ tags:
 - architecture
 - extension
 ---
- A family of API kinds for modeling service networking in Kubernetes.
 
-<!--more--> 
-
-Gateway API provides a family of extensible, role-oriented, protocol-aware
-API kinds for modeling service networking in Kubernetes.
+* == family of API kinds /
+  * allows
+    * modeling (extend, role-oriented, protocol-aware) service networking

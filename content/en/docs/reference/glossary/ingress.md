@@ -19,5 +19,3 @@ tags:
       * load balancing,
       * SSL termination
       * name-based virtual hosting
-
-<!--more--> 

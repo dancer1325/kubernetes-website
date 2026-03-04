@@ -26,86 +26,65 @@ no_list: true
   * == framework /
     * enable you, to
       * run DISTRIBUTED systems RESILIENTLY
-
-- Features
-  - Automated rollouts & rollbacks
-    - rolls out 
-      - := gradual changes of
-        - application
-        - configuration
-    - rollback
-      - 👀️if something goes wrong | rollout → AUTOMATIC rollback👀
-        - Reason: 🧠thanks to monitor application health /
-          - ensure NOT ALL instances are killed | same time🧠
-  - Service discovery & load balancing
-    - own IP address / pod
-    - 1! DNS / set of pods
-    - load balance ACROSS the pods
-    - service discovery provided natively
-      - == ❌NO need to use an unfamiliar service discovery mechanism❌
-  - Storage orchestration
-    - you choose the storage system / mount 
-      - local
-      - public cloud provider
-        - _Example:_ AWS, GCP
-      - network
-        - _Example:_ NFS, Cinder, Ceph, iSCSI
-  - Self-healing
-    - about
-      - if containers fail → restart
-      - if nodes die → replace / reschedule containers
-      - if containers do NOT respond to user-defined health-check → kill
-  - Secret and configuration management
-    - are updated/deployed WITHOUT
-      - rebuilding the image
-      - exposing secrets
-  - Automatic bin packing
-    - TODO: Containers are placed automatically based on
-      **Note:** without sacrificing availability
-      - resource requirements &
-      - other constraints
-    - [**Resource Management for Pods and Containers**](Kubernetes/Documentation/Concepts/Configuration/Resource%20Management%20for%20Pods%20and%20Containers%20dec00252d8ee41369f43063968c9d90d.md)
-  - Batch execution
-    - Batch and CI workloads
+  - Features
+    - Automated rollouts & rollbacks
+      - rolls out 
+        - := gradual changes of
+          - application
+          - configuration
+      - rollback
+        - 👀️if something goes wrong | rollout → AUTOMATIC rollback👀
+          - Reason: 🧠thanks to monitor application health /
+            - ensure NOT ALL instances are killed | same time🧠
+    - Service discovery & load balancing
+      - own IP address / pod
+      - 1! DNS / set of pods
+      - load balance ACROSS the pods
+      - service discovery provided natively
+        - == ❌NO need to use an unfamiliar service discovery mechanism❌
+      - [MORE](../services-networking)
+    - Storage orchestration
+      - you choose the storage system / mount 
+        - local
+        - public cloud provider
+          - _Example:_ AWS, GCP
+        - network
+          - _Example:_ NFS, Cinder, Ceph, iSCSI
+      - [MORE](../storage)
+    - Self-healing
+      - ==
+        - if containers fail → restart
+        - replace containers
+        - once containers are ready to serve -> advertise the containers to clients 
+        - if containers do NOT respond to user-defined health-check → kill containers
+    - Secret & configuration management
+      - are updated/deployed WITHOUT
+        - rebuilding the image
+        - exposing secrets
+      - _Example of sensitive information:_ passwords, OAuth tokens, SSH keys
+      - [MORE](../../reference/glossary/secret.md)
+    - Automatic bin packing
+      - based on your [resources](../../reference/glossary/infrastructure-resource.md), 
+        - how to fit containers | your nodes
+        - how to distribute resources | your containers
+      - [MORE](../configuration/manage-resources-containers.md)
+    - Batch execution
       - if a container fails → it’s replaced
-    - [Jobs](Kubernetes/Documentation/Concepts/Workloads/Workload%20Resources/Jobs%20f854f3a6b1dc48ad8ee77a7623b1d785.md)
-  - Horizontal scaling
-    - Scale up or down the application based on
-      - commands
-      - UI
-      - CPU usage
-    - [Horizontal Pod Autoscaling](Kubernetes/Documentation/Tasks/Run%20Applications/Horizontal%20Pod%20Autoscaling%2009ea3f3035ba41db8d3feca844baa3f1.md)
-  - IPv4/IPv6 dual-stack
-    - allocate IPv4 & IPv6 addresses to
-      - Pods &
-      - Services
-    - [**IPv4/IPv6 dual-stack**](Kubernetes/Documentation/Concepts/Services,%20Load%20Balancing%20and%20Networking/IPv4%20IPv6%20dual-stack%20d9b71fc134c84c4bbae1a430fc1d5f77.md)
-  - [extendable](../extend-kubernetes)
-
-Kubernetes provides you with:
-
-* **Storage orchestration**
-  
-* **Automatic bin packing**
-  You provide Kubernetes with a cluster of nodes that it can use to run containerized tasks.
-  You tell Kubernetes how much CPU and memory (RAM) each container needs. Kubernetes can fit
-  containers onto your nodes to make the best use of your resources.
-* **Self-healing**
-  Kubernetes restarts containers that fail, replaces containers, kills containers that don't
-  respond to your user-defined health check, and doesn't advertise them to clients until they
-  are ready to serve.
-* **Secret and configuration management**
-  Kubernetes lets you store and manage sensitive information, such as passwords, OAuth tokens,
-  and SSH keys. You can deploy and update secrets and application configuration without
-  rebuilding your container images, and without exposing secrets in your stack configuration.
-* **Batch execution**
-  In addition to services, Kubernetes can manage your batch and CI workloads, replacing containers that fail, if desired.
-* **Horizontal scaling**
-  Scale your application up and down with a simple command, with a UI, or automatically based on CPU usage.
-* **IPv4/IPv6 dual-stack**
-  Allocation of IPv4 and IPv6 addresses to Pods and Services
-* **Designed for extensibility**
-  Add features to your Kubernetes cluster without changing upstream source code.
+      - [jobs](../../reference/glossary/job.md)
+    - Horizontal scaling
+      - Scale up or down the application 
+        - based on
+          - CPU usage
+        - -- via --
+          - MANUALLY (commands, UI)
+          - AUTOMATICALLY
+      - [Horizontal Pod Autoscaling](Kubernetes/Documentation/Tasks/Run%20Applications/Horizontal%20Pod%20Autoscaling%2009ea3f3035ba41db8d3feca844baa3f1.md)
+    - IPv4/IPv6 dual-stack
+      - allocate IPv4 & IPv6 addresses to
+        - Pods &
+        - Services
+      - [MORE](../services-networking/dual-stack.md)
+    - [extendable](../extend-kubernetes)
 
 ## What Kubernetes is not
 
