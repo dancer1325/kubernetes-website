@@ -15,6 +15,9 @@ tags:
   * := executable image /
     * lightweight
     * portable
+      * == consistency ACROSS 
+        * environments
+        * OS
     * == 👀software + ALL its dependencies👀
     * 's goal
       * stateless
@@ -27,8 +30,17 @@ tags:
   * 👀decouple applications -- from -- underlying host infrastructure (cloud, OS, ...) 👀
     * == repeatable
       * == you get the SAME behavior | ANYWHERE you run it
+    * -> 
+      * less separation BETWEEN dev & devOps
+      * recommendations
+        * create application containers 
+          * | build/release time
+          * NOT | deployment time
   * allows
     * bundle & run your applications
+    * observability |
+      * OS-level
+      * application-level
   * == OS-level virtualization
   * [vs virtual machines (VMs)](#containers-vs-virtual-machines)
 
@@ -61,7 +73,7 @@ tags:
 | **Scalability**             | Very fast (seconds to scale)                             | Slower (minutes to provision)                    |
 | **Migration**               | Simple (push/pull images)                                | Complex (format conversion needed)               |
 | **Dependencies**            | Container runtime + Linux kernel                         | Hypervisor + hardware virtualization             |
-| **Update/Patch**            | Replace container (immutable)                            | Patch OS inside VM                               |
+| **Update/Patch**            | Replace container (immutable)  -> faster                 | Patch OS inside VM -> slower                     |
 | **Networking**              | Shared network with isolation                            | Virtual network adapters                         |
 | **Storage**                 | Layered filesystem (copy-on-write)                       | Full virtual disks                               |
 

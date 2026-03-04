@@ -85,7 +85,8 @@ kube-proxy on the nodes in your cluster.
 
 ## Addons
 
-Addons use Kubernetes resources ({{< glossary_tooltip term_id="daemonset" >}},
+TODO:
+* Addons use Kubernetes resources ({{< glossary_tooltip term_id="daemonset" >}},
 {{< glossary_tooltip term_id="deployment" >}}, etc) to implement cluster features.
 Because these are providing cluster-level features, namespaced resources for
 addons belong within the `kube-system` namespace.
@@ -93,31 +94,31 @@ addons belong within the `kube-system` namespace.
 Selected addons are described below; for an extended list of available addons,
 please see [Addons](/docs/concepts/cluster-administration/addons/).
 
+implement cluster-level features — via —  [Kubernetes resources](../Workloads/Workload%20Resources%20bedee4e8f78746bb9cd3dd82599906f2.md)
+- → belong to `kube-system` namespace
+
 ### DNS
 
-While the other addons are not strictly required, all Kubernetes clusters should have
-[cluster DNS](/docs/concepts/services-networking/dns-pod-service/), as many examples rely on it.
-
-Cluster DNS is a DNS server, in addition to the other DNS server(s) in your environment,
-which serves DNS records for Kubernetes services.
-
-Containers started by Kubernetes automatically include this DNS server in their DNS searches.
+* [cluster DNS](../services-networking/dns-pod-service.md)
+  * == DNS server /
+    * | your environment, you could have MULTIPLE
+    * serves DNS records -- for -- Kubernetes services
+    * if containers started by Kubernetes -> included AUTOMATICALLY | DNS searches
+  * required by ALMOST ALL Kubernetes clusters
 
 ### Web UI (Dashboard)
 
-[Dashboard](/docs/tasks/access-application-cluster/web-ui-dashboard/) is a general purpose,
-web-based UI for Kubernetes clusters. It allows users to manage and troubleshoot applications
-running in the cluster, as well as the cluster itself.
+* [here](../../reference/tools/_index.md#dashboard)
 
 ### Container resource monitoring
 
-[Container Resource Monitoring](/docs/tasks/debug/debug-cluster/resource-usage-monitoring/)
-records generic time-series metrics about containers in a central database, and provides a UI for browsing that data.
+* [Container Resource Monitoring](../../tasks/debug/debug-cluster/resource-usage-monitoring.md)
 
 ### Cluster-level Logging
 
-A [cluster-level logging](/docs/concepts/cluster-administration/logging/) mechanism is responsible
+TODO: A [cluster-level logging](/docs/concepts/cluster-administration/logging/) mechanism is responsible
 for saving container logs to a central log store with a search/browsing interface.
+For saving container logs to a central log store.
 
 ### Network plugins
 

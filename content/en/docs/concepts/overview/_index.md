@@ -88,79 +88,42 @@ no_list: true
 
 ## What Kubernetes is not
 
-* != PaaS (Platform as a Service) system
-    * traditional
-    * all-inclusive 
-
-TODO: 
-However, Kubernetes is not monolithic, and these default solutions
-    are optional and pluggable. Kubernetes provides the building blocks for building developer
-    platforms, but preserves user choice and flexibility where it is important.
-
-- != ❌all-inclusive PaaS❌
+- != ❌PaaS system❌
   - 👀ALTHOUGH provide SOME PaaS' feature👀
     - Reason:🧠Kubernetes 
       - operates | container level
       - NOT operate | hardware level🧠
     - _Examples:_ deployment, scaling, load balancing, integrate with logging + monitoring + alerting solutions
-  - no PaaS features
-    - ≠ monolithic
-      - === [Extending Kubernetes](Extending%20Kubernetes%20465ae404131c433295cee5c74cf656d9.md)
+  - NO PaaS features
+    - Kubernetes is NOT monolithic
+      - Reason: 🧠[it's extendable](../extend-kubernetes)
+  - _Examples of PaaS:_ Heroku
 
-Kubernetes:
-
-* Does not limit the types of applications supported. Kubernetes aims to support an
-  extremely diverse variety of workloads, including stateless, stateful, and data-processing
-  workloads. If an application can run in a container, it should run great on Kubernetes.
-* Does not deploy source code and does not build your application. Continuous Integration,
-  Delivery, and Deployment (CI/CD) workflows are determined by organization cultures and
-  preferences as well as technical requirements.
-* Does not provide application-level services, such as middleware (for example, message buses),
-  data-processing frameworks (for example, Spark), databases (for example, MySQL), caches, nor
-  cluster storage systems (for example, Ceph) as built-in services. Such components can run on
-  Kubernetes, and/or can be accessed by applications running on Kubernetes through portable
-  mechanisms, such as the [Open Service Broker](https://openservicebrokerapi.org/).
-* Does not dictate logging, monitoring, or alerting solutions. It provides some integrations
-  as proof of concept, and mechanisms to collect and export metrics.
-* Does not provide nor mandate a configuration language/system (for example, Jsonnet). It provides
-  a declarative API that may be targeted by arbitrary forms of declarative specifications.
-* Does not provide nor adopt any comprehensive machine configuration, maintenance, management,
-  or self-healing systems.
-* Additionally, Kubernetes is not a mere orchestration system. In fact, it eliminates the need
-  for orchestration. The technical definition of orchestration is execution of a defined workflow:
-  first do A, then B, then C. In contrast, Kubernetes comprises a set of independent, composable
-  control processes that continuously drive the current state towards the provided desired state.
-  It shouldn't matter how you get from A to C. Centralized control is also not required. This
-  results in a system that is easier to use and more powerful, robust, resilient, and extensible.
-
-- Kubernetes
-  - allows
-    - running distributed systems resiliently
-      - scaling
-      - failover
-  - [features](../../../Kubernetes%208bb068da389f426783032ff97a9bb3af.md)
-
-
-
-- ⚠️ Kubernetes does **NOT** ⚠️
+- ❌Kubernetes does NOT❌
   - limit the types of supported applications
-    *Example:* variety of [Workloads](Workloads%207f133c71ced8439a97de8ca6b4c88026.md)
+    - [Workloads](../workloads)
   - deploy source code
   - build your application
-  - provide application-level services
-    *Example:* middleware, databases, …
-  - dictate logging / monitoring / alerting
-    **Note:** 👁️ provide some integrations as proof of concepts 👁️
-  - mandate a configuration language-system
-    **Note:** 👁️ Kubernetes API can be targeted by many declarative specifications 👁️
+  - provide 
+    - application-level services
+      - _Example:_ middleware, databases, data-processing frameworks, caches, ...
+      - BUT, these application-level service can be
+        - run | Kubernetes
+        - accessed by applications running on Kubernetes
+          - -- through -- portable mechanisms
+            - _Example:_ [Open Service Broker](https://openservicebrokerapi.org/)
+    - logging / monitoring / alerting solutions
+      - ONLY some integrations -- as -- POC
+  - force a configuration language-system
+    - Reason: 🧠Kubernetes API can be declared -- by -- many forms👁️
   - provide / adopt systems of
     - maintenance
     - management
     - self-healing
-  - merely an orchestration system
+  - orchestrate simply
     - orchestrator
       - := executor of a defined workflow
-    - control processes to drive from current state → desired state
+    - Reason:🧠== control processes / drive from current state -- to -- desired state🧠
 
 ## Historical context for Kubernetes {#going-back-in-time}
 
@@ -206,49 +169,4 @@ Kubernetes:
 
 ### Container deployment era
 
-Containers have become popular because they provide extra benefits, such as:
-
-* Agile application creation and deployment: increased ease and efficiency of
-  container image creation compared to VM image use.
-* Continuous development, integration, and deployment: provides reliable
-  and frequent container image build and deployment with quick and efficient
-  rollbacks (due to image immutability).
-* Dev and Ops separation of concerns: create application container images at
-  build/release time rather than deployment time, thereby decoupling
-  applications from infrastructure.
-* Observability: not only surfaces OS-level information and metrics, but also
-  application health and other signals.
-* Environmental consistency across development, testing, and production: runs
-  the same on a laptop as it does in the cloud.
-* Cloud and OS distribution portability: runs on Ubuntu, RHEL, CoreOS, on-premises,
-  on major public clouds, and anywhere else.
-* Application-centric management: raises the level of abstraction from running an
-  OS on virtual hardware to running an application on an OS using logical resources.
-* Loosely coupled, distributed, elastic, liberated micro-services: applications are
-  broken into smaller, independent pieces and can be deployed and managed dynamically –
-  not a monolithic stack running on one big single-purpose machine.
-* Resource isolation: predictable application performance.
-* Resource utilization: high efficiency and density.
-
-- Container deployment era
-    - agile application creation and deployment
-      **Note:** vs VM
-    - CD / CI / Continuous Deployment
-    - Dev vs Ops separation
-    - Observability
-      - OS-level information
-      - application-level information
-    - [portable](../../Documentation%202e1fbf09afca4abca8f42170786a36be.md)
-    - application-centric management
-      **Reason:** 🧠 VM’s focus is to run an OS  — vs — Container’s focus is to run an application on an OS 🧠
-  - in a production environment, you need to
-    **Note:** 👁️ an alternative is to use Kubernetes 👁️
-    - manage the containers which run
-    - ensure no downtime
-
-## {{% heading "whatsnext" %}}
-
-* Take a look at the [Kubernetes Components](/docs/concepts/overview/components/)
-* Take a look at the [The Kubernetes API](/docs/concepts/overview/kubernetes-api/)
-* Take a look at the [Cluster Architecture](/docs/concepts/architecture/)
-* Ready to [Get Started](/docs/setup/)?
+* [container](../../reference/glossary/container.md)
