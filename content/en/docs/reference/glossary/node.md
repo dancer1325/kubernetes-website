@@ -25,6 +25,11 @@ tags:
     * container runtime / implement the [CRI](cri.md)
       * _Example:_ [docker](docker.md)
 
+* critical fault | a node
+  * == ALL pods / running | node, fail
+  * == final status
+    * ALTHOUGH node later becomes healthy, you need to create a NEW pod to recover 
+
 * worker node
   * types 
     * -- based on the -- cluster

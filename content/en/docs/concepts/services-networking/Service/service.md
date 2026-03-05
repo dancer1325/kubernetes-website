@@ -46,6 +46,18 @@ to, so that the frontend can use the backend part of the workload?
 
 Enter _Services_.
 
+* [Service API](service.md)
+  lets you provide a stable (long lived) IP address or hostname for a service implemented
+  by one or more backend pods, where the individual pods making up
+  the service can change over time.
+  * Kubernetes automatically manages
+    [EndpointSlice](/docs/concepts/services-networking/endpoint-slices/)
+    objects to provide information about the pods currently backing a Service.
+  * A service proxy implementation monitors the set of Service and
+    EndpointSlice objects, and programs the data plane to route
+    service traffic to its backends, by using operating system or
+    cloud provider APIs to intercept or rewrite packets.
+
 <!-- body -->
 
 ## Services in Kubernetes

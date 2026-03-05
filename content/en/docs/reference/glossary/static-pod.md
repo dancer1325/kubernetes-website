@@ -20,3 +20,8 @@ tags:
   * ❌NOT support [ephemeral containers](ephemeral-container.md)❌
   * vs non-static pods
     * pods are managed -- by the -- [control plane](control-plane.md)
+  * uses
+    * by tools
+      * _Example:_ kubeadm
+  * use cases
+    * deploy Control plane components 

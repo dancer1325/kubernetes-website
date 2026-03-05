@@ -4,14 +4,25 @@ weight: 20
 simple_list: true
 ---
 
-<!-- overview -->
-{{< feature-state feature_gate_name="GenericWorkload" >}}
+* requirements
+  * [`GenericWorkload` feature gate](../../../reference/command-line-tools-reference/feature-gates/GenericWorkload.md)
 
-The Workload API resource allows you to describe the scheduling requirements and structure of a multi-Pod application.
-While workload controllers provide runtime behavior for the workloads,
-the Workload API is supposed to provide scheduling constraints for the "true" workloads, such as Job and others.
-
-<!-- body -->
+* Workload API resource
+  * allows you to 
+    * describe the
+      * scheduling requirements | workload level
+        * _Example:_ [gang scheduling](../../scheduling-eviction/gang-scheduling.md)
+      * structure of a multi-Pod application
+  * vs workload controllers
+    * workload controllers
+      * provide
+        * runtime behavior -- for the -- workloads
+    * Workload API
+      * allows
+        * set complex scheduling requirements
+  * use cases
+    * batch processing
+    * machine learning workloads / require "all-or-nothing" placement
 
 ## What is a Workload?
 

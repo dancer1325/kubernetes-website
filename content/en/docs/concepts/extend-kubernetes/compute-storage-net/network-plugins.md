@@ -9,7 +9,6 @@ weight: 10
 ---
 
 * TODO:
-<!-- overview -->
 
 Kubernetes (version 1.3 through to the latest {{< skew latestVersion >}}, and likely onwards) lets you use
 [Container Network Interface](https://github.com/containernetworking/cni)
@@ -26,7 +25,9 @@ releases of the CNI specification. The Kubernetes project recommends using a plu
 compatible with the [v1.0.0](https://github.com/containernetworking/cni/blob/spec-v1.0.0/SPEC.md)
 CNI specification (plugins can be compatible with multiple spec versions).
 
-<!-- body -->
+are software components that implement the container network interface (CNI) specification.
+They are responsible for allocating IP addresses to pods and enabling them to communicate
+with each other within the cluster.
 
 ## Installation
 

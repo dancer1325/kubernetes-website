@@ -43,6 +43,9 @@ tags:
       * application-level
   * == OS-level virtualization
   * [vs virtual machines (VMs)](#containers-vs-virtual-machines)
+  * ways to expose it
+    * DNS name
+    * OWN IP address
 
 * containerized applications
   * == applications / run | containers 

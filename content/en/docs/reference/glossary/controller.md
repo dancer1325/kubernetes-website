@@ -15,7 +15,7 @@ tags:
   * == control loops / 
     * responsible for
       * watch -- , through the [kube-apiserver](kube-apiserver.md), -- the cluster's state
-      * desired state == current state
+      * make sure desired state == current state
   * == separate process / EACH controller
   * SOME run | [kube-controller-manager](kube-controller-manager.md)
     * _Examples:_ 

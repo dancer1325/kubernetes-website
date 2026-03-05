@@ -12,7 +12,7 @@ tags:
 - workload
 ---
 
-* == task / runs till be completed
+* == task / runs TILL be completed
   * finite
     * == if task was succeed -> end
   * batch

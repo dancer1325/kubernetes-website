@@ -12,4 +12,5 @@ tags:
 
 - addons
   - := Resources /
-    - extend Kubernetes functionality
+    - extend -- , thanks to Daemonset, Deployment, ... -- Kubernetes functionality
+    - if an addon provide cluster-level features -> live | `kube-system` namespace

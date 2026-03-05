@@ -13,6 +13,8 @@ tags:
 
 - := network proxy /
   - runs | EACH cluster’s node (ALSO control plane)
+    - Reason:🧠ensure service API & associated behaviors are AVAILABLE | your cluster network🧠
+    - EXCEPTION: ⚠️if you use network plugins / provide their own network proxy⚠️
   - maintains network rules | nodes
     - enable, | network sessions inside / outside the cluster, 
       - communicate -- with -- your pods

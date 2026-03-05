@@ -13,9 +13,12 @@ tags:
 ---
 
 * Deployment
-  * == API object / manages -- , through ReplicaSets, -- stateless replicated pods
-    * if you need local state -> use [StatefulSet](statefulset.md)
-  * == workload object
+  * == API object / 
+    * manages -- , through ReplicaSets, -- stateless replicated pods
+      * if you need local state -> use [StatefulSet](statefulset.md)
+  * == workload resource
+  * replacement of [ReplicationController](replication-controller.md)
 
 * replicated pods
   * == SAME container spec 
+  * -> any pod can be interchanged

@@ -19,3 +19,5 @@ tags:
       * load balancing,
       * SSL termination
       * name-based virtual hosting
+  * use cases
+    * make an application, AVAILABLE -- for -- ONLY web application

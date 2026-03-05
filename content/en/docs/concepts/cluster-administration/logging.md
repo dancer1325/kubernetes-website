@@ -30,7 +30,9 @@ query logs. Kubernetes does not provide a native storage solution for log data. 
 there are many logging solutions that integrate with Kubernetes. The following sections
 describe how to handle and store logs on nodes.
 
-<!-- body -->
+* responsible for
+  * saving container logs -- , via search/browsing interface, -- | central log store 
+
 
 ## Pod and container logs {#basic-logging-in-kubernetes}
 

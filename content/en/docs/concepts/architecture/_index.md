@@ -5,29 +5,15 @@ description: >
   The architectural concepts behind Kubernetes.
 ---
 
+* goal
+  * Kubernetes cluster's components / cluster is
+    * complete 
+    * working 
+
 * [Kubernetes cluster](.././../reference/glossary/cluster.md)
-* [Kubernetes components](../overview/Kubernetes%20Components/components.md)
+* [Kubernetes components](../overview/components.md)
 
-The control plane manages the worker nodes and the Pods in the cluster
-In production
-environments, the control plane usually runs across multiple computers and a cluster
-usually runs multiple nodes, providing fault-tolerance and high availability.
-
-This document outlines the various components you need to have for a complete and working Kubernetes cluster.
-
-{{< figure src="/images/docs/kubernetes-cluster-architecture.svg" alt="The control plane (kube-apiserver, etcd, kube-controller-manager, kube-scheduler) and several nodes. Each node is running a kubelet and kube-proxy." caption="Figure 1. Kubernetes cluster components." class="diagram-large" >}}
-
-{{< details summary="About this architecture" >}}
-The diagram in Figure 1 presents an example reference architecture for a Kubernetes cluster.
-The actual distribution of components can vary based on specific cluster setups and requirements.
-
-In the diagram, each node runs the [`kube-proxy`](#kube-proxy) component. You need a
-network proxy component on each node to ensure that the
-{{< glossary_tooltip text="Service" term_id="service">}} API and associated behaviors
-are available on your cluster network. However, some network plugins provide their own,
-third party implementation of proxying. When you use that kind of network plugin,
-the node does not need to run `kube-proxy`.
-{{< /details >}}
+![](/static/images/docs/kubernetes-cluster-architecture.svg)
 
 ## Control plane components
 
@@ -36,7 +22,8 @@ as well as detecting and responding to cluster events (for example, starting up 
 {{< glossary_tooltip text="pod" term_id="pod">}} when a Deployment's
 `{{< glossary_tooltip text="replicas" term_id="replica" >}}` field is unsatisfied).
 
-Control plane components can be run on any machine in the cluster. However, for simplicity, setup scripts
+Control plane components can be run on any machine in the cluster
+* However, for simplicity, setup scripts
 typically start all control plane components on the same machine, and do not run user containers on this machine.
 See [Creating Highly Available clusters with kubeadm](/docs/setup/production-environment/tools/kubeadm/high-availability/)
 for an example control plane setup that runs across multiple machines.
@@ -73,11 +60,6 @@ for an example control plane setup that runs across multiple machines.
 
 * [here](../../reference/glossary/kube-proxy.md)
 
-TODO:
-If you use a [network plugin](#network-plugins) that implements packet forwarding for Services
-by itself, and providing equivalent behavior to kube-proxy, then you do not need to run
-kube-proxy on the nodes in your cluster.
-
 ### Container runtime
 
 * [here](../../reference/glossary/container-runtime.md)
@@ -85,17 +67,8 @@ kube-proxy on the nodes in your cluster.
 
 ## Addons
 
-TODO:
-* Addons use Kubernetes resources ({{< glossary_tooltip term_id="daemonset" >}},
-{{< glossary_tooltip term_id="deployment" >}}, etc) to implement cluster features.
-Because these are providing cluster-level features, namespaced resources for
-addons belong within the `kube-system` namespace.
-
-Selected addons are described below; for an extended list of available addons,
-please see [Addons](/docs/concepts/cluster-administration/addons/).
-
-implement cluster-level features — via —  [Kubernetes resources](../Workloads/Workload%20Resources%20bedee4e8f78746bb9cd3dd82599906f2.md)
-- → belong to `kube-system` namespace
+* [here](../../reference/glossary/addons.md)
+* [full list of Addons](../../concepts/cluster-administration/addons.md)
 
 ### DNS
 
@@ -116,67 +89,63 @@ implement cluster-level features — via —  [Kubernetes resources](../Workload
 
 ### Cluster-level Logging
 
-TODO: A [cluster-level logging](/docs/concepts/cluster-administration/logging/) mechanism is responsible
-for saving container logs to a central log store with a search/browsing interface.
-For saving container logs to a central log store.
+* [cluster-level logging](../../concepts/cluster-administration/logging.md)
 
 ### Network plugins
 
-[Network plugins](../../concepts/extend-kubernetes/compute-storage-net/network-plugins)
-are software components that implement the container network interface (CNI) specification.
-They are responsible for allocating IP addresses to pods and enabling them to communicate
-with each other within the cluster.
+* [here](../../concepts/extend-kubernetes/compute-storage-net/network-plugins)
 
 ## Architecture variations
 
-While the core components of Kubernetes remain consistent, the way they are deployed and
-managed can vary. Understanding these variations is crucial for designing and maintaining
-Kubernetes clusters that meet specific operational needs.
+* Kubernetes core components
+  * remain consistent
+  * way to be deployed & managed: can vary
 
 ### 👀ways to deploy the control plane components👀
 
 * Traditional deployment
   * Control plane components run directly | dedicated machines OR VMs (often managed -- as -- systemd services)
 
-* Static Pods
-  * Control plane components are deployed -- as -- static Pods / 
-    * managed by the kubelet | specific nodes
-  * uses
-    * by tools
-      * _Example:_ kubeadm
+* [Static Pods ](../../reference/glossary/static-pod.md)
 
 * Self-hosted
-: The control plane runs as Pods within the Kubernetes cluster itself, managed by Deployments
-  and StatefulSets or other Kubernetes primitives.
+  * control plane runs as Pods | Kubernetes cluster itself /
+    * managed by: Deployments, StatefulSets or other Kubernetes primitives
 
 * Managed Kubernetes services
-: Cloud providers often abstract away the control plane, managing its components as part of their service offering.
+  * _Example:_ cloud providers
+  * abstract away the control plane,
+    * == manage control plane components -- via -- some offered service
 
-### Workload placement considerations
+### how to place workloads +  control plane components?
 
-The placement of workloads, including the control plane components, can vary based on cluster size,
-performance requirements, and operational policies:
+* depend on
+  * cluster size
+  * performance requirements
+  * operational policies
 
-- In smaller or development clusters, control plane components and user workloads might run on the same nodes.
-- Larger production clusters often dedicate specific nodes to control plane components,
-  separating them from user workloads.
-- Some organizations run critical add-ons or monitoring tools on control plane nodes.
+* recommendations
+  - | smaller OR development clusters,
+    - run control plane components & user workloads | SAME nodes
+  - | larger production clusters,
+    - control plane components | specific nodes
+    - user workloads | other nodes 
+* other approaches
+  * critical add-ons or monitoring tools | control plane nodes
 
 ### Cluster management tools
 
-Tools like kubeadm, kops, and Kubespray offer different approaches to deploying and managing clusters,
-each with its own method of component layout and management.
+* _Example:_ kubeadm, kops, and Kubespray
+* DIFFERENT approach to deploy & manage clusters / EACH cluster management tool
 
 ### Customization and extensibility
 
-Kubernetes architecture allows for significant customization:
-
-- Custom schedulers can be deployed to work alongside the default Kubernetes scheduler or to replace it entirely.
-- API servers can be extended with CustomResourceDefinitions and API Aggregation.
-- Cloud providers can integrate deeply with Kubernetes using the cloud-controller-manager.
-
-The flexibility of Kubernetes architecture allows organizations to tailor their clusters to specific needs,
-balancing factors such as operational complexity, performance, and management overhead.
+* type of customizations
+  - custom schedulers /
+    - work alongside the default Kubernetes scheduler
+    - replace the default Kubernetes scheduler
+  - extend API servers -- with -- CustomResourceDefinitions & API Aggregation
+  - integrate cloud providers -- , via cloud-controller-manager, with -- Kubernetes 
 
 ## {{% heading "whatsnext" %}}
 

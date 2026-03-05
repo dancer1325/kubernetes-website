@@ -7,99 +7,73 @@ description: >
 
 ## The Kubernetes network model
 
-The Kubernetes network model is built out of several pieces:
+- Kubernetes network model
+  - characteristics
+    - 1! IP / EACH cluster's pod
+      - ⚠️cluster-wide⚠️
+        - != node-scope
+      - 👁️ you don’t need manually to 👁️
+        **Reason:** 🧠 it’s abstracted and managed by Kubernetes  🧠
+        - pod1 ← link → pod2
+        - container’s ports ← mapping to → [host’s ports](Services,%20Load%20Balancing%20and%20Networking%2093f52609b9cd4c7a924b63a2c5f80cab.md)
+      - pods == VMs / Physical Hosts from perspective of
+        - port allocation
+        - naming
+        - service discovery
+        - load balancing
+        - application configuration
+        - migration
+    - pod network OR cluster network
+      - namespace setup
+        - system-level software implement the [CRI](../containers/cri.md)
+      - itself
+        - managed -- by -- a [pod network implementation](../cluster-administration/addons.md#networking-and-network-policy)
+          - | Linux, MOST container runtimes use  _CNI plugins_
+      - handle communication -- , WITHOUT using proxies OR NATs, -- BETWEEN pods /
+        - node1's pod1 can communicate -- with -- node1's pod2
+          - | Windows,
+            - NOT valid | host-network pods
+        - node1's pod1 can communicate -- with -- node2's pod2
+          - | Windows,
+            - NOT valid | host-network pods
+      - node’s agent can communicate -- with — ALL nod's pod 
+    - service proxying
+      - [kube-proxy](../../reference/glossary/kube-proxy.md)
+        - default Kubernetes implementation
+      - SOME pod network implementations use their own service
+        - Reason:🧠MORE integrated with the rest of the implementation🧠
+    - [network policies](../../reference/glossary/network-policy.md)
+    - [Gateway API](gateway) 
+      - if you use a [supported cloud provider](../../reference/glossary/cloud-provider.md) & want simpler & less-configurable -> use Service API's [`type: LoadBalancer`](service.md#loadbalancer)
+    - [Service API](service.md)
+    - OWN private network namespace / EACH pod
+      - shared by ALL containers | pod
+      - pod1's container1 can communicate -- , through "localhost", with -- pod1's container2 
+  - implementation
+    - SOME are implemented by Kubernetes
+    - ⚠️SOME is provided -- , through Kubernetes API, by -- other parts⚠️
+  - networking implementation
+    - available | DIFFERENT CR (Container Runtime)
 
-* Each [pod](/docs/concepts/workloads/pods/) in a cluster gets its
-  own unique cluster-wide IP address.
-
-  * A pod has its own private network namespace which is shared by
-    all of the containers within the pod. Processes running in
-    different containers in the same pod can communicate with each
-    other over `localhost`.
-
-* The _pod network_ (also called a cluster network) handles communication
-  between pods. It ensures that (barring intentional network segmentation):
-
-  * All pods can communicate with all other pods, whether they are
-    on the same [node](/docs/concepts/architecture/nodes/) or on
-    different nodes. Pods can communicate with each other
-    directly, without the use of proxies or address translation (NAT).
-
-    On Windows, this rule does not apply to host-network pods.
-
-  * Agents on a node (such as system daemons, or kubelet) can
-    communicate with all pods on that node.
-
-* The [Service](/docs/concepts/services-networking/service/) API
-  lets you provide a stable (long lived) IP address or hostname for a service implemented
-  by one or more backend pods, where the individual pods making up
-  the service can change over time.
-
-  * Kubernetes automatically manages
-    [EndpointSlice](/docs/concepts/services-networking/endpoint-slices/)
-    objects to provide information about the pods currently backing a Service.
-
-  * A service proxy implementation monitors the set of Service and
-    EndpointSlice objects, and programs the data plane to route
-    service traffic to its backends, by using operating system or
-    cloud provider APIs to intercept or rewrite packets.
-
-* The [Gateway](/docs/concepts/services-networking/gateway/) API
-  (or its predecessor, [Ingress](/docs/concepts/services-networking/ingress/))
-  allows you to make Services accessible to clients that are outside the cluster.
-
-  * A simpler, but less-configurable, mechanism for cluster
-    ingress is available via the Service API's
-    [`type: LoadBalancer`](/docs/concepts/services-networking/service/#loadbalancer),
-    when using a supported {{< glossary_tooltip term_id="cloud-provider">}}.
-
-* [NetworkPolicy](/docs/concepts/services-networking/network-policies) is a built-in
-  Kubernetes API that allows you to control traffic between pods, or between pods and
-  the outside world.
-
-In older container systems, there was no automatic connectivity
-between containers on different hosts, and so it was often necessary
-to explicitly create links between containers, or to map container
-ports to host ports to make them reachable by containers on other
-hosts. This is not needed in Kubernetes; Kubernetes's model is that
-pods can be treated much like VMs or physical hosts from the
-perspectives of port allocation, naming, service discovery, load
-balancing, application configuration, and migration.
-
-Only a few parts of this model are implemented by Kubernetes itself.
-For the other parts, Kubernetes defines the APIs, but the
-corresponding functionality is provided by external components, some
-of which are optional:
-
-* Pod network namespace setup is handled by system-level software implementing the
-  [Container Runtime Interface](/docs/concepts/containers/cri/).
-
-* The pod network itself is managed by a
-  [pod network implementation](/docs/concepts/cluster-administration/addons/#networking-and-network-policy).
-  On Linux, most container runtimes use the
-  {{< glossary_tooltip text="Container Networking Interface (CNI)" term_id="cni" >}}
-  to interact with the pod network implementation, so these
-  implementations are often called _CNI plugins_.
-
-* Kubernetes provides a default implementation of service proxying,
-  called {{< glossary_tooltip term_id="kube-proxy">}}, but some pod
-  network implementations instead use their own service proxy that
-  is more tightly integrated with the rest of the implementation.
-
-* NetworkPolicy is generally also implemented by the pod network
-  implementation. (Some simpler pod network implementations don't
-  implement NetworkPolicy, or an administrator may choose to
-  configure the pod network without NetworkPolicy support. In these
-  cases, the API will still be present, but it will have no effect.)
-
-* There are many [implementations of the Gateway API](https://gateway-api.sigs.k8s.io/implementations/),
-  some of which are specific to particular cloud environments, some more
-  focused on "bare metal" environments, and others more generic.
+* history
+  * | older container systems,
+    * ❌there was NO AUTOMATIC connectivity BETWEEN containers | DIFFERENT hosts❌
+      * SOLUTION:
+        * solution1: explicitly create links BETWEEN containers
+        * solution2: map container ports -- to -- host ports
+          * Reason:🧠make them reachable by containers | other hosts🧠
+  * | Kubernetes
+    * pods == VMs OR physical hosts, about
+      * port allocation
+      * naming
+      * service discovery
+      * load balancing
+      * application configuration
+      * migration
 
 ## {{% heading "whatsnext" %}}
 
-The [Connecting Applications with Services](/docs/tutorials/services/connect-applications-service/)
-tutorial lets you learn about Services and Kubernetes networking with a hands-on example.
+* [how to connect applications -- via -- Services](../../tutorials/services/connect-applications-service.md)
 
-[Cluster Networking](/docs/concepts/cluster-administration/networking/) explains how to set
-up networking for your cluster, and also provides an overview of the technologies involved.
+* [Cluster Networking](../cluster-administration/networking.md) 
+  * how to set up networking | your cluster

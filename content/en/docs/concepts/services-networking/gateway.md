@@ -8,6 +8,12 @@ weight: 55
 ---
 
 <!-- overview -->
+(or its predecessor, [Ingress](/docs/concepts/services-networking/ingress/))
+allows you to make Services accessible to clients that are outside the cluster.
+
+* There are many [implementations of the Gateway API](https://gateway-api.sigs.k8s.io/implementations/),
+  some of which are specific to particular cloud environments, some more
+  focused on "bare metal" environments, and others more generic.
 
 Make network services available by using an extensible, role-oriented, protocol-aware configuration
 mechanism. [Gateway API](https://gateway-api.sigs.k8s.io/) is an {{<glossary_tooltip text="add-on" term_id="addons">}}
