@@ -8,23 +8,13 @@ content_type: concept
 weight: 40
 ---
 
-<!-- overview -->
-This document details the deprecation policy for various facets of the system.
-
-<!-- body -->
-Kubernetes is a large system with many components and many contributors. As
-with any such software, the feature set naturally evolves over time, and
-sometimes a feature may need to be removed. This could include an API, a flag,
-or even an entire feature. To avoid breaking existing users, Kubernetes follows
-a deprecation policy for aspects of the system that are slated to be removed.
+* goal
+  * deprecation policy / DIFFERENT parts of Kubernetes system
 
 ## Deprecating parts of the API
 
-Since Kubernetes is an API-driven system, the API has evolved over time to
-reflect the evolving understanding of the problem space. The Kubernetes API is
-actually a set of APIs, called "API groups", and each API group is
-independently versioned. [API versions](/docs/reference/using-api/#api-versioning) fall
-into 3 main tracks, each of which has different policies for deprecation:
+* DIFFERENT deprecation policy / EACH [API version](_index.md#api-versioning)
+
 
 | Example  | Track                            |
 |----------|----------------------------------|
@@ -116,163 +106,24 @@ version X, which introduces a new API group. A new Kubernetes release is made
 every approximately 4 months (3 per year). The following table describes which
 API versions are supported in a series of subsequent releases.
 
-<table>
-  <thead>
-    <tr>
-      <th>Release</th>
-      <th>API Versions</th>
-      <th>Preferred/Storage Version</th>
-      <th>Notes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>X</td>
-      <td>v1alpha1</td>
-      <td>v1alpha1</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>X+1</td>
-      <td>v1alpha2</td>
-      <td>v1alpha2</td>
-      <td>
-        <ul>
-           <li>v1alpha1 is removed. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+2</td>
-      <td>v1beta1</td>
-      <td>v1beta1</td>
-      <td>
-        <ul>
-          <li>v1alpha2 is removed. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+3</td>
-      <td>v1beta2, v1beta1 (deprecated)</td>
-      <td>v1beta1</td>
-      <td>
-        <ul>
-          <li>v1beta1 is deprecated. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+4</td>
-      <td>v1beta2, v1beta1 (deprecated)</td>
-      <td>v1beta2</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>X+5</td>
-      <td>v1, v1beta1 (deprecated), v1beta2 (deprecated)</td>
-      <td>v1beta2</td>
-      <td>
-        <ul>
-          <li>v1beta2 is deprecated. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+6</td>
-      <td>v1, v1beta2 (deprecated)</td>
-      <td>v1</td>
-      <td>
-        <ul>
-          <li>v1beta1 is removed. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+7</td>
-      <td>v1, v1beta2 (deprecated)</td>
-      <td>v1</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>X+8</td>
-      <td>v2alpha1, v1</td>
-      <td>v1</td>
-      <td>
-        <ul>
-          <li>v1beta2 is removed. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+9</td>
-      <td>v2alpha2, v1</td>
-      <td>v1</td>
-      <td>
-        <ul>
-           <li>v2alpha1 is removed. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+10</td>
-      <td>v2beta1, v1</td>
-      <td>v1</td>
-      <td>
-        <ul>
-          <li>v2alpha2 is removed. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+11</td>
-      <td>v2beta2, v2beta1 (deprecated), v1</td>
-      <td>v1</td>
-      <td>
-        <ul>
-          <li>v2beta1 is deprecated. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+12</td>
-      <td>v2, v2beta2 (deprecated), v2beta1 (deprecated), v1 (deprecated)</td>
-      <td>v1</td>
-      <td>
-        <ul>
-          <li>v2beta2 is deprecated. See release notes for required actions.</li>
-          <li>v1 is deprecated in favor of v2, but will not be removed</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+13</td>
-      <td>v2, v2beta1 (deprecated), v2beta2 (deprecated), v1 (deprecated)</td>
-      <td>v2</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>X+14</td>
-      <td>v2, v2beta2 (deprecated), v1 (deprecated)</td>
-      <td>v2</td>
-      <td>
-        <ul>
-          <li>v2beta1 is removed. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>X+15</td>
-      <td>v2, v1 (deprecated)</td>
-      <td>v2</td>
-      <td>
-        <ul>
-          <li>v2beta2 is removed. See release notes for required actions.</li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+| Release | API Versions                                                    | Preferred/Storage Version | Notes                                                                                                                      |
+|---------|-----------------------------------------------------------------|---------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| X       | v1alpha1                                                        | v1alpha1                  |                                                                                                                            |
+| X+1     | v1alpha2                                                        | v1alpha2                  | v1alpha1 is removed. See release notes for required actions.                                                               |
+| X+2     | v1beta1                                                         | v1beta1                   | v1alpha2 is removed. See release notes for required actions.                                                               |
+| X+3     | v1beta2, v1beta1 (deprecated)                                   | v1beta1                   | v1beta1 is deprecated. See release notes for required actions.                                                             |
+| X+4     | v1beta2, v1beta1 (deprecated)                                   | v1beta2                   |                                                                                                                            |
+| X+5     | v1, v1beta1 (deprecated), v1beta2 (deprecated)                  | v1beta2                   | v1beta2 is deprecated. See release notes for required actions.                                                             |
+| X+6     | v1, v1beta2 (deprecated)                                        | v1                        | v1beta1 is removed. See release notes for required actions.                                                                |
+| X+7     | v1, v1beta2 (deprecated)                                        | v1                        |                                                                                                                            |
+| X+8     | v2alpha1, v1                                                    | v1                        | v1beta2 is removed. See release notes for required actions.                                                                |
+| X+9     | v2alpha2, v1                                                    | v1                        | v2alpha1 is removed. See release notes for required actions.                                                               |
+| X+10    | v2beta1, v1                                                     | v1                        | v2alpha2 is removed. See release notes for required actions.                                                               |
+| X+11    | v2beta2, v2beta1 (deprecated), v1                               | v1                        | v2beta1 is deprecated. See release notes for required actions.                                                             |
+| X+12    | v2, v2beta2 (deprecated), v2beta1 (deprecated), v1 (deprecated) | v1                        | v2beta2 is deprecated. See release notes for required actions.<br>v1 is deprecated in favor of v2, but will not be removed |
+| X+13    | v2, v2beta1 (deprecated), v2beta2 (deprecated), v1 (deprecated) | v2                        |                                                                                                                            |
+| X+14    | v2, v2beta2 (deprecated), v1 (deprecated)                       | v2                        | v2beta1 is removed. See release notes for required actions.                                                                |
+| X+15    | v2, v1 (deprecated)                                             | v2                        | v2beta2 is removed. See release notes for required actions.                                                                |
 
 ### REST resources (aka API objects)
 

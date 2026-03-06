@@ -1045,91 +1045,77 @@ resources, and **deletecollection** allows deleting multiple resources.
 
 ## Field validation
 
-Kubernetes always validates the type of fields. For example, if a field in the
-API is defined as a number, you cannot set the field to a text value. If a field
-is defined as an array of strings, you can only provide an array. Some fields
-allow you to omit them, other fields are required. Omitting a required field
-from an API request is an error.
+* enable OR disable
+  * by default, ALWAYS enable
+    * _Examples:_
+      * if API's field is defined -- as a --
+        * number -> you can NOT set the field -- as a -- text value
+        * [string] -> you need to provide an [string]
+  * ⚠️| SOME fields, you can disable the field validation ⚠️
+    * ❌NOT recommended❌
 
-If you make a request with an extra field, one that the cluster's control plane
-does not recognize, then the behavior of the API server is more complicated.
+* [ServerSideFieldValidation](../command-line-tools-reference/feature-gates/ServerSideFieldValidation.md)
 
-By default, the API server drops fields that it does not recognize
-from an input that it receives (for example, the JSON body of a `PUT` request).
+* ALLOWED | `POST`, `PUT`, and `PATCH`
+  * Reason:🧠| submit data🧠
 
-There are two situations where the API server drops fields that you supplied in
-an HTTP request.
+* if you make a request & invalid field -> API server responds: 400 Bad Request error
 
-These situations are:
+* if you make a request / EXTRA field | SOME scenarios -> API server can drop these fields
+  * SOME POSSIBLE scenarios
+    1. field is unrecognized
+       * Reason:🧠field is NOT | resource's OpenAPI schema🧠
+       * ⚠️EXCEPTION: [CRDs](../glossary/customresourcedefinition.md)⚠️
+         * == API server does NOT drop these EXTRA fields
+         * Reason:🧠NOT prune -- , via `x-kubernetes-preserve-unknown-fields`, -- unknown fields🧠 
+    2. field is duplicated | object
 
-1. The field is unrecognized because it is not in the resource's OpenAPI schema. (One
-   exception to this is for {{< glossary_tooltip term_id="CustomResourceDefinition" text="CRDs" >}}
-   that explicitly choose not to prune unknown fields via `x-kubernetes-preserve-unknown-fields`).
-1. The field is duplicated in the object.
+* if you make a request & invalid field & EXTRA field -> API server responds: 400 Bad Request error
+  * INDEPENDENTLY of [level of validation](#validation-for-unrecognized-or-duplicate-fields-setting-the-field-validation-level)
+
+* types of field validation
+  * | server side
+    * requirements
+      * Kubernetes API Server v1.25
+  * | [client side](#client-side)
+    * requirements
+      * Kubernetes API Server v1.25- 
+  * [declarative](declarative-validation.md)
 
 ### Validation for unrecognized or duplicate fields {#setting-the-field-validation-level}
 
-{{< feature-state feature_gate_name="ServerSideFieldValidation" >}}
-
-From 1.25 onward, unrecognized or duplicate fields in an object are detected via
-validation on the server when you use HTTP verbs that can submit data (`POST`, `PUT`, and `PATCH`).
-Possible levels of validation are `Ignore`, `Warn` (default), and `Strict`.
-
-`Ignore`
-: The API server succeeds in handling the request as it would without the erroneous fields
-  being set, dropping all unknown and duplicate fields and giving no indication it
-  has done so.
-
-`Warn`
-: (Default) The API server succeeds in handling the request, and reports a
-  warning to the client. The warning is sent using the `Warning:` response header,
-  adding one warning item for each unknown or duplicate field. For more
-  information about warnings and the Kubernetes API, see the blog article
-  [Warning: Helpful Warnings Ahead](/blog/2020/09/03/warnings/).
-
-`Strict`
-: The API server rejects the request with a 400 Bad Request error when it
-  detects any unknown or duplicate fields. The response message from the API
-  server specifies all the unknown or duplicate fields that the API server has
-  detected.
-
-The field validation level is set by the `fieldValidation` query parameter.
-
-{{< note >}}
-If you submit a request that specifies an unrecognized field, and that is also invalid for
-a different reason (for example, the request provides a string value where the API expects
-an integer for a known field), then the API server responds with a 400 Bad Request error, but will
-not provide any information on unknown or duplicate fields (only which fatal
-error it encountered first).
-
-You always receive an error response in this case, no matter what field validation level you requested.
-{{< /note >}}
-
-Tools that submit requests to the server (such as `kubectl`), might set their own
-defaults that are different from the `Warn` validation level that the API server uses
-by default.
-
-The `kubectl` tool uses the `--validate` flag to set the level of field
-validation. It accepts the values `ignore`, `warn`, and `strict` while
-also accepting the values `true` (equivalent to `strict`) and `false`
-(equivalent to `ignore`). The default validation setting for kubectl is
-`--validate=true`, which means strict server-side field validation.
-
-When kubectl cannot connect to an API server with field validation (API servers
-prior to Kubernetes 1.27), it will fall back to using client-side validation.
-Client-side validation will be removed entirely in a future version of kubectl.
-
-{{< note >}}
-
-Prior to Kubernetes 1.25, `kubectl --validate` was used to toggle client-side validation on or off as
-a boolean flag.
-
-{{< /note >}}
-
-Starting from v1.33, Kubernetes (including v{{< skew currentVersion>}}) offers a way to define field validations using _declarative tags_.
-This is useful for people contributing to Kubernetes itself, and it's also relevant if you're
-writing your own API using Kubernetes libraries.
-To learn more, see [Declarative API Validation](/docs/reference/using-api/declarative-validation/).
+* levels of validation
+  * == level of validation | server side
+  * ways to specify
+    * -- via -- `fieldValidation` query parameter
+    * | kubectl, `--validate=SpecifyFieldValidationLevel`
+      * ALLOWED `SpecifyFieldValidationLevel`
+        * COMMON ones
+        * `true`
+          * == `Strict`
+          * default one
+        * `false`
+          * == `Ignore`
+  * ALLOWED ones
+    * `Ignore`
+      * API server
+        * | handle the request, ALTHOUGH SOME EXTRA field,
+          * succeeds
+          * drop ALL EXTRA fields
+          * ❌NO give any indication❌
+    * `Warn`
+      * default one
+      * API server
+        * | handle the request, ALTHOUGH SOME EXTRA field,
+          * succeeds
+          * reports -- , to the client, a -- warning 
+            * 1 `Warning:` response header / EACH EXTRA field
+      * [MORE](/content/en/blog/_posts/2020/warning-helpful-warnings-ahead)
+    * `Strict`
+      * API server
+        * | handle the request, ALTHOUGH SOME EXTRA field,
+          * rejects -- with a -- 400 Bad Request error
+          * reports -- , to the client, -- ALL WRONG EXTRA fields
 
 ## Dry-run
 

@@ -8,9 +8,11 @@ aka:
 tags:
 - fundamental
 ---
-Specification of a Kubernetes API object in [JSON](https://www.json.org/json-en.html)
-or [YAML](https://yaml.org/) format.
 
-<!--more-->
-A manifest specifies the desired state of an object that Kubernetes will maintain when you apply the manifest.
-For YAML format, each file can contain multiple manifests.
+* == specification of a Kubernetes API [object](object.md)
+  * ALLOWED formats
+    * [JSON](https://www.json.org/json-en.html)
+    * [YAML](https://yaml.org/)
+      * 👀ALLOWED >= 1 manifest👀
+  * uses
+    * 💡Kubernetes object's [desired state](object.md)💡

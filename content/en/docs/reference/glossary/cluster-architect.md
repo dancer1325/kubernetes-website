@@ -9,9 +9,8 @@ aka:
 tags:
 - user-type
 ---
- A person who designs infrastructure that involves one or more Kubernetes clusters.
 
-<!--more--> 
-
-Cluster architects are concerned with best practices for distributed systems, for example&#58; high availability and security.
-
+* person / designs infrastructure / 
+  * involves >=1 Kubernetes clusters
+  * follows BEST practices -- for -- distributed systems
+    * _Example:_ high availability & security

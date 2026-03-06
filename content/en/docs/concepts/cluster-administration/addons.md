@@ -4,10 +4,6 @@ content_type: concept
 weight: 150
 ---
 
-<!-- overview -->
-
-{{% thirdparty-content %}}
-
 * goal
   * available add-ons
 
@@ -91,12 +87,10 @@ weight: 150
   be [installed](https://github.com/coredns/helm)
   as the in-cluster DNS for pods.
 
-## Visualization &amp; Control
+## Visualization & Control
 
-* [Dashboard](https://github.com/kubernetes/dashboard#kubernetes-dashboard)
-  is a dashboard web interface for Kubernetes.
-* [Headlamp](https://headlamp.dev/) is an extensible Kubernetes UI that can be
-  deployed in-cluster or used as a desktop application.
+* [Dashboard](../../reference/tools/_index.md#dashboard)
+* [Headlamp](../../reference/tools/_index.md#headlamp)
 
 ## Infrastructure
 
@@ -114,7 +108,4 @@ weight: 150
 
 ## Legacy Add-ons
 
-There are several other add-ons documented in the deprecated
-[cluster/addons](https://git.k8s.io/kubernetes/cluster/addons) directory.
-
-Well-maintained ones should be linked to here. PRs welcome!
+* [FULL list](https://git.k8s.io/kubernetes/cluster/addons)

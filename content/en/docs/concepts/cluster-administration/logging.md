@@ -7,32 +7,24 @@ content_type: concept
 weight: 60
 ---
 
-<!-- overview -->
+* container engines
+  * support logging
+    * ❌BUT NORMALLY, NOT complete logging solution❌ 
 
-Application logs can help you understand what is happening inside your application. The
-logs are particularly useful for debugging problems and monitoring cluster activity. Most
-modern applications have some kind of logging mechanism. Likewise, container engines
-are designed to support logging. The easiest and most adopted logging method for
-containerized applications is writing to standard output and standard error streams.
+* containerized applications
+  * ' most common logging method
+    * write -- to -- standard output & standard error streams
 
-However, the native functionality provided by a container engine or runtime is usually
-not enough for a complete logging solution.
-
-For example, you may want to access your application's logs if a container crashes,
-a pod gets evicted, or a node dies.
-
-In a cluster, logs should have a separate storage and lifecycle independent of nodes,
-pods, or containers. This concept is called
-[cluster-level logging](#cluster-level-logging-architectures).
-
-Cluster-level logging architectures require a separate backend to store, analyze, and
-query logs. Kubernetes does not provide a native storage solution for log data. Instead,
-there are many logging solutions that integrate with Kubernetes. The following sections
-describe how to handle and store logs on nodes.
+* [cluster-level logging](#cluster-level-logging-architectures) 
+  * 's design: ⭐️logs' storage & lifecycle -- separate of -- nodes OR pods OR containers' storage & lifecycle⭐️
+  * requirements
+    * separate backend /
+      * store logs
+      * analyze logs
+      * query logs
 
 * responsible for
-  * saving container logs -- , via search/browsing interface, -- | central log store 
-
+  * saving container logs -- , via search/browsing interface, -- | central log store
 
 ## Pod and container logs {#basic-logging-in-kubernetes}
 
@@ -258,12 +250,11 @@ as your responsibility.
 
 ## Cluster-level logging architectures
 
-While Kubernetes does not provide a native solution for cluster-level logging, there are
-several common approaches you can consider. Here are some options:
-
-* Use a node-level logging agent that runs on every node.
-* Include a dedicated sidecar container for logging in an application pod.
-* Push logs directly to a backend from within an application.
+* ❌there is NO Kubernetes native solution❌
+* possible approaches
+  * node-level logging agent / runs | EVERY node
+  * sidecar container / log | application pod
+  * | application, push logs DIRECTLY -- to a -- backend 
 
 ### Using a node logging agent
 

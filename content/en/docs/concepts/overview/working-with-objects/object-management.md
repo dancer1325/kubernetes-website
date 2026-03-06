@@ -4,13 +4,8 @@ content_type: concept
 weight: 20
 ---
 
-<!-- overview -->
-The `kubectl` command-line tool supports several different ways to create and manage
-Kubernetes {{< glossary_tooltip text="objects" term_id="object" >}}. This document provides an overview of the different
-approaches. Read the [Kubectl book](https://kubectl.docs.kubernetes.io) for
-details of managing objects by Kubectl.
-
-<!-- body -->
+* goal
+  * how to manage -- , via `kubectl`, -- objects
 
 ## Management techniques
 

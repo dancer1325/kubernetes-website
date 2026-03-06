@@ -7,8 +7,7 @@ author: >
    Alexander Block
 ---
 
-This blog post was inspired by a previous Kubernetes blog post about
-[Advanced Server Side Apply](https://kubernetes.io/blog/2022/10/20/advanced-server-side-apply/).
+* see [Advanced Server Side Apply](advanced-server-side-apply)
 The author of said blog post listed multiple benefits for applications and
 controllers when switching to server-side apply (from now on abbreviated with
 SSA). Especially the chapter about
@@ -175,8 +174,9 @@ field-manager (e.g. "admin-override") that is not overwritten by Kluctl.
 
 ## A few takeaways
 
-Server-side apply is a great feature and essential for the future of
-controllers and tools in Kubernetes. The amount of controllers involved
+* Server-side apply
+  * essential -- for -- Kubernetes controllers & Kubernetes tools 
+* The amount of controllers involved
 will only get more and proper modes of working together are a must.
 
 I believe that CI/CD-related controllers and tools should leverage

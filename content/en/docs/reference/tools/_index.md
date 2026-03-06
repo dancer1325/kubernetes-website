@@ -20,6 +20,7 @@ no_list: true
 
 * == Kubernetes UI
   * web-based
+    * by default, ONLY accessible | Kubernetes virtual network
   * ⚠️deprecated & unmaintained⚠️
     * use [Headlamp](#headlamp)
   * allows
@@ -40,10 +41,10 @@ no_list: true
       * extensible -- via -- plugin system 
       * allows
         * cluster management & troubleshooting
-    * support for 
-      * in-cluster deployment 
-      * desktop application modes
     * RBAC-based controls
+  * uses 
+    * | cluster
+    * as desktop application
 
 ## Helm
 {{% thirdparty-content single="true" %}}

@@ -21,5 +21,5 @@ stages:
 
 removed: true
 ---
-Enables the [Sever Side Apply (SSA)](/docs/reference/using-api/server-side-apply/)
-feature on the API Server.
+
+* enables the [Sever Side Apply (SSA) feature](../../using-api/server-side-apply.md) | API Server

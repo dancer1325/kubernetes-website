@@ -16,6 +16,8 @@ tags:
     * specified | 
       * REST path
       * serialized object's `.apiVersion` field
+    * INDEPENDENTLY versioned
+      * == EACH API group is versioned INDEPENDENTLY
   * allows
     * | configure your API server, enable OR disable
       * EACH API group 

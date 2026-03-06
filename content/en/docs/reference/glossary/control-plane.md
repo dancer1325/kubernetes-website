@@ -14,6 +14,7 @@ tags:
   * == container orchestration layer /
     * manage the 
       * overall state of the cluster
+        * EACH Kubernetes object reach the [desired state](object.md)
       * worker nodes
     * exposes, about lifecycle of containers (define + deploy + manage), 
       * API 

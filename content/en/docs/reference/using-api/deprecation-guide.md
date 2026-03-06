@@ -9,14 +9,14 @@ weight: 45
 content_type: reference
 ---
 
-<!-- overview -->
+* goal
+  * migration FROM deprecated API versions -- to -- newer & more stable API versions  
 
-As the Kubernetes API evolves, APIs are periodically reorganized or upgraded.
-When APIs evolve, the old API is deprecated and eventually removed.
-This page contains information you need to know when migrating from
-deprecated API versions to newer and more stable API versions.
-
-<!-- body -->
+* Kubernetes API 
+  * evolves: reorganize, upgrade
+    * old APIs' phases
+      * deprecation
+      * removal
 
 ## Removed APIs by release
 

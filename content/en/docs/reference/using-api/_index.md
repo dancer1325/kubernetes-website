@@ -18,65 +18,78 @@ card:
 
 ## API versioning
 
-- multiple are supported
-    - different API path / each version
-    *Example:* `/api/v1`, `/apis/rbac.authorization.k8s.io/v1alpha1`, …
-    - ⚠️ if your objects are using a version ⚠️
-        - in deprecation period → transition to the stable one
-        - already no served → forced to replace to the new API version
-- done | API-level
-**Note:** ⚠️ not done at resource-level or field-level ⚠️
+- 👀>1 are supported👀
+  - DIFFERENT API path / EACH version
+    - _Examples:_ 
+    - _Examples:_ 
+      - /api/v1
+      - /apis/rbac.authorization.k8s.io/v1alpha1
+  - if your objects are using a version 
+    - ⚠️in DEPRECATION period -> transition to the stable one⚠️
+    - ⚠️ALREADY NO served -> replace to the NEW API version⚠️
+- 👀| API-level👀
+  - != resource-level OR field-level⚠️
+- follow semVer
+  - ❌NO CURRENT plans -- for a -- MAJOR version❌
+    - == Kubernetes v1.Y.Z
 
+
+TODO: 
 The JSON and Protobuf serialization schemas follow the same guidelines for
-schema changes. The following descriptions cover both formats.
+schema changes
 
-The API versioning and software versioning are indirectly related.
-The [API and release versioning proposal](https://git.k8s.io/sig-release/release-engineering/versioning.md)
-describes the relationship between API versioning and software versioning.
+* [API versioning vs software versioning](https://git.k8s.io/sig-release/release-engineering/versioning.md)
 
-Different API versions indicate different levels of stability and support. You
-can find more information about the criteria for each level in the
-[API Changes documentation](https://git.k8s.io/community/contributors/devel/sig-architecture/api_changes.md#alpha-beta-and-stable-versions).
-
-Here's a summary of each level:
-
-- Alpha:
-  - The version names contain `alpha` (for example, `v1alpha1`).
-  - Built-in alpha API versions are disabled by default and must be explicitly enabled in the `kube-apiserver` configuration to be used.
-  - The software may contain bugs. Enabling a feature may expose bugs.
-  - Support for an alpha API may be dropped at any time without notice.
-  - The API may change in incompatible ways in a later software release without notice.
-  - The software is recommended for use only in short-lived testing clusters,
-    due to increased risk of bugs and lack of long-term support.
-
-- Beta:
-  - The version names contain `beta` (for example, `v2beta3`).
-  - Built-in beta API versions are disabled by default and must be explicitly enabled in the `kube-apiserver` configuration to be used
-    (**except** for beta versions of APIs introduced prior to Kubernetes 1.22, which were enabled by default).
-  - Built-in beta API versions have a maximum lifetime of 9 months or 3 minor releases (whichever is longer) from introduction
-    to deprecation, and 9 months or 3 minor releases (whichever is longer) from deprecation to removal.
-  - The software is well tested. Enabling a feature is considered safe.
-  - The support for a feature will not be dropped, though the details may change.
-
-  - The schema and/or semantics of objects may change in incompatible ways in
-    a subsequent beta or stable API version. When this happens, migration
-    instructions are provided. Adapting to a subsequent beta or stable API version
-    may require editing or re-creating API objects, and may not be straightforward.
-    The migration may require downtime for applications that rely on the feature.
-  - The software is not recommended for production uses. Subsequent releases
-    may introduce incompatible changes. Use of beta API versions is
-    required to transition to subsequent beta or stable API versions
-    once the beta API version is deprecated and no longer served.
-
-  {{< note >}}
-  Please try beta features and provide feedback. After the features exit beta, it
-  may not be practical to make more changes.
-  {{< /note >}}
-
-- Stable:
-  - The version name is `vX` where `X` is an integer.
-  - Stable API versions remain available for all future releases within a Kubernetes major version,
-    and there are no current plans for a major version revision of Kubernetes that removes stable APIs.
+* DIFFERENT levels of stability & support / EACH API version
+  * [MORE](https://git.k8s.io/community/contributors/devel/sig-architecture/api_changes.md#alpha-beta-and-stable-versions).
+  * levelS
+    - Alpha
+      - names
+        - contain `alpha`
+          - _Example:_ `v1alpha1`
+      - disabled, by default
+        - if you want to use -> EXPLICITLY enable it | `kube-apiserver`
+      - software 
+        - may contain bugs
+      - may, | ANY time WITHOUT notice 
+        - be dropped 
+        - be changed in incompatible ways
+      - recommendations
+        - use it ONLY | short-lived testing clusters
+    - Beta:
+      - names
+        - contain `beta` 
+          - _Example:_ `v2beta3`
+      - enabling
+        - | Kubernetes v1.22-
+          - enabled, by default
+        - | Kubernetes v1.22+
+          - disabled, by default
+            - if you want to use -> EXPLICITLY enable it | `kube-apiserver`
+      - lifetime
+        - introduction -- to -- deprecation
+          - <= (9 months, 3 minor releases)
+        - deprecation -- to -- removal
+          - <= (9 months, 3 minor releases) 
+      - software
+        - well tested
+      - you can enable it, safely
+      - support for a feature
+        - NOT dropped
+        - may change
+      - schema & semantics of objects
+        - | subsequent beta OR stable API version, may INCOMPATIBLY change 
+          - ⚠️if you want to migrate -> may require editing OR re-creating API objects⚠️
+      - recommendations
+        - ❌NOT use | production❌
+          - Reason:🧠NEXT releases may introduce incompatible changes🧠
+        - use them (BEFORE transition to stable) & provide feedback
+          - Reason:🧠once they are promoted to stable -> may NOT be practical to make MORE changes🧠
+    - Stable:
+      - `vX` 
+        - `X` == integer
+        - version name 
+      - AVAILABLE -- for -- ALL Kubernetes future releases / SAME major version
 
 ## [API groups](https://git.k8s.io/design-proposals-archive/api-machinery/api-group.md)
 
