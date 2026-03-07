@@ -18,6 +18,7 @@ tags:
   - responsible for
     - exposes the Kubernetes API
     - handles the conversion between [API versions](../using-api/_index.md#api-versioning)
+    - track _managed fields_ / ALL NEWLY created objects
 
 - kube-apiserver
   - == Kubernetes API server's main implementation

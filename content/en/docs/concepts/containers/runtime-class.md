@@ -17,7 +17,8 @@ This page describes the RuntimeClass resource and runtime selection mechanism.
 RuntimeClass is a feature for selecting the container runtime configuration. The container runtime
 configuration is used to run a Pod's containers.
 
-<!-- body -->
+* allows
+  * define custom isolation
 
 ## Motivation
 

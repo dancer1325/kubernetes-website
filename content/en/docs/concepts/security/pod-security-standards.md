@@ -8,7 +8,11 @@ content_type: concept
 weight: 15
 ---
 
-<!-- overview -->
+* goal
+
+
+* ensure
+  * Pods & their containers are isolated appropriately
 
 The Pod Security Standards define three different _policies_ to broadly cover the security
 spectrum. These policies are _cumulative_ and range from highly-permissive to highly-restrictive.

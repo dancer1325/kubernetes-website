@@ -36,14 +36,12 @@ weight: 25
 
 ## Field management
 
-The Kubernetes API server tracks _managed fields_ for all newly created objects.
+* if you try to apply an object / fields DIFFERENT value & owned by another [manager](#field-managers-managers) -> [conflict](#conflicts)
+  * Reason:🧠indicate that the operation might undo another collaborator's changes🧠
 
-When trying to apply an object, fields that have a different value and are owned by
-another [manager](#managers) will result in a [conflict](#conflicts)
-* This is done
-in order to signal that the operation might undo another collaborator's changes.
-Writes to objects with managed fields can be forced, in which case the value of any
-conflicted field will be overridden, and the ownership will be transferred.
+TODO: 
+  Writes to objects with managed fields can be forced, in which case the value of any
+  conflicted field will be overridden, and the ownership will be transferred.
 
 Whenever a field's value does change, ownership moves from its current manager to the
 manager making the change.
@@ -59,12 +57,12 @@ details explicitly using HTTP `POST` (**create**), `PUT` (**update**), or non-ap
 * You can also declare and record a field manager
 by including a value for that field in a Server-Side Apply operation.
 
-A Server-Side Apply **patch** request requires the client to provide its identity
-as a [field manager](#managers)
-* When using Server-Side Apply, trying to change a
-field that is controlled by a different manager results in a rejected
-request unless the client forces an override.
-For details of overrides, see [Conflicts](#conflicts).
+* Server-Side Apply **patch** request
+  * requirements
+    * client must provide its identity -- as a -- [field manager](#field-managers-managers)
+
+* if you try to change -- , via Server-Side Apply, a -- field / controlled by a DIFFERENT manager -> rejected request
+  * EXCEPTION: ⚠️client forces an [override](#conflicts)⚠️
 
 When two or more appliers set a field to the same value, they share ownership of
 that field
@@ -83,14 +81,8 @@ If the field is not owned by any other field managers, it is either deleted
 from the live object or reset to its default value, if it has one.
 The same rule applies to associative list or map items.
 
-Compared to the (legacy)
-[`kubectl.kubernetes.io/last-applied-configuration`](/docs/reference/labels-annotations-taints/#kubectl-kubernetes-io-last-applied-configuration)
-annotation managed by `kubectl`, Server-Side Apply uses a more declarative
-approach, that tracks a user's (or client's) field management, rather than
-a user's last applied state
-* As a side effect of using Server-Side Apply,
-information about which field manager manages each field in an object also
-becomes available.
+* 👀vs legacy [`kubectl.kubernetes.io/last-applied-configuration`](../labels-annotations-taints/_index.md#kubectlkubernetesiolast-applied-configuration)👀
+  * (SSA) tracks a user's (or client's) field management vs (`last-applied-configuration`) user's last applied state
 
 ### Conflicts
 
@@ -99,34 +91,33 @@ becomes available.
     * Reason:🧠prevents an applier unintentionally overwrite a value🧠
 
 * ways / applier can resolve the conflict
-  * **Overwrite value, become sole manager:** If overwriting the value was
-    intentional (or if the applier is an automated process like a controller) the
-    applier should set the `force` query parameter to true (for `kubectl apply`,
-    you use the `--force-conflicts` command line parameter), and make the request
-    again
-    * This forces the operation to succeed, changes the value of the field,
-      and removes the field from all other managers' entries in `managedFields`.
-  * **Don't overwrite value, give up management claim:** If the applier doesn't
-    care about the value of the field any more, the applier can remove it from their
-    local model of the resource, and make a new request with that particular field
-    omitted
-    * This leaves the value unchanged, and causes the field to be removed
-      from the applier's entry in `managedFields`.
-  * **Don't overwrite value, become shared manager:** If the applier still cares
-    about the value of a field, but doesn't want to overwrite it, they can
-    change the value of that field in their local model of the resource so as to
-    match the value of the object on the server, and then make a new request that
-    takes into account that local update
-    * Doing so leaves the value unchanged,
-      and causes that field's management to be shared by the applier along with all
-      other field managers that already claimed to manage it.
+  * **Overwrite value + become 1! manager** 
+    * requirements
+      * applier set the query parameter `force=true`
+        * _Example:_ `kubectl apply --force-conflicts`
+    * become 1! manager
+      * Reason: 🧠remove the field | ALL OTHER managers' `.managedFields`🧠
+    * use cases
+      * fresh Kubernetes cluster installations
+      * upgrades
+  * **NOT overwrite value + give up management claim** 
+    * the applier
+      * does NOT care about the value of the field
+      * make a NEW request / omit that particular field
+      * remove the field | `managedFields`
+  * **NOT overwrite value + become SHARED manager**
+    * the applier
+      * STILL cares about the value of a field
+      * NOT overwrite the field
+      * adjust their local model (== their manifest) == CURRENT status
 
 ### Field managers {#managers}
 
-Managers identify distinct workflows that are modifying the object (especially
-useful on conflicts!), and can be specified through the
-[`fieldManager`](/docs/reference/kubernetes-api/common-parameters/common-parameters/#fieldManager)
-query parameter as part of a modifying request
+* Managers
+  * identify DIFFERENT workflows / 
+    * are modifying the object
+    * can be specified -- through the -- [`fieldManager` query parameter](../kubernetes-api/common-parameters/common-parameters.md#fieldmanager-fieldmanager)
+
 * When you Apply to a resource,
 the `fieldManager` parameter is required.
 For other updates, the API server infers a field manager identity from the

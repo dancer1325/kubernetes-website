@@ -69,5 +69,15 @@ tags:
 - `metadata`
   - := data -- to -- identify UNIQUELY the Kubernetes object
     - _Example:_ `.name`, `.namespace`
+  - `.name`
+    - requirements
+      - UNIQUE | [namespace](namespace.md)
+        - (NOT ACROSS namespaceS)
+
+- resources /
+  - namespace-based
+    - Pods, Deployments, Services
+  - cluster-wide resources
+    - StorageClasses, Nodes, PersistentVolumes
 
 - [Kubernetes API Conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md)

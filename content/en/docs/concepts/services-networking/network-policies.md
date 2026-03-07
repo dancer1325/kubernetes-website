@@ -18,6 +18,10 @@ description: >-
 
 * TODO:
 
+let you control
+network traffic between Pods, or between Pods and the network outside your cluster.
+
+(declarative control over network packet filtering)
 <!-- overview -->
 
 If you want to control traffic flow at the IP address or port level for TCP, UDP, and SCTP protocols,

@@ -8,9 +8,7 @@ author: >
 ---
 
 * [Server-side apply (SSA)](/content/en/docs/reference/using-api/server-side-apply.md) (SSA)
-  * [GA for a few releases](../2021/server-side-apply-ga) and I
-  have found myself in a number of conversations, recommending that people / teams
-  in various situations use it.  So I’d like to write down some of those reasons.
+  * [GA for a few releases](../2021/server-side-apply-ga) 
 
 ## Obvious (and not-so-obvious) benefits of SSA {#benefits}
 

@@ -12,9 +12,6 @@ weight: 50
     * can authenticate -- to the -- Kubernetes API server
     * ' requests are authorized
 
-<!-- overview -->
-This page provides an overview of controlling access to the Kubernetes API.
-
 <!-- body -->
 Users access the [Kubernetes API](/docs/concepts/overview/kubernetes-api/) using `kubectl`,
 client libraries, or by making REST requests.  Both human users and

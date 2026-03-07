@@ -10,8 +10,10 @@ tags:
 - fundamental
 - core-object
 ---
- Provides an identity for processes that run in a {{< glossary_tooltip text="Pod" term_id="pod" >}}.
 
-<!--more--> 
-
-When processes inside Pods access the cluster, they are authenticated by the API server as a particular service account, for example, `default`. When you create a Pod, if you do not specify a service account, it is automatically assigned the default service account in the same {{< glossary_tooltip text="Namespace" term_id="namespace" >}}.
+* 👀exist 1 serviceAccount / EACH namespace👀
+  * | create a Pod, if you do NOT specify a service account -> use AUTOMATICALLY the default service account | that [namespace](namespace.md)
+* provides
+  * an identity -- for -- processes / run | [pod](pod.md)
+* uses
+  * pod communicate -- , authenticating thanks to serviceAccount, with -- the API server

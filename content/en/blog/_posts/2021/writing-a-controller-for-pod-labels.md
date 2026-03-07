@@ -7,18 +7,20 @@ author: >
   Arthur Busser (Padok) 
 ---
 
-[Operators][what-is-an-operator] are proving to be an excellent solution to
-running stateful distributed applications in Kubernetes. Open source tools like
-the [Operator SDK][operator-sdk] provide ways to build reliable and maintainable
-operators, making it easier to extend Kubernetes and implement custom
-scheduling.
+* [Operators][what-is-an-operator]
+  * allows
+    * running stateful distributed applications | Kubernetes
+  * TODO: Open source tools like
+  the [Operator SDK][operator-sdk] provide ways to build reliable and maintainable
+  operators, making it easier to extend Kubernetes and implement custom
+  scheduling.
 
-Kubernetes operators run complex software inside your cluster. The open source
-community has already built [many operators][operatorhub] for distributed
-applications like Prometheus, Elasticsearch, or Argo CD. Even outside of
-open source, operators can help to bring new functionality to your Kubernetes
-cluster.
+  * uses
+    * run complex software | your cluster
+  * [Operator hub][operatorhub]
+    * _Example:_ Prometheus, Elasticsearch, Argo CD, ...
 
+TODO:
 An operator is a set of [custom resources][custom-resource-definitions] and a
 set of [controllers][controllers]. A controller watches for changes to specific
 resources in the Kubernetes API and reacts by creating, updating, or deleting

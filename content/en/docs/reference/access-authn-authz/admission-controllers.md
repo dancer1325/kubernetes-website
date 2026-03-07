@@ -24,6 +24,12 @@ to properly support the feature.  As a result, a Kubernetes API server that is n
 configured with the right set of admission controllers is an incomplete server that will not
 support all the features you expect.
 
+plugins / intercept Kubernetes API requests and can validate or mutate
+the requests based on specific fields in the request
+* Thoughtfully designing
+  these controllers helps to avoid unintended disruptions as Kubernetes APIs
+  change across version updates.
+2
 <!-- body -->
 ## What are they?
 

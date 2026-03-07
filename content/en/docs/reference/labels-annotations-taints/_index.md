@@ -11,13 +11,9 @@ card:
     title: Labels, annotations and taints
 ---
 
-<!-- overview -->
-
-Kubernetes reserves all labels, annotations and taints in the `kubernetes.io` and `k8s.io` namespaces.
-
-This document serves both as a reference to the values and as a coordination point for assigning values.
-
-<!-- body -->
+* Kubernetes
+  * reserves
+    * ALL labels + annotations + taints | `kubernetes.io` namespaces & `k8s.io` namespaces
 
 ## Labels, annotations and taints used on API objects
 
@@ -1604,19 +1600,14 @@ annotation instead. Kubernetes versions 1.25 and newer ignore this annotation.
 
 ### kubectl.kubernetes.io/last-applied-configuration
 
-Type: Annotation
-
-Example: _see following snippet_
-```yaml
-    kubectl.kubernetes.io/last-applied-configuration: >
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"example","namespace":"default"},"spec":{"selector":{"matchLabels":{"app.kubernetes.io/name":foo}},"template":{"metadata":{"labels":{"app.kubernetes.io/name":"foo"}},"spec":{"containers":[{"image":"container-registry.example/foo-bar:1.42","name":"foo-bar","ports":[{"containerPort":42}]}]}}}}
-```
-
-Used on: all objects
-
-The kubectl command line tool uses this annotation as a legacy mechanism
-to track changes. That mechanism has been superseded by
-[Server-side apply](/docs/reference/using-api/server-side-apply/).
+* Type: Annotation
+  * allows
+    * track changes
+  * managed -- by -- kubectl
+* uses
+  * | ALL objects
+* deprecated
+  * replaced by -- [Server-side apply](../using-api/server-side-apply.md)
 
 ### kubectl.kubernetes.io/restartedAt {#kubectl-k8s-io-restart-at}
 

@@ -9,11 +9,10 @@ content_type: concept
 weight: 10
 ---
 
-<!-- overview -->
-This page provides an overview of authentication in Kubernetes, with a focus on
-authentication to the [Kubernetes API](/docs/concepts/overview/kubernetes-api/).
+* goal
+  * authentication | Kubernetes
+    * focus -- via -- [Kubernetes API](../../concepts/overview/kubernetes-api)
 
-<!-- body -->
 ## Users in Kubernetes
 
 All Kubernetes clusters have two categories of users: service accounts managed

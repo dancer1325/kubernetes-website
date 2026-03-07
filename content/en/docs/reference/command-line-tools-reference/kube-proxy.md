@@ -5,6 +5,8 @@ weight: 30
 auto_generated: true
 ---
 
+* 💡[source code](https://github.com/dancer1325/kubernetes/tree/master/cmd/kube-proxy)💡
+* ⚠️this code is auto-generated⚠️
 
 <!--
 The file is auto-generated from the Go source code of the component using a generic
@@ -16,9 +18,6 @@ To update the reference content, please follow the
 guide. You can file document formatting bugs against the
 [reference-docs](https://github.com/kubernetes-sigs/reference-docs/) project.
 -->
-
-* 💡[source code](https://github.com/dancer1325/kubernetes/tree/master/cmd/kube-proxy)💡
-* ⚠️this code is auto-generated⚠️
 
 ## {{% heading "synopsis" %}}
 

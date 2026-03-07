@@ -19,7 +19,7 @@ concepts:
 * [Admission controllers](/docs/reference/access-authn-authz/admission-controllers/)
 * [Admission webhooks](/docs/reference/access-authn-authz/extensible-admission-controllers/#what-are-admission-webhooks)
 
-<!-- body -->
+  * For design considerations, see
 
 ## Importance of good webhook design {#why-good-webhook-design-matters}
 

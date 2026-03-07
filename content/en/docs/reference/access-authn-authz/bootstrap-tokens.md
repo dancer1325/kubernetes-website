@@ -6,8 +6,10 @@ content_type: concept
 weight: 20
 ---
 
-<!-- overview -->
+* goal
+  * authentication -- via -- Bootstrap tokens
 
+TODO: 
 {{< feature-state for_k8s_version="v1.18" state="stable" >}}
 
 Bootstrap tokens are a simple bearer token that is meant to be used when

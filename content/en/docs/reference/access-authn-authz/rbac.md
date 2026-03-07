@@ -9,161 +9,17 @@ aliases: [/rbac/]
 weight: 33
 ---
 
-<!-- overview -->
-Role-based access control (RBAC) is a method of regulating access to computer or
-network resources based on the roles of individual users within your organization.
-
-
-<!-- body -->
-RBAC authorization uses the `rbac.authorization.k8s.io`
-{{< glossary_tooltip text="API group" term_id="api-group" >}} to drive authorization
-decisions, allowing you to dynamically configure policies through the Kubernetes API.
-
-To enable RBAC, start the {{< glossary_tooltip text="API server" term_id="kube-apiserver" >}}
-with the `--authorization-config` flag set to a file that includes the `RBAC` authorizer; for example:
-
-```yaml
-apiVersion: apiserver.config.k8s.io/v1
-kind: AuthorizationConfiguration
-authorizers:
-  ...
-  - type: RBAC
-  ...
-```
-
-Or, start the {{< glossary_tooltip text="API server" term_id="kube-apiserver" >}} with
-the `--authorization-mode` flag set to a comma-separated list that includes `RBAC`;
-for example:
-```shell
-kube-apiserver --authorization-mode=...,RBAC --other-options --more-options
-```
+* ways to enable
+  * start the [API server](../glossary/kube-apiserver.md) -- with -- 
+    * `--authorization-config=pathToFileWhichIncludesRBACAutorizer`, OR
+    * `--authorization-mode=commaSeparatedListWhichIncludesRBAC`
 
 ## API objects {#api-overview}
 
-The RBAC API declares four kinds of Kubernetes object: _Role_, _ClusterRole_,
-_RoleBinding_ and _ClusterRoleBinding_. You can describe or amend the RBAC
-{{< glossary_tooltip text="objects" term_id="object" >}}
-using tools such as `kubectl`, just like any other Kubernetes object.
-
-{{< caution >}}
-These objects, by design, impose access restrictions. If you are making changes
-to a cluster as you learn, see
-[privilege escalation prevention and bootstrapping](#privilege-escalation-prevention-and-bootstrapping)
-to understand how those restrictions can prevent you making some changes.
-{{< /caution >}}
-
-### Role and ClusterRole
-
-An RBAC _Role_ or _ClusterRole_ contains rules that represent a set of permissions.
-Permissions are purely additive (there are no "deny" rules).
-
-A Role always sets permissions within a particular {{< glossary_tooltip text="namespace" term_id="namespace" >}};
-when you create a Role, you have to specify the namespace it belongs in.
-
-ClusterRole, by contrast, is a non-namespaced resource. The resources have different names (Role
-and ClusterRole) because a Kubernetes object always has to be either namespaced or not namespaced;
-it can't be both.
-
-ClusterRoles have several uses. You can use a ClusterRole to:
-
-1. define permissions on namespaced resources and be granted access within individual namespace(s)
-1. define permissions on namespaced resources and be granted access across all namespaces
-1. define permissions on cluster-scoped resources
-
-If you want to define a role within a namespace, use a Role; if you want to define
-a role cluster-wide, use a ClusterRole.
-
-#### Role example
-
-Here's an example Role in the "default" namespace that can be used to grant read access to
-{{< glossary_tooltip text="pods" term_id="pod" >}}:
-
-{{% code_sample file="access/simple-role.yaml" %}}
-
-#### ClusterRole example
-
-A ClusterRole can be used to grant the same permissions as a Role.
-Because ClusterRoles are cluster-scoped, you can also use them to grant access to:
-
-* cluster-scoped resources (like {{< glossary_tooltip text="nodes" term_id="node" >}})
-* non-resource endpoints (like `/healthz`)
-* namespaced resources (like Pods), across all namespaces
-
-  For example: you can use a ClusterRole to allow a particular user to run
-  `kubectl get pods --all-namespaces`
-
-Here is an example of a ClusterRole that can be used to grant read access to
-{{< glossary_tooltip text="secrets" term_id="secret" >}} in any particular namespace,
-or across all namespaces (depending on how it is [bound](#rolebinding-and-clusterrolebinding)):
-
-{{% code_sample file="access/simple-clusterrole.yaml" %}}
-
-The name of a Role or a ClusterRole object must be a valid
-[path segment name](/docs/concepts/overview/working-with-objects/names#path-segment-names).
-
-### RoleBinding and ClusterRoleBinding
-
-A role binding grants the permissions defined in a role to a user or set of users.
-It holds a list of *subjects* (users, groups, or service accounts), and a reference to the
-role being granted.
-A RoleBinding grants permissions within a specific namespace whereas a ClusterRoleBinding
-grants that access cluster-wide.
-
-A RoleBinding may reference any Role in the same namespace. Alternatively, a RoleBinding
-can reference a ClusterRole and bind that ClusterRole to the namespace of the RoleBinding.
-If you want to bind a ClusterRole to all the namespaces in your cluster, you use a
-ClusterRoleBinding.
-
-The name of a RoleBinding or ClusterRoleBinding object must be a valid
-[path segment name](/docs/concepts/overview/working-with-objects/names#path-segment-names).
-
-#### RoleBinding examples {#rolebinding-example}
-
-Here is an example of a RoleBinding that grants the "pod-reader" Role to the user "jane"
-within the "default" namespace.
-This allows "jane" to read pods in the "default" namespace.
-
-{{% code_sample file="access/simple-rolebinding-with-role.yaml" %}}
-
-A RoleBinding can also reference a ClusterRole to grant the permissions defined in that
-ClusterRole to resources inside the RoleBinding's namespace. This kind of reference
-lets you define a set of common roles across your cluster, then reuse them within
-multiple namespaces.
-
-For instance, even though the following RoleBinding refers to a ClusterRole,
-"dave" (the subject, case sensitive) will only be able to read Secrets in the "development"
-namespace, because the RoleBinding's namespace (in its metadata) is "development".
-
-{{% code_sample file="access/simple-rolebinding-with-clusterrole.yaml" %}}
-
-#### ClusterRoleBinding example
-
-To grant permissions across a whole cluster, you can use a ClusterRoleBinding.
-The following ClusterRoleBinding allows any user in the group "manager" to read
-secrets in any namespace.
-
-{{% code_sample file="access/simple-clusterrolebinding.yaml" %}}
-
-After you create a binding, you cannot change the Role or ClusterRole that it refers to.
-If you try to change a binding's `roleRef`, you get a validation error. If you do want
-to change the `roleRef` for a binding, you need to remove the binding object and create
-a replacement.
-
-There are two reasons for this restriction:
-
-1. Making `roleRef` immutable allows granting someone `update` permission on an existing binding
-   object, so that they can manage the list of subjects, without being able to change
-   the role that is granted to those subjects.
-1. A binding to a different role is a fundamentally different binding.
-   Requiring a binding to be deleted/recreated in order to change the `roleRef`
-   ensures the full list of subjects in the binding is intended to be granted
-   the new role (as opposed to enabling or accidentally modifying only the roleRef
-   without verifying all of the existing subjects should be given the new role's
-   permissions).
-
-The `kubectl auth reconcile` command-line utility creates or updates a manifest file containing RBAC objects,
-and handles deleting and recreating binding objects if required to change the role they refer to.
-See [command usage and examples](#kubectl-auth-reconcile) for more information.
+* [`Role`](../glossary/rbac.md)
+* [`ClusterRole`](../glossary/rbac.md)
+* [`RoleBinding`](../glossary/rbac.md)
+* [`ClusterRoleBinding`](../glossary/rbac.md)
 
 ### Referring to resources
 
@@ -1033,9 +889,14 @@ Grants a ClusterRole across the entire cluster (all namespaces). Examples:
 
 ### `kubectl auth reconcile` {#kubectl-auth-reconcile}
 
-Creates or updates `rbac.authorization.k8s.io/v1` API objects from a manifest file.
-
-Missing objects are created, and the containing namespace is created for namespaced objects, if required.
+* responsible for
+  * FROM a manifest file,
+    * creates OR updates `rbac.authorization.k8s.io/v1` API objects
+  * if it's required to change the role | `RoleBinding` OR `ClusterRoleBinding` -> 
+    * delete & recreate binding objects
+    * if required -> create 
+      * missing objects
+      * containing namespace
 
 Existing roles are updated to include the permissions in the input objects,
 and remove extra permissions if `--remove-extra-permissions` is specified.

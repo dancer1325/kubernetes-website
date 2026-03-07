@@ -13,6 +13,7 @@ content_type: concept
 
 This page provides an overview of Validating Admission Policy.
 
+(declarative restrictions on what changes someone can make using the Kubernetes API).
 
 <!-- body -->
 

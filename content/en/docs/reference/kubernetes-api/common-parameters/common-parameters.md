@@ -10,6 +10,11 @@ weight: 11
 auto_generated: true
 ---
 
+
+* 💡[source code](https://github.com/dancer1325/kubernetes/blob/master/staging/src/k8s.io/apimachinery/pkg/apis/meta/v1/types.go)💡
+  * declared fields
+* ⚠️this code is auto-generated⚠️
+
 <!--
 The file is auto-generated from the Go source code of the component using a generic
 [generator](https://github.com/kubernetes-sigs/reference-docs/). To learn how
