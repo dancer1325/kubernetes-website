@@ -9,6 +9,9 @@ weight: 50
 User _impersonation_ is a method of allowing authenticated users to act as another user,
 group, or service account through HTTP headers.
 
+provides
+a method that a user can act as another user through impersonation headers
+
 <!-- body -->
 A user can act as another user through impersonation headers. These let requests
 manually override the user info a request authenticates as. For example, an admin

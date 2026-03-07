@@ -27,6 +27,13 @@ Services defined in the cluster are assigned DNS names. By default, a
 client Pod's DNS search list includes the Pod's own namespace and the
 cluster's default domain.
 
+* `serviceName.namespaceName.type.clusterDomain`
+  * DNS name pattern
+  * _Example:_ `kubernetes.default.svc`
+    * default one
+    * AUTOMATICALLY created
+    * points -- to -- API Server
+
 ### Namespaces of Services
 
 A DNS query may return different results based on the namespace of the Pod making
@@ -392,6 +399,7 @@ this problem.
   Inside a Windows Pod, you can resolve both `kubernetes.default.svc.cluster.local`
   and `kubernetes`, but not the partially qualified names (`kubernetes.default` or
   `kubernetes.default.svc`).
+
 
 ## {{% heading "whatsnext" %}}
 

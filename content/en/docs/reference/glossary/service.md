@@ -9,17 +9,23 @@ tags:
 - core-object
 ---
 
-* := method /
-  * allows
-    * exposing a network application / 
-      * is running | >=1 cluster's podS
-      * targeted set of pods is determined -- by a -- [selector](selector.md)
-        * if number of pods is changed -> set of pods / match de selector change
-  * uses either
-    * IP networking (IPv4, IPv6, or both), OR
-    * external name reference | Domain Name System (DNS)
-  * makes sure that
-    * network traffic can be directed -- to the -- workload's current set of pods
-  * enables
-    * [Ingress](ingress.md)
-    * [Gateway](gateway.md)
+* Service
+  * := method /
+    * allows
+      * exposing a network application / 
+        * is running | >=1 cluster's podS
+        * targeted set of pods is determined -- by a -- [selector](selector.md)
+          * if number of pods is changed -> set of pods / match de selector change
+    * uses either
+      * IP networking (IPv4, IPv6, or both), OR
+      * external name reference | Domain Name System (DNS)
+    * makes sure that
+      * network traffic can be directed -- to the -- workload's current set of pods
+    * enables
+      * [Ingress](ingress.md)
+      * [Gateway](gateway.md)
+  * 👀default service 👀
+    * name: kubernetes
+    * type: ClusterIP
+    * | default namespace
+    * created | install Kubernetes

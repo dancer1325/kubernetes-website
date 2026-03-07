@@ -9,9 +9,14 @@ aka:
 tags:
 - security
 ---
- A cryptographically secure file used to validate access to the Kubernetes cluster.
 
-<!--more--> 
+* certificate
+  * == cryptographically secure file /
+    * allows
+      * validating access -- to the -- Kubernetes cluster
+      * enable applications | Kubernetes cluster -- to -- SECURELY access the Kubernetes API
 
-Certificates enable applications within a Kubernetes cluster to access the Kubernetes API securely. Certificates validate that clients are allowed to access the API.
-
+* cluster's certificate authority (CA)
+  * == CA | Kubernetes cluster /
+    * [API server](kube-apiserver.md) configured -- to -- trust it
+  * created, by default, | install the Kubernetes cluster

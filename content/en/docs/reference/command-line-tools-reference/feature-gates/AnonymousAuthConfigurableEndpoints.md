@@ -19,5 +19,6 @@ stages:
     fromVersion: "1.34"
     locked: true
 ---
-Enable [configurable endpoints for anonymous auth](/docs/reference/access-authn-authz/authentication/#anonymous-authenticator-configuration)
-for the API server.
+
+* enable 
+  * [configurable endpoints -- for -- anonymous authentications | API server](../../access-authn-authz/authentication.md#anonymous-authenticator-configuration)
