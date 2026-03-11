@@ -11,7 +11,7 @@ tags:
 - core-object
 ---
 
-* := Kubernetes built-in kind /
+* := Kubernetes objects /
   * 💡managed by Kubernetes💡
   * ⚠️namespace-scope⚠️
     * == exist 1 serviceAccount (default one) / EACH namespace
@@ -21,4 +21,4 @@ tags:
   * provides
     * an identity -- for -- processes / run | [pod](pod.md)
 * uses
-  * pod communicate -- , authenticating thanks to serviceAccount, with -- the API server
+  * pod & applications | pod can communicate -- , authenticating thanks to serviceAccount, with -- the API server

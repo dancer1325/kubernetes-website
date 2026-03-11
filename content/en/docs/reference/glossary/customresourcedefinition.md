@@ -11,6 +11,8 @@ tags:
 - operation
 - extension
 ---
+
+TODO: 
 A kind of {{< glossary_tooltip text="API object" term_id="object" >}} that defines a new custom API to add
 to your Kubernetes API server, without building a complete custom server.
 

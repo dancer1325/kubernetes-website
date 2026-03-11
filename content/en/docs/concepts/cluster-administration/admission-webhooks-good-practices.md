@@ -6,20 +6,22 @@ content_type: concept
 weight: 60
 ---
 
-<!-- overview -->
+* goal
+  * | design _admission webhooks_ | Kubernetes,
+    * good practices
+    * considerations
 
-This page provides good practices and considerations when designing
-_admission webhooks_ in Kubernetes. This information is intended for
-cluster operators who run admission webhook servers or third-party applications
-that modify or validate your API requests.
+* audience
+  * cluster operators
+    * Reason: 🧠they run
+      * admission webhook servers
+      * third-party applications / modify or validate your API requests🧠
 
-Before reading this page, ensure that you're familiar with the following
-concepts:
+* requirements
+  * [Admission controllers](../../reference/access-authn-authz/admission-controllers)
+  * [Admission webhooks](../../reference/access-authn-authz/extensible-admission-controllers.md#what-are-admission-webhooks)
 
-* [Admission controllers](/docs/reference/access-authn-authz/admission-controllers/)
-* [Admission webhooks](/docs/reference/access-authn-authz/extensible-admission-controllers/#what-are-admission-webhooks)
-
-  * For design considerations, see
+    * For design considerations, see
 
 ## Importance of good webhook design {#why-good-webhook-design-matters}
 
@@ -631,11 +633,10 @@ modify any resources in that namespace.
 
 ## Examples of good implementations {#example-good-implementations}
 
-{{% thirdparty-content %}}
-
 The following projects are examples of "good" custom webhook server
 implementations. You can use them as a starting point when designing your own
-webhooks. Don't use these examples as-is; use them as a starting point and
+webhooks
+Don't use these examples as-is; use them as a starting point and
 design your webhooks to run well in your specific environment.
 
 * [`cert-manager`](https://github.com/cert-manager/cert-manager/tree/master/internal/webhook)

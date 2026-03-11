@@ -4,14 +4,9 @@ content_type: concept
 weight: 30
 ---
 
-<!-- overview -->
-
-Operators are software extensions to Kubernetes that make use of
-[custom resources](/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-to manage applications and their components. Operators follow
-Kubernetes principles, notably the [control loop](/docs/concepts/architecture/controller).
-
-<!-- body -->
+* Operators
+  * == software extensions to Kubernetes / 
+    * use: [custom resources](api-extension/custom-resources) + [controllers](../architecture/controller)
 
 ## Motivation
 

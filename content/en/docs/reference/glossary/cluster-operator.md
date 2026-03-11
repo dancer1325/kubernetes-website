@@ -9,13 +9,9 @@ aka:
 tags:
 - user-type
 ---
- A person who configures, controls, and monitors clusters.
 
-<!--more--> 
-
-Their primary responsibility is keeping a cluster up and running, which may involve periodic maintenance activities or upgrades.<br>
-
-{{< note >}}
-Cluster operators are different from the [Operator pattern](/docs/concepts/extend-kubernetes/operator/) that extends the Kubernetes API.
-{{< /note >}}
-
+* cluster operator
+  * == person / 
+    * manage (configures, controls, and monitors) clusters
+    * responsible for: cluster up & running
+  * != [operator pattern](operator-pattern.md)

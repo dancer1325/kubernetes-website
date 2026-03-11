@@ -4,24 +4,11 @@ content_type: concept
 weight: 70
 ---
 
-<!-- overview -->
-{{<glossary_definition term_id="garbage-collection" length="short">}} This
-allows the clean up of resources like the following:
-
-* [Terminated pods](/docs/concepts/workloads/pods/pod-lifecycle/#pod-garbage-collection)
-* [Completed Jobs](/docs/concepts/workloads/controllers/ttlafterfinished/)
-* [Objects without owner references](#owners-dependents)
-* [Unused containers and container images](#containers-images)
-* [Dynamically provisioned PersistentVolumes with a StorageClass reclaim policy of Delete](/docs/concepts/storage/persistent-volumes/#delete)
-* [Stale or expired CertificateSigningRequests (CSRs)](/docs/reference/access-authn-authz/certificate-signing-requests/#request-signing-process)
-* {{<glossary_tooltip text="Nodes" term_id="node">}} deleted in the following scenarios:
-  * On a cloud when the cluster uses a [cloud controller manager](/docs/concepts/architecture/cloud-controller/)
-  * On-premises when the cluster uses an addon similar to a cloud controller
-    manager
-* [Node Lease objects](/docs/concepts/architecture/nodes/#heartbeats)
+* [definition](../../reference/glossary/garbage-collection.md)
 
 ## Owners and dependents {#owners-dependents}
 
+TODO: 
 Many objects in Kubernetes link to each other through [*owner references*](/docs/concepts/overview/working-with-objects/owners-dependents/).
 Owner references tell the control plane which objects are dependent on others.
 Kubernetes uses owner references to give the control plane, and other API
@@ -57,14 +44,17 @@ You can check for that kind of Event by running
 
 ## Cascading deletion {#cascading-deletion}
 
+* cascading deletion
+  * 
 Kubernetes checks for and deletes objects that no longer have owner
-references, like the pods left behind when you delete a ReplicaSet. When you
+references
+* _Example:_ pods left | delete a ReplicaSet
+* When you
 delete an object, you can control whether Kubernetes deletes the object's
-dependents automatically, in a process called *cascading deletion*. There are
-two types of cascading deletion, as follows:
-
-* Foreground cascading deletion
-* Background cascading deletion
+dependents automatically, in a process called 
+* types of cascading deletion
+  * Foreground cascading deletion
+  * Background cascading deletion
 
 You can also control how and when garbage collection deletes resources that have
 owner references using Kubernetes {{<glossary_tooltip text="finalizers" term_id="finalizer">}}.

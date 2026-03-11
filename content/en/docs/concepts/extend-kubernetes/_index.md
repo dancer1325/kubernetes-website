@@ -18,63 +18,54 @@ no_list: true
 * goal
   * how to customize a Kubernetes cluster
 
-* Kubernetes
-  * HIGHLY configurable & extensible
-    * -> rare need to 
-      * fork OR
-      * submit patches
+* audience
+  * [cluster operator](../../reference/glossary/cluster-operator.md)
+  * [platform developer](../../reference/glossary/platform-developer.md)
+  * [Kubernetes contributors](../../reference/glossary/contributor.md)
 
-TODO:
-- extensible
-  - plugin architecture
-    - way to extend it’s functionality via
-      - controllers
-      - operators
-      - …
-  - define custom resources
-  - extensions to the API
-
-* It is aimed at
-{{< glossary_tooltip text="cluster operators" term_id="cluster-operator" >}} who want to understand
-how to adapt their Kubernetes cluster to the needs of their work environment
-* Developers who are
-prospective {{< glossary_tooltip text="Platform Developers" term_id="platform-developer" >}} or
-Kubernetes Project {{< glossary_tooltip text="Contributors" term_id="contributor" >}} will also
-find it useful as an introduction to what extension points and patterns exist, and their
-trade-offs and limitations.
-
-Customization approaches can be broadly divided into [configuration](#configuration), which only
-involves changing command line arguments, local configuration files, or API resources; and [extensions](#extensions),
-which involve running additional programs, additional network services, or both.
-This document is primarily about _extensions_.
-
-- ⚠️ Features can be added to your Kubernetes cluster ⚠️
+* ways to customize Kubernetes
+  * [configuration](#configuration)
+  * [extensions](#extensions)
+    * == run ADDITIONAL programs &/OR ADDITIONAL network services
 
 ## Configuration
 
-*Configuration files* and *command arguments* are documented in the [Reference](/docs/reference/) section of the online
-documentation, with a page for each binary:
+* == change Kubernetes component configuration
+  * ways
+    * CL arguments
+    * local configuration files
+    * API resources
+  * ALLOWED Kubernetes components
+    * [`kube-apiserver`](../../reference/command-line-tools-reference/kube-apiserver)
+    * [`kube-controller-manager`](../../reference/command-line-tools-reference/kube-controller-manager)
+    * [`kube-scheduler`](../../reference/command-line-tools-reference/kube-scheduler)
+    * [`kubelet`](../../reference/command-line-tools-reference/kubelet)
+    * [`kube-proxy`](../../reference/command-line-tools-reference/kube-proxy)
 
-* [`kube-apiserver`](/docs/reference/command-line-tools-reference/kube-apiserver/)
-* [`kube-controller-manager`](/docs/reference/command-line-tools-reference/kube-controller-manager/)
-* [`kube-scheduler`](/docs/reference/command-line-tools-reference/kube-scheduler/)
-* [`kubelet`](/docs/reference/command-line-tools-reference/kubelet/)
-* [`kube-proxy`](/docs/reference/command-line-tools-reference/kube-proxy/)
+* cons
+  * NORMALLY, ONLY ALLOWED -- by -- [cluster operator](../../reference/glossary/cluster-operator.md)
+  * Kubernetes-version dependant
+    * == if there are modifications BETWEEN Kubernetes versions -> you need to modify & restart processes
 
-Command arguments and configuration files may not always be changeable in a hosted Kubernetes service or a
-distribution with managed installation. When they are changeable, they are usually only changeable
-by the cluster operator. Also, they are subject to change in future Kubernetes versions, and
-setting them may require restarting processes. For those reasons, they should be used only when
-there are no other options.
+* recommendations
+  * LAST ALTERNATIVE to extend Kubernetes
 
-Built-in *policy APIs*, such as [ResourceQuota](/docs/concepts/policy/resource-quotas/),
-[NetworkPolicy](/docs/concepts/services-networking/network-policies/) and Role-based Access Control
-([RBAC](/docs/reference/access-authn-authz/rbac/)), are built-in Kubernetes APIs that provide declaratively configured policy settings.
-APIs are typically usable even with hosted Kubernetes services and with managed Kubernetes installations.
-The built-in policy APIs follow the same conventions as other Kubernetes resources such as Pods.
-When you use a policy APIs that is [stable](/docs/reference/using-api/#api-versioning), you benefit from a
-[defined support policy](/docs/reference/using-api/deprecation-policy/) like other Kubernetes APIs.
-For these reasons, policy APIs are recommended over *configuration files* and *command arguments* where suitable.
+* built-in *policy APIs*
+  * == built-in Kubernetes APIs /
+    * provide
+      * declaratively configured policy settings
+  * _Examples:_ 
+    * [ResourceQuota](../policy/resource-quotas)
+    * [NetworkPolicy](../services-networking/network-policies)
+    * [RBAC](../../reference/access-authn-authz/rbac)
+  * use cases | they can be managed
+    * hosted Kubernetes services
+    * managed Kubernetes installations
+  * 
+    The built-in policy APIs follow the same conventions as other Kubernetes resources such as Pods.
+    When you use a policy APIs that is [stable](/docs/reference/using-api/#api-versioning), you benefit from a
+    [defined support policy](/docs/reference/using-api/deprecation-policy/) like other Kubernetes APIs.
+    For these reasons, policy APIs are recommended over *configuration files* and *command arguments* where suitable.
 
 ## Extensions
 
@@ -82,31 +73,40 @@ Extensions are software components that extend and deeply integrate with Kuberne
 They adapt it to support new types and new kinds of hardware.
 
 Many cluster administrators use a hosted or distribution instance of Kubernetes.
-These clusters come with extensions pre-installed. As a result, most Kubernetes
+These clusters come with extensions pre-installed
+* As a result, most Kubernetes
 users will not need to install extensions and even fewer users will need to author new ones.
 
 ### Extension patterns
 
-Kubernetes is designed to be automated by writing client programs. Any
+Kubernetes is designed to be automated by writing client programs
+* Any
 program that reads and/or writes to the Kubernetes API can provide useful
-automation. *Automation* can run on the cluster or off it. By following
+automation
+* *Automation* can run on the cluster or off it
+* By following
 the guidance in this doc you can write highly available and robust automation.
 Automation generally works with any Kubernetes cluster, including hosted
 clusters and managed installations.
 
 There is a specific pattern for writing client programs that work well with
 Kubernetes called the {{< glossary_tooltip term_id="controller" text="controller" >}}
-pattern. Controllers typically read an object's `.spec`, possibly do things, and then
+pattern
+* Controllers typically read an object's `.spec`, possibly do things, and then
 update the object's `.status`.
 
-A controller is a client of the Kubernetes API. When Kubernetes is the client and calls
-out to a remote service, Kubernetes calls this a *webhook*. The remote service is called
-a *webhook backend*. As with custom controllers, webhooks do add a point of failure.
+A controller is a client of the Kubernetes API
+* When Kubernetes is the client and calls
+out to a remote service, Kubernetes calls this a *webhook*
+* The remote service is called
+a *webhook backend*
+* As with custom controllers, webhooks do add a point of failure.
 
 {{< note >}}
 Outside of Kubernetes, the term “webhook” typically refers to a mechanism for asynchronous
 notifications, where the webhook call serves as a one-way notification to another system or
-component. In the Kubernetes ecosystem, even synchronous HTTP callouts are often
+component
+* In the Kubernetes ecosystem, even synchronous HTTP callouts are often
 described as “webhooks”.
 {{< /note >}}
 
