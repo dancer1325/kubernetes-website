@@ -10,7 +10,7 @@ content_type: concept
 weight: 10
 ---
 
-<!-- overview -->
+* TODO: 
 
 *Custom resources* are extensions of the Kubernetes API. This page discusses when to add a custom
 resource to your Kubernetes cluster and when to use a standalone service. It describes the two
@@ -32,6 +32,9 @@ and cluster admins can update custom resources independently of the cluster itse
 Once a custom resource is installed, users can create and access its objects using
 {{< glossary_tooltip text="kubectl" term_id="kubectl" >}}, just as they do for built-in resources
 like *Pods*.
+
+* custom resource's storage
+  * served & handled -- by the -- Kubernetes control plane 
 
 ## Custom controllers
 
@@ -157,6 +160,7 @@ This way, your workload does not rely on the Kubernetes API for its normal opera
 
 ## CustomResourceDefinitions
 
+* [here](../../../reference/glossary/customresourcedefinition.md)
 The [CustomResourceDefinition](/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/)
 API resource allows you to define custom resources.
 Defining a CRD object creates a new custom resource with a name and schema that you specify.

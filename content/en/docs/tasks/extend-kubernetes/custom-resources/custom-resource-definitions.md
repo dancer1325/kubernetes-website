@@ -11,12 +11,9 @@ min-kubernetes-server-version: 1.16
 weight: 20
 ---
 
-<!-- overview -->
-This page shows how to install a
-[custom resource](/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-into the Kubernetes API by creating a
-[CustomResourceDefinition](/docs/reference/generated/kubernetes-api/{{< param "version" >}}/#customresourcedefinition-v1-apiextensions-k8s-io).
-
+* goal
+  * how to install a [custom resource](../../../concepts/extend-kubernetes/api-extension/custom-resources.md) | Kubernetes API
+    
 ## {{% heading "prerequisites" %}}
 
 {{< include "task-tutorial-prereqs.md" >}} {{< version-check >}}

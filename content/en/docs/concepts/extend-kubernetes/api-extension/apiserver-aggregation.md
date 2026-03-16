@@ -8,49 +8,110 @@ content_type: concept
 weight: 20
 ---
 
-<!-- overview -->
-
-The aggregation layer allows Kubernetes to be extended with additional APIs, beyond what is
-offered by the core Kubernetes APIs.
-The additional APIs can either be ready-made solutions such as a
-[metrics server](https://github.com/kubernetes-sigs/metrics-server), or APIs that you develop yourself.
-
-The aggregation layer is different from
-[Custom Resource Definitions](/docs/concepts/extend-kubernetes/api-extension/custom-resources/),
-which are a way to make the {{< glossary_tooltip term_id="kube-apiserver" text="kube-apiserver" >}}
-recognise new kinds of object.
-
-<!-- body -->
+- API Aggregation (AA)
+  - == technical approach
+  - ⚠️requirements⚠️
+    - programming
+      - Reason: 🧠code ADDITIONAL API server🧠
+  - allows
+    - 👀MORE controlling | API👀
+      - _Examples:_ 
+        - how store data
+        - how convert BETWEEN API versions
+    - extend Kubernetes API -- with -- ADDITIONAL APIs
+      - types of ADDITIONAL APIs
+        - ready-made solutions
+          - _Example:_ [metrics server](https://github.com/kubernetes-sigs/metrics-server)
+        - develop yourself
 
 ## Aggregation layer
 
-The aggregation layer runs in-process with the kube-apiserver. Until an extension resource is
-registered, the aggregation layer will do nothing. To register an API, you add an _APIService_
-object, which "claims" the URL path in the Kubernetes API. At that point, the aggregation layer
-will proxy anything sent to that API path (e.g. `/apis/myextension.mycompany.io/v1/…`) to the
-registered APIService.
+- Aggregation layer
+  - == 💡SUBORDINATED (!= PRIMARY one) API server💡 /
+    - sit behind PRIMARY API server
+      - == 👀if you request for your CUSTOM APIs -> PRIMARY one delegate -- , acting as a proxy, through the `APIService`, to -- SUBORDINATED API server 👀
+    - ⚠️you write + deploy + maintain ⚠️
+    - 👀runs |  kube-apiserver 👀
+  - ⚠️requirements⚠️
+    - register an extension resource -- through -- `APIService`
+      - OTHERWISE, the aggregation layer will do NOTHING
+      - [MORE](../../../reference/kubernetes-api/cluster-resources/api-service-v1.md)
+  - [how to configure](../../../tasks/extend-kubernetes/configure-aggregation-layer)
 
-The most common way to implement the APIService is to run an *extension API server* in Pod(s) that
-run in your cluster. If you're using the extension API server to manage resources in your cluster,
-the extension API server (also written as "extension-apiserver") is typically paired with one or
-more {{< glossary_tooltip text="controllers" term_id="controller" >}}. The apiserver-builder
-library provides a skeleton for both extension API servers and the associated controller(s).
+* 👀ways to implement the `APIService`👀
+  * 💡run an extension API server | Pod(s) / run | your cluster💡
+    * MOST common way 
+    * [how to setup](../../../tasks/extend-kubernetes/setup-extension-api-server)
+    * if you use the extension API server -- to -- manage resources | your cluster -> pair the extension API server + >= 1 [controllers](../../../reference/glossary/controller.md)
+    * SHOULD have/CLOSE TO REQUIREMENTS
+      * low latency networking 
+        * to
+        * from the kube-apiserver
+      * discovery requests (kube-apiserver -- to -- extension-api-server) <= 5 seconds
 
-### Response latency
+```title="diagram"
+┌─────────────────────────────────────────────────────────────────────┐
+│                     kube-apiserver (single process)                 │
+│                                                                     │
+│  ┌───────────────────────────────────────────────────────────────┐ │
+│  │  Core API                                                     │ │
+│  │  • Handles: /api/v1/pods, /api/v1/services, etc.            │ │
+│  │  • Built-in resources                                        │ │
+│  └───────────────────────────────────────────────────────────────┘ │
+│                                                                     │
+│  ┌───────────────────────────────────────────────────────────────┐ │
+│  │  Aggregation Layer                                           │ │
+│  │  • Reads APIService objects                                  │ │
+│  │  • Routes requests to extension API servers                  │ │
+│  │  • Acts as proxy/delegator                                   │ │
+│  │                                                               │ │
+│  │  Routing Table:                                              │ │
+│  │  /apis/metrics.k8s.io/v1beta1/* → metrics-server             │ │
+│  │  /apis/custom.io/v1/*           → my-custom-api              │ │
+│  └───────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────┘
+                        │                              │
+                        │ (delegates via Service)      │
+                        ↓                              ↓
+         ┌─────────────────────────┐   ┌─────────────────────────┐
+         │  Extension API Server   │   │  Extension API Server   │
+         │  (metrics-server)       │   │  (my-custom-api)        │
+         │  • Out-of-process       │   │  • Out-of-process       │
+         │  • Runs in Pod(s)       │   │  • Runs in Pod(s)       │
+         │  • Your custom code     │   │  • Your custom code     │
+         └─────────────────────────┘   └─────────────────────────┘
+```
 
-Extension API servers should have low latency networking to and from the kube-apiserver.
-Discovery requests are required to round-trip from the kube-apiserver in five seconds or less.
+```title="requestFlow"
+Client (kubectl/app)
+    │
+    │ GET /apis/metrics.k8s.io/v1beta1/nodes
+    ↓
+┌───────────────────────────────────┐
+│  kube-apiserver                   │
+│  1. Receives request              │
+│  2. Aggregation Layer checks:     │
+│     • Path matches APIService?    │
+│     • Yes → Proxy to target       │
+└───────────────────────────────────┘
+    │
+    │ Forwards request (acts as proxy)
+    ↓
+┌───────────────────────────────────┐
+│  Extension API Server             │
+│  (metrics-server)                 │
+│  3. Processes request             │
+│  4. Returns response              │
+└───────────────────────────────────┘
+    │
+    │ Response flows back
+    ↓
+Client receives data
+```
 
-If your extension API server cannot achieve that latency requirement, consider making changes that
-let you meet it.
-
-## {{% heading "whatsnext" %}}
-
-* To get the aggregator working in your environment, [configure the aggregation layer](/docs/tasks/extend-kubernetes/configure-aggregation-layer/).
-* Then, [setup an extension api-server](/docs/tasks/extend-kubernetes/setup-extension-api-server/) to work with the aggregation layer.
-* Read about [APIService](/docs/reference/kubernetes-api/cluster-resources/api-service-v1/) in the API reference
-* Learn about [Declarative Validation Concepts](/docs/reference/using-api/declarative-validation/),
-  an internal mechanism for defining validation rules that in the future will help support validation for extension API server development.
-
-Alternatively: learn how to extend the Kubernetes API using
-[Custom Resource Definitions](/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/).
+* [apiserver-builder](https://github.com/kubernetes-sigs/apiserver-builder-alpha)
+  * == library
+    * provides
+      * skeleton -- for --
+        * extension API servers
+        * associated controller(s)

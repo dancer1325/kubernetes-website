@@ -10,6 +10,12 @@ weight: 10
 
 * TODO:
 
+- := software components which
+  - implement CNI specification
+    **Note:** == Container Network Interface
+  - allocates IP addresses to the pods →
+    - pod1 ← can communicate with → pod2
+
 Kubernetes (version 1.3 through to the latest {{< skew latestVersion >}}, and likely onwards) lets you use
 [Container Network Interface](https://github.com/containernetworking/cni)
 (CNI) plugins for cluster networking. You must use a CNI plugin that is compatible with your

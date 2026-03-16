@@ -1,0 +1,10 @@
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta1.metrics.k8s.io
+spec:
+  group: metrics.k8s.io         # ─┐ Builds URL path:
+  version: v1beta1              # ─┤ /apis/metrics.k8s.io/v1beta1/*
+  service:
+    name: metrics-server        # ← Delegation target
+    namespace: kube-system
