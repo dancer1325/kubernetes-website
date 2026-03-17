@@ -17,14 +17,9 @@ card:
   * [kube-apiserver](../../../reference/glossary/kube-apiserver.md)
   * [Kubernetes API](../../../reference/glossary/kubernetes-api.md)
 
-Most operations can be performed through the [kubectl](/docs/reference/kubectl/)
-command-line interface or other command-line tools, such as
-[kubeadm](/docs/reference/setup-tools/kubeadm/), which in turn use the API.
-However, you can also access the API directly using REST calls. Kubernetes
-provides a set of [client libraries](/docs/reference/using-api/client-libraries/)
-for those looking to
-write applications using the Kubernetes API.
+* [overview](../../reference/glossary/kubernetes-api.md)
 
+TODO: 
 Each Kubernetes cluster publishes the specification of the APIs that the cluster serves.
 There are two mechanisms that Kubernetes uses to publish these API specifications; both are useful
 to enable automatic interoperability. For example, the `kubectl` tool fetches and caches the API
@@ -48,6 +43,24 @@ provides
   on every endpoints. It also includes any extensibility components that a cluster supports.
   The data is a complete specification and is significantly larger than that from the
   Discovery API.
+
+
+| Feature                     | What it does                                                                                                        |
+|-----------------------------|---------------------------------------------------------------------------------------------------------------------|
+| CRUD                        | The new endpoints support CRUD basic operations via HTTP and `kubectl`                                              |
+| Watch                       | The new endpoints support Kubernetes Watch operations via HTTP                                                      |
+| Discovery                   | Clients like `kubectl` and dashboard automatically offer list, display, and field edit operations on your resources |
+| json-patch                  | The new endpoints support PATCH with `Content-Type: application/json-patch+json`                                    |
+| merge-patch                 | The new endpoints support PATCH with `Content-Type: application/merge-patch+json`                                   |
+| HTTPS                       | The new endpoints uses HTTPS                                                                                        |
+| Built-in Authentication     | Access to the extension uses the core API server (aggregation layer) for authentication                             |
+| Built-in Authorization      | Access to the extension can reuse the authorization used by the core API server; for example, RBAC.                 |
+| Finalizers                  | Block deletion of extension resources until external cleanup happens.                                               |
+| Admission Webhooks          | Set default values and validate extension resources during any create/update/delete operation.                      |
+| UI/CLI Display              | Kubectl, dashboard can display extension resources.                                                                 |
+| Unset versus Empty          | Clients can distinguish unset fields from zero-valued fields.                                                       |
+| Client Libraries Generation | Kubernetes provides generic client libraries, as well as tools to generate type-specific client libraries.          |
+| Labels and annotations      | Common metadata across objects that tools know how to edit for core and custom resources.                           |
 
 ## Discovery API
 

@@ -16,7 +16,8 @@ tags:
   - == 💡Control Plane's core component💡
     - == FE -- for -- Control Plane
   - responsible for
-    - exposes the Kubernetes API
+    - 👀exposes the Kubernetes API👀
+      - == implement the [Kubernetes API](kubernetes-api.md)
     - handles the conversion between [API versions](../using-api/_index.md#api-versioning)
     - track _managed fields_ / ALL NEWLY created objects
 

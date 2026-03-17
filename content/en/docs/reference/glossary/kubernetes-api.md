@@ -12,7 +12,7 @@ tags:
 ---
 
 * Kubernetes API
-  * == application / 
+  * == 💡HTTP API💡 / 
     * 's core
       * flexible
       * extensible -- to -- support custom resources
@@ -21,6 +21,15 @@ tags:
         * Kubernetes components
         * Kubernetes components -- & -- external
     * stores the cluster's state
+    * 👀implemented -- by the -- [Kubernetes API server](kube-apiserver.md)👀
+    * 💡MOSTLY declarative💡
+      * Reason: 🧠controller keeps desired state == cluster state🧠
+      * MOSTLY
+        * Reason: 🧠some are imperative
+          * _Examples:_ `kubectl logs`, `kubectl exec`, ...🧠
   * ways to use it
     * DIRECTLY
-    * -- through -- tools (_Example:_ [kubectl](kubectl.md))
+      * == REST calls
+    * -- through -- 
+      * CL tools (_Example:_ [kubectl](kubectl.md), [kubeadm](kubeadm.md))
+      * [client libraries](../using-api/client-libraries.md)

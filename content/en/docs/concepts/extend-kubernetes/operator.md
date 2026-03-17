@@ -6,7 +6,7 @@ weight: 30
 
 * Operators
   * == software extensions to Kubernetes / 
-    * use: [custom resources](api-extension/custom-resources) + [controllers](../architecture/controller)
+    * -- based on -- [custom resources](api-extension/custom-resources) + [controllers](../architecture/controller)
 
 ## Motivation
 
