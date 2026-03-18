@@ -10,6 +10,10 @@ weight: 1
 auto_generated: true
 ---
 
+* 💡[source code](https://github.com/dancer1325/kubernetes/tree/master/staging/src/k8s.io/apiextensions-apiserver)💡
+  * declared fields
+* ⚠️this code is auto-generated⚠️
+
 <!--
 The file is auto-generated from the Go source code of the component using a generic
 [generator](https://github.com/kubernetes-sigs/reference-docs/). To learn how

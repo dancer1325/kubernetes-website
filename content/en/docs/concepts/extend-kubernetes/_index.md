@@ -25,32 +25,31 @@ no_list: true
 
 * ways to customize Kubernetes
   * [configuration](#configuration)
+  * [policy APIs](#policy-apis)
   * [extensions](#extensions)
     * == run ADDITIONAL programs &/OR ADDITIONAL network services
 
 ## Configuration
 
 * == change Kubernetes component configuration
-  * ways
+  * ways (== changing)
     * CL arguments
     * local configuration files
-    * API resources
-  * ALLOWED Kubernetes components
+    * [API resources](../../reference/glossary/api-resource.md)
+  * ALLOWED | the Kubernetes components
     * [`kube-apiserver`](../../reference/command-line-tools-reference/kube-apiserver)
     * [`kube-controller-manager`](../../reference/command-line-tools-reference/kube-controller-manager)
     * [`kube-scheduler`](../../reference/command-line-tools-reference/kube-scheduler)
     * [`kubelet`](../../reference/command-line-tools-reference/kubelet)
     * [`kube-proxy`](../../reference/command-line-tools-reference/kube-proxy)
+  * cons
+    * NORMALLY, ONLY ALLOWED -- by -- [cluster operator](../../reference/glossary/cluster-operator.md)
+    * Kubernetes-version dependant
+      * == if there are modifications BETWEEN Kubernetes versions -> you need to modify & restart processes
 
-* cons
-  * NORMALLY, ONLY ALLOWED -- by -- [cluster operator](../../reference/glossary/cluster-operator.md)
-  * Kubernetes-version dependant
-    * == if there are modifications BETWEEN Kubernetes versions -> you need to modify & restart processes
+## Policy APIs
 
-* recommendations
-  * LAST ALTERNATIVE to extend Kubernetes
-
-* built-in *policy APIs*
+* built-in Policy APIs
   * == built-in Kubernetes APIs /
     * provide
       * declaratively configured policy settings
@@ -61,60 +60,72 @@ no_list: true
   * use cases | they can be managed
     * hosted Kubernetes services
     * managed Kubernetes installations
-  * TODO: 
-    The built-in policy APIs follow the same conventions as other Kubernetes resources such as Pods.
-    When you use a policy APIs that is [stable](/docs/reference/using-api/#api-versioning), you benefit from a
-    [defined support policy](/docs/reference/using-api/deprecation-policy/) like other Kubernetes APIs.
-    For these reasons, policy APIs are recommended over *configuration files* and *command arguments* where suitable.
+  * 's conventions / follow == OTHER Kubernetes resources' conventions / follow
+
+* recommendation
+  * use policy APIs -- RATHER THAN -- [configuration](#configuration)
+    * Reason:🧠if you use a policy APIs / [stable](../../reference/using-api/_index.md#api-versioning) -> you benefit from a [defined support policy](../../reference/using-api/deprecation-policy.md)
+      * == -- as -- other Kubernetes APIs🧠
 
 ## Extensions
 
-Extensions are software components that extend and deeply integrate with Kubernetes.
-They adapt it to support new types and new kinds of hardware.
-
-Many cluster administrators use a hosted or distribution instance of Kubernetes.
-These clusters come with extensions pre-installed
-* As a result, most Kubernetes
-users will not need to install extensions and even fewer users will need to author new ones.
+* Extensions
+  * == software components / 
+    * extend Kubernetes -- to -- support
+      * NEW types
+      * NEW kinds of hardware
+    * deeply integrate -- with -- Kubernetes
+  * audience
+    * Kubernetes cluster administrators /
+      * ❌NO use❌
+        * hosted Kubernetes
+          * _Examples:_ GKE, EKS, AKS
+        * instance of Kubernetes
+          * _Examples:_ OpenShift, Rancher
 
 ### Extension patterns
 
-Kubernetes is designed to be automated by writing client programs
-* Any
-program that reads and/or writes to the Kubernetes API can provide useful
-automation
-* *Automation* can run on the cluster or off it
-* By following
-the guidance in this doc you can write highly available and robust automation.
-Automation generally works with any Kubernetes cluster, including hosted
-clusters and managed installations.
+* Kubernetes' design -- about -- automation:
+  * 💡-- by -- writing client programs💡
+    * recommendation
+      * use controller pattern
+    * -- through -- Kubernetes API
+    * / can run 
+      * | cluster
+      * outside cluster
 
-There is a specific pattern for writing client programs that work well with
-Kubernetes called the {{< glossary_tooltip term_id="controller" text="controller" >}}
-pattern
-* Controllers typically read an object's `.spec`, possibly do things, and then
-update the object's `.status`.
+* controller pattern
+  * == pattern -- for -- writing client programs
+  * [controller](../../reference/glossary/controller.md)
 
-A controller is a client of the Kubernetes API
-* When Kubernetes is the client and calls
-out to a remote service, Kubernetes calls this a *webhook*
-* The remote service is called
-a *webhook backend*
-* As with custom controllers, webhooks do add a point of failure.
+* webhook
+  * :=
+    * (| Kubernetes ecosystem),
+      * mechanism -- for -- (⚠️async & sync⚠️) notifications /
+        * "kube-apiserver" calls -- to a -- remote service (webhook backend)
+    * (| outside Kubernetes),
+      * mechanism -- for -- asynchronous notifications /
+        * webhook call == 1-way notification -- to -- ANOTHER system or component
+  * webhook backend
+    * == remote service
 
-{{< note >}}
-Outside of Kubernetes, the term “webhook” typically refers to a mechanism for asynchronous
-notifications, where the webhook call serves as a one-way notification to another system or
-component
-* In the Kubernetes ecosystem, even synchronous HTTP callouts are often
-described as “webhooks”.
-{{< /note >}}
+  ┌──────────────────┐             ┌─────────────────┐
+  │  kube-apiserver  │  ────────>  │ Webhook Backend │
+  │  (client)        │  HTTP req   │  (server)       │
+  └──────────────────┘             └─────────────────┘
 
-In the webhook model, Kubernetes makes a network request to a remote service.
-With the alternative *binary Plugin* model, Kubernetes executes a binary (program).
-Binary plugins are used by the kubelet (for example, [CSI storage plugins](https://kubernetes-csi.github.io/docs/)
-and [CNI network plugins](/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/)),
-and by kubectl (see [Extend kubectl with plugins](/docs/tasks/extend-kubectl/kubectl-plugins/)).
+* webhook vs controller
+  * BOTH add a point of failure 
+    * ⚠️ALTHOUGH webhook failures are MORE critic⚠️
+      * Reason:🧠they can block cluster operations🧠
+ 
+* binary Plugin model
+  * == Kubernetes executes a binary (program)
+  * uses
+    * by [kubelet](../../tasks/extend-kubectl/kubectl-plugins.md)
+      * _Examples:_
+        * [CSI storage plugins](https://kubernetes-csi.github.io/docs/)
+        * [CNI network plugins](compute-storage-net/network-plugins.md)
 
 ### Extension points
 

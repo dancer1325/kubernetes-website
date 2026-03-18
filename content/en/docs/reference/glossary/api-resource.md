@@ -25,3 +25,9 @@ tags:
 
 * ALL | Kubernetes 
   * is treated -- as an -- API object
+
+* API subresource
+  * := ADDITIONAL API endpoint / 
+    * aggregated | resource -- to -- expose specific resource's operations
+  * 💡`/apis/<group>/<version>/namespaces/<ns>/<resource>/<name>/<subresource>`💡
+    * pattern

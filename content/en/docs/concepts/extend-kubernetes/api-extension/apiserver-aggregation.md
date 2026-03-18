@@ -23,6 +23,8 @@ weight: 20
         - ready-made solutions
           - _Example:_ [metrics server](https://github.com/kubernetes-sigs/metrics-server)
         - develop yourself
+  - use cases
+    - you need flexibility/customization
 
 ## Aggregation layer
 

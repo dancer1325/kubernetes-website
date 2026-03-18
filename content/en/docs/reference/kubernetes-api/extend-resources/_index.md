@@ -4,6 +4,10 @@ weight: 7
 auto_generated: true
 ---
 
+* 💡source code | this folder💡
+  * specific / EACH ".md"
+* ⚠️this code is auto-generated⚠️
+
 <!--
 The file is auto-generated from the Go source code of the component using a generic
 [generator](https://github.com/kubernetes-sigs/reference-docs/). To learn how

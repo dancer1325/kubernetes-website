@@ -15,7 +15,9 @@ tags:
   * == control loops / 
     * responsible for
       * watch -- , through the [kube-apiserver](kube-apiserver.md), -- the cluster's state
+        * == read
       * make sure desired state == current state
+        * == write
   * == separate process / EACH controller
   * SOME run | [kube-controller-manager](kube-controller-manager.md)
     * _Examples:_ 
@@ -23,6 +25,12 @@ tags:
       * daemonset controller
       * namespace controller
       * persistent volume controller
+  * -> client of the Kubernetes API
+
+┌─────────────┐                  ┌──────────────────┐
+│  Controller │  ─────────────>  │  kube-apiserver  │
+│  (client)   │   HTTP request   │  (server)        │
+└─────────────┘                  └──────────────────┘
 
 * ALL controllers
   * are compiled | 1! binary
