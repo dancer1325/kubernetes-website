@@ -7,9 +7,14 @@ description: Extend kubectl by creating and installing kubectl plugins.
 content_type: task
 ---
 
-<!-- overview -->
+* goal
+  * how to install & write extensions -- for -- [kubectl](../../reference/kubectl/kubectl)
 
-This guide demonstrates how to install and write extensions for [kubectl](/docs/reference/kubectl/kubectl/).
+* plugins -- for -- kubectl
+  * == separate binaries / 
+    * add OR replace the behavior -- of -- specific subcommands
+
+TODO: 
 By thinking of core `kubectl` commands as essential building blocks for interacting with a Kubernetes cluster,
 a cluster administrator can think of plugins as a means of utilizing these building blocks to create more complex behavior.
 Plugins extend `kubectl` with new sub-commands, allowing for new and custom features not included in the main distribution of `kubectl`.

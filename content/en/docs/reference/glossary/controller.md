@@ -18,6 +18,7 @@ tags:
         * == read
       * make sure desired state == current state
         * == write
+  * == clients -- of the -- API server
   * == separate process / EACH controller
   * SOME run | [kube-controller-manager](kube-controller-manager.md)
     * _Examples:_ 

@@ -83,20 +83,24 @@ no_list: true
         * instance of Kubernetes
           * _Examples:_ OpenShift, Rancher
 
-### Extension patterns
-
 * Kubernetes' design -- about -- automation:
   * 💡-- by -- writing client programs💡
     * recommendation
       * use controller pattern
     * -- through -- Kubernetes API
-    * / can run 
+    * / can run
       * | cluster
       * outside cluster
+
+### Extension patterns
 
 * controller pattern
   * == pattern -- for -- writing client programs
   * [controller](../../reference/glossary/controller.md)
+
+### Integration Mechanism
+
+#### webhook
 
 * webhook
   * :=
@@ -118,7 +122,9 @@ no_list: true
   * BOTH add a point of failure 
     * ⚠️ALTHOUGH webhook failures are MORE critic⚠️
       * Reason:🧠they can block cluster operations🧠
- 
+
+#### binary Plugin model
+
 * binary Plugin model
   * == Kubernetes executes a binary (program)
   * uses
@@ -129,46 +135,22 @@ no_list: true
 
 ### Extension points
 
-This diagram shows the extension points in a Kubernetes cluster and the
-clients that access it.
+![extension points | Kubernetes cluster + clients / access it](/content/en/docs/concepts/extend-kubernetes/extension-points.png)
 
-<!-- image source: https://docs.google.com/drawings/d/1k2YdJgNTtNfW7_A8moIIkij-DmVgEhNrn3y2OODwqQQ/view -->
-
-{{< figure src="/docs/concepts/extend-kubernetes/extension-points.png"
-    alt="Symbolic representation of seven numbered extension points for Kubernetes"
-    class="diagram-large" caption="Kubernetes extension points" >}}
-
+TODO: 
 #### Key to the figure
 
-1. Users often interact with the Kubernetes API using `kubectl`. [Plugins](#client-extensions)
-   customise the behaviour of clients. There are generic extensions that can apply to different clients,
-   as well as specific ways to extend `kubectl`.
-
-1. The API server handles all requests. Several types of extension points in the API server allow
-   authenticating requests, or blocking them based on their content, editing content, and handling
-   deletion. These are described in the [API Access Extensions](#api-access-extensions) section.
-
-1. The API server serves various kinds of *resources*. *Built-in resource kinds*, such as
-   `pods`, are defined by the Kubernetes project and can't be changed.
-   Read [API extensions](#api-extensions) to learn about extending the Kubernetes API.
-
-1. The Kubernetes scheduler [decides](/docs/concepts/scheduling-eviction/assign-pod-node/)
-   which nodes to place pods on. There are several ways to extend scheduling, which are
-   described in the [Scheduling extensions](#scheduling-extensions) section.
-
-1. Much of the behavior of Kubernetes is implemented by programs called
-   {{< glossary_tooltip term_id="controller" text="controllers" >}}, that are
-   clients of the API server. Controllers are often used in conjunction with custom resources.
-   Read [combining new APIs with automation](#combining-new-apis-with-automation) and
-   [Changing built-in resources](#changing-built-in-resources) to learn more.
-
-1. The kubelet runs on servers (nodes), and helps pods appear like virtual servers with their own IPs on
+1. [Client extensions](#client-extensions)
+2. [API Access Extensions](#api-access-extensions)
+3. [API extensions](#api-extensions)
+4. [Scheduling extensions](#scheduling-extensions)
+5. Create custom [Controllers](../../reference/glossary/controller.md) 
+   * [combining new APIs with automation](#new-apis--automation)
+   * [Changing built-in resources](#changing-built-in-resources)
+6. The kubelet runs on servers (nodes), and helps pods appear like virtual servers with their own IPs on
    the cluster network. [Network Plugins](#network-plugins) allow for different implementations of
    pod networking.
-
-1. You can use [Device Plugins](#device-plugins) to integrate custom hardware or other special
-   node-local facilities, and make these available to Pods running in your cluster. The kubelet
-   includes support for working with device plugins.
+7. [Device Plugins](#device-plugins)
 
    The kubelet also mounts and unmounts
    {{< glossary_tooltip text="volume" term_id="volume" >}} for pods and their containers.
@@ -178,67 +160,67 @@ clients that access it.
 
 #### Extension point choice flowchart {#extension-flowchart}
 
-If you are unsure where to start, this flowchart can help. Note that some solutions may involve
-several types of extensions.
-
-<!-- image source for flowchart: https://docs.google.com/drawings/d/1sdviU6lDz4BpnzJNHfNpQrqI9F19QZ07KnhnxVrp2yg/edit -->
-
-{{< figure src="/docs/concepts/extend-kubernetes/flowchart.svg"
-    alt="Flowchart with questions about use cases and guidance for implementers. Green circles indicate yes; red circles indicate no."
-    class="diagram-large" caption="Flowchart guide to select an extension approach" >}}
-
----
+![how to choose the extension point?](/content/en/docs/concepts/extend-kubernetes/flowchart.svg)
 
 ## Client extensions
 
-Plugins for kubectl are separate binaries that add or replace the behavior of specific subcommands.
-The `kubectl` tool can also integrate with [credential plugins](/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins)
-These extensions only affect a individual user's local environment, and so cannot enforce site-wide policies.
-
-If you want to extend the `kubectl` tool, read [Extend kubectl with plugins](/docs/tasks/extend-kubectl/kubectl-plugins/).
+* plugins
+  * == extensions
+  * allow
+    * customise the behaviour of clients
+  * types
+    * generic 
+      * == apply | DIFFERENT clients
+      * _Example:_ [credential plugins](../../reference/access-authn-authz/authentication.md#client-go-credential-plugins)
+    * [specific ways to extend `kubectl`](../../tasks/extend-kubectl/kubectl-plugins)
 
 ## API extensions
 
-### Custom resource definitions
+### Custom resource definitions (CRD)
 
-Consider adding a _Custom Resource_ to Kubernetes if you want to define new controllers, application
-configuration objects or other declarative APIs, and to manage them using Kubernetes tools, such
-as `kubectl`.
+* [here](api-extension/custom-resources.md)
 
-For more about Custom Resources, see the
-[Custom Resources](/docs/concepts/extend-kubernetes/api-extension/custom-resources/) concept guide.
+### API aggregation layer (AA)
 
-### API aggregation layer
+* [here](api-extension/apiserver-aggregation.md)
 
-You can use Kubernetes' [API Aggregation Layer](/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/)
-to integrate the Kubernetes API with additional services such as for [metrics](/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/).
+### NEW APIs + Automation
 
-### Combining new APIs with automation
+TODO: how is it related with API extension? or NOT equivalent to CRD?
 
-A combination of a custom resource API and a control loop is called the
-{{< glossary_tooltip term_id="controller" text="controllers" >}} pattern. If your controller takes
-the place of a human operator deploying infrastructure based on a desired state, then the controller
-may also be following the {{< glossary_tooltip text="operator pattern" term_id="operator-pattern" >}}.
-The Operator pattern is used to manage specific applications; usually, these are applications that
-maintain state and require care in how they are managed.
+* operator-pattern
+  * == pattern / controller deploys infrastructure -- based on a -- desired state
+  * uses
+    * manage specific applications
+      * _Example:_ applications / 
+        * maintain state
+        * | manage, require care
 
-You can also make your own custom APIs and control loops that manage other resources, such as storage,
-or to define policies (such as an access control restriction).
+* define policies
+  * _Example:_ access control restriction
 
 ### Changing built-in resources
 
-When you extend the Kubernetes API by adding custom resources, the added resources always fall
-into a new API Groups. You cannot replace or change existing API groups.
-Adding an API does not directly let you affect the behavior of existing APIs (such as Pods), whereas
-_API Access Extensions_ do.
+* API access extensions
+  * allow
+    * changing the behavior of EXISTING APIs 
+      * _Example:_ pods
+
+* Kubernetes API extensions -- by -- adding custom resources
+  * add NEW API Groups' resources
+    * ❌!= replace OR change EXISTING API groups❌
 
 ## API access extensions
 
-When a request reaches the Kubernetes API Server, it is first _authenticated_, then _authorized_,
+API server handles all requests
+* Several types of extension points in the API server allow
+  authenticating requests, or blocking them based on their content, editing content, and handling
+  deletion
+
+* When a request reaches the Kubernetes API Server, it is first _authenticated_, then _authorized_,
 and is then subject to various types of _admission control_ (some requests are in fact not
-authenticated, and get special treatment). See
-[Controlling Access to the Kubernetes API](/docs/concepts/security/controlling-access/)
-for more on this flow.
+authenticated, and get special treatment)
+* [Controlling Access to the Kubernetes API](../../concepts/security/controlling-access.md)
 
 Each of the steps in the Kubernetes authentication / authorization flow offers extension points.
 
@@ -279,9 +261,14 @@ In addition to the built-in steps, there are several extensions:
 
 ### Device plugins
 
-_Device plugins_ allow a node to discover new Node resources (in addition to the
-builtin ones like cpu and memory) via a
-[Device Plugin](/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/).
+* Device plugins
+  * allow
+    * node can discover NEW node resources
+      * _Example of EXISTING resources:_ cpu and memory
+  * uses
+    * integrate custom hardware OR other special node-local facilities /
+      * AVAILABLE | pods / run | your custer
+  * [MORE](compute-storage-net/device-plugins.md)
 
 ### Storage plugins
 
@@ -324,6 +311,9 @@ For plugin configuration details, see
 [Configure a kubelet image credential provider](/docs/tasks/administer-cluster/kubelet-credential-provider/).
 
 ## Scheduling extensions
+
+The Kubernetes scheduler [decides](/docs/concepts/scheduling-eviction/assign-pod-node/)
+which nodes to place pods on
 
 - [Scheduling](Scheduling,%20Preemption%20and%20Eviction%2011a13fe1aaf54bcfa09ecf21179846c1.md) extensions
   - [Schedulers](Scheduling,%20Preemption%20and%20Eviction/Kubernetes%20Scheduler%2028b495fc09a54694a371e5c85524eb1e.md)

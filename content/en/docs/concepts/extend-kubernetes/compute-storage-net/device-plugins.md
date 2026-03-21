@@ -13,6 +13,9 @@ weight: 20
 Kubernetes provides a device plugin framework that you can use to advertise system hardware
 resources to the {{< glossary_tooltip term_id="kubelet" >}}.
 
+The kubelet
+includes support for working with device plugins.
+
 Instead of customizing the code for Kubernetes itself, vendors can implement a
 device plugin that you deploy either manually or as a {{< glossary_tooltip term_id="daemonset" >}}.
 The targeted devices include GPUs, high-performance NICs, FPGAs, InfiniBand adapters,
