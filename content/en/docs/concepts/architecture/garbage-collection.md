@@ -13,15 +13,20 @@ Many objects in Kubernetes link to each other through [*owner references*](/docs
 Owner references tell the control plane which objects are dependent on others.
 Kubernetes uses owner references to give the control plane, and other API
 clients, the opportunity to clean up related resources before deleting an
-object. In most cases, Kubernetes manages owner references automatically.
+object
+* In most cases, Kubernetes manages owner references automatically.
 
 Ownership is different from the [labels and selectors](/docs/concepts/overview/working-with-objects/labels/)
-mechanism that some resources also use. For example, consider a
+mechanism that some resources also use
+* For example, consider a
 {{<glossary_tooltip text="Service" term_id="service">}} that creates
-`EndpointSlice` objects. The Service uses *labels* to allow the control plane to
-determine which `EndpointSlice` objects are used for that Service. In addition
+`EndpointSlice` objects
+* The Service uses *labels* to allow the control plane to
+determine which `EndpointSlice` objects are used for that Service
+* In addition
 to the labels, each `EndpointSlice` that is managed on behalf of a Service has
-an owner reference. Owner references help different parts of Kubernetes avoid
+an owner reference
+* Owner references help different parts of Kubernetes avoid
 interfering with objects they don’t control.
 
 {{< note >}}
@@ -45,22 +50,18 @@ You can check for that kind of Event by running
 ## Cascading deletion {#cascading-deletion}
 
 * cascading deletion
-  * 
-Kubernetes checks for and deletes objects that no longer have owner
-references
-* _Example:_ pods left | delete a ReplicaSet
-* When you
-delete an object, you can control whether Kubernetes deletes the object's
-dependents automatically, in a process called 
-* types of cascading deletion
-  * Foreground cascading deletion
-  * Background cascading deletion
-
-You can also control how and when garbage collection deletes resources that have
-owner references using Kubernetes {{<glossary_tooltip text="finalizers" term_id="finalizer">}}.
+  * == | delete an object,
+    * delete AUTOMATICALLY the object's dependents / NO have owner references
+  * _Example:_ pods left | delete a ReplicaSet
+  * types
+    * Foreground cascading deletion
+    * Background cascading deletion
+  * delete PRECONDITIONS depend -- on -- [finalizer](../../reference/glossary/finalizer.md)
+    * Reason:🧠as any deletion
 
 ### Foreground cascading deletion {#foreground-deletion}
 
+TODO: 
 In foreground cascading deletion, the owner object you're deleting first enters
 a *deletion in progress* state. In this state, the following happens to the
 owner object:
@@ -73,13 +74,16 @@ owner object:
   process is complete.
 
 After the owner object enters the *deletion in progress* state, the controller
-deletes dependents it knows about. After deleting all the dependent objects it knows about,
-the controller deletes the owner object. At this point, the object is no longer visible in the
+deletes dependents it knows about
+* After deleting all the dependent objects it knows about,
+the controller deletes the owner object
+* At this point, the object is no longer visible in the
 Kubernetes API.
 
 During foreground cascading deletion, the only dependents that block owner
 deletion are those that have the `ownerReference.blockOwnerDeletion=true` field
-and are in the garbage collection controller cache. The garbage collection controller
+and are in the garbage collection controller cache
+* The garbage collection controller
 cache may not contain objects whose resource type cannot be listed / watched successfully,
 or objects that are created concurrent with deletion of an owner object.
 See [Use foreground cascading deletion](/docs/tasks/administer-cluster/use-cascading-deletion/#use-foreground-cascading-deletion)
@@ -100,14 +104,17 @@ to learn more.
 ### Orphaned dependents
 
 When Kubernetes deletes an owner object, the dependents left behind are called
-*orphan* objects. By default, Kubernetes deletes dependent objects. To learn how
+*orphan* objects
+* By default, Kubernetes deletes dependent objects
+* To learn how
 to override this behaviour, see [Delete owner objects and orphan dependents](/docs/tasks/administer-cluster/use-cascading-deletion/#set-orphan-deletion-policy).
 
 ## Garbage collection of unused containers and images {#containers-images}
 
 The {{<glossary_tooltip text="kubelet" term_id="kubelet">}} performs garbage
 collection on unused images every five minutes and on unused containers every
-minute. You should avoid using external garbage collection tools, as these can
+minute
+* You should avoid using external garbage collection tools, as these can
 break the kubelet behavior and remove containers that should exist.
 
 To configure options for unused container and image garbage collection, tune the
@@ -120,7 +127,8 @@ resource type.
 
 Kubernetes manages the lifecycle of all images through its *image manager*,
 which is part of the kubelet, with the cooperation of
-{{< glossary_tooltip text="cadvisor" term_id="cadvisor" >}}. The kubelet
+{{< glossary_tooltip text="cadvisor" term_id="cadvisor" >}}
+* The kubelet
 considers the following disk usage limits when making garbage collection
 decisions:
 
@@ -129,13 +137,15 @@ decisions:
 
 Disk usage above the configured `HighThresholdPercent` value triggers garbage
 collection, which deletes images in order based on the last time they were used,
-starting with the oldest first. The kubelet deletes images
+starting with the oldest first
+* The kubelet deletes images
 until disk usage reaches the `LowThresholdPercent` value.
 
 #### Garbage collection for unused container images {#image-maximum-age-gc}
 
 You can specify the maximum time a local image can be unused for,
-regardless of disk usage. This is a kubelet setting that you configure for each node.
+regardless of disk usage
+* This is a kubelet setting that you configure for each node.
 
 To configure the setting, you need to set a value for the `imageMaximumGCAge`
 field in the kubelet configuration file.
@@ -148,7 +158,8 @@ For example, you can set the configuration field to `12h45m`,
 which means 12 hours and 45 minutes.
 
 {{< note >}}
-This feature does not track image usage across kubelet restarts. If the kubelet
+This feature does not track image usage across kubelet restarts
+* If the kubelet
 is restarted, the tracked image age is reset, causing the kubelet to wait the full
 `imageMaximumGCAge` duration before qualifying images for garbage collection
 based on image age.
@@ -185,7 +196,8 @@ The kubelet only garbage collects the containers it manages.
 ## Configuring garbage collection {#configuring-gc}
 
 You can tune garbage collection of resources by configuring options specific to
-the controllers managing those resources. The following pages show you how to
+the controllers managing those resources
+* The following pages show you how to
 configure garbage collection:
 
 * [Configuring cascading deletion of Kubernetes objects](/docs/tasks/administer-cluster/use-cascading-deletion/)

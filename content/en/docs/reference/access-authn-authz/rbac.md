@@ -117,13 +117,15 @@ workload to function correctly are applied.
 
 ### Aggregated ClusterRoles
 
-You can _aggregate_ several ClusterRoles into one combined ClusterRole.
-A controller, running as part of the cluster control plane, watches for ClusterRole
-objects with an `aggregationRule` set
-* The `aggregationRule` defines a label
-{{< glossary_tooltip text="selector" term_id="selector" >}} that the controller
-uses to match other ClusterRole objects that should be combined into the `rules`
-field of this one.
+* \>1 ClusterRoles can be aggregated -- into -- 1 combined ClusterRole
+
+* controller
+  * watches for ClusterRole objects -- with an -- `aggregationRule` set
+
+* `aggregationRule`
+  * defines a [selector](../glossary/selector.md)'s [label](../glossary/label.md) 
+  * uses
+    * controller use it -- to -- match OTHER ClusterRole objects / should be combined | this one's `rules` field
 
 {{< caution >}}
 The control plane overwrites any values that you manually specify in the `rules` field of an

@@ -9,7 +9,6 @@ card:
   weight: 20
 ---
 
-
 * [overview](../glossary/kubectl.md)
 
 ## Syntax
@@ -18,49 +17,47 @@ card:
 kubectl [command] [TYPE] [NAME] [flags]
 ```
 
-where `command`, `TYPE`, `NAME`, and `flags` are:
+* `command`
+  * TODO: Specifies the operation that you want to perform on one or more resources,
+    for example `create`, `get`, `describe`, `delete`.
+* `TYPE`
+  * Specifies the [resource type](#resource-types)
+  * Resource types are case-insensitive and you can specify the singular, plural, or abbreviated forms
+  * For example, the following commands produce the same output:
 
-* `command`: Specifies the operation that you want to perform on one or more resources,
-  for example `create`, `get`, `describe`, `delete`.
+    ```shell
+    kubectl get pod pod1
+    kubectl get pods pod1
+    kubectl get po pod1
+    ```
+* `NAME`
+  * Specifies the name of the resource
+  * Names are case-sensitive
+  * If the name is omitted,
+      details for all resources are displayed, for example `kubectl get pods`
+  * When performing an operation on multiple resources, you can specify each resource by
+      type and name or specify one or more files:
 
-* `TYPE`: Specifies the [resource type](#resource-types). Resource types are case-insensitive and
-  you can specify the singular, plural, or abbreviated forms.
-  For example, the following commands produce the same output:
+      * To specify resources by type and name:
 
-  ```shell
-  kubectl get pod pod1
-  kubectl get pods pod1
-  kubectl get po pod1
-  ```
+        * To group resources if they are all the same type:  `TYPE1 name1 name2 name<#>`.<br/>
+          Example: `kubectl get pod example-pod1 example-pod2`
 
-* `NAME`: Specifies the name of the resource. Names are case-sensitive. If the name is omitted,
-  details for all resources are displayed, for example `kubectl get pods`.
+        * To specify multiple resource types individually:  `TYPE1/name1 TYPE1/name2 TYPE2/name3 TYPE<#>/name<#>`.<br/>
+          Example: `kubectl get pod/example-pod1 replicationcontroller/example-rc1`
 
-  When performing an operation on multiple resources, you can specify each resource by
-  type and name or specify one or more files:
+      * To specify resources with one or more files:  `-f file1 -f file2 -f file<#>`
 
-  * To specify resources by type and name:
+        * Use YAML rather than JSON
+          since YAML tends to be more user-friendly, especially for configuration files.<br/>
+          Example: `kubectl get -f ./pod.yaml`
 
-    * To group resources if they are all the same type:  `TYPE1 name1 name2 name<#>`.<br/>
-      Example: `kubectl get pod example-pod1 example-pod2`
-
-    * To specify multiple resource types individually:  `TYPE1/name1 TYPE1/name2 TYPE2/name3 TYPE<#>/name<#>`.<br/>
-      Example: `kubectl get pod/example-pod1 replicationcontroller/example-rc1`
-
-  * To specify resources with one or more files:  `-f file1 -f file2 -f file<#>`
-
-    * Use YAML rather than JSON
-      since YAML tends to be more user-friendly, especially for configuration files.<br/>
-      Example: `kubectl get -f ./pod.yaml`
-
-* `flags`: Specifies optional flags. For example, you can use the `-s` or `--server` flags
-  to specify the address and port of the Kubernetes API server.<br/>
-
-{{< caution >}}
-Flags that you specify from the command line override default values and any corresponding environment variables.
-{{< /caution >}}
-
-If you need help, run `kubectl help` from the terminal window.
+* `flags`
+  * OPTIONAL
+  * _Example:_
+    * `-s` / `--server`
+      * == Kubernetes API server's address & port
+  * ' priority > environment variables priority > default values priority
 
 ## In-cluster authentication and namespace overrides
 

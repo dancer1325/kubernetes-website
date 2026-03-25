@@ -1598,7 +1598,7 @@ This annotation is deprecated. You should use the
 annotation instead. Kubernetes versions 1.25 and newer ignore this annotation.
 {{< /note >}}
 
-### kubectl.kubernetes.io/last-applied-configuration
+### `kubectl.kubernetes.io/last-applied-configuration`
 
 * Type: Annotation
   * allows
