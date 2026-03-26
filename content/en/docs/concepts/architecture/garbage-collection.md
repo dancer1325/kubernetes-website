@@ -63,7 +63,8 @@ You can check for that kind of Event by running
 
 TODO: 
 In foreground cascading deletion, the owner object you're deleting first enters
-a *deletion in progress* state. In this state, the following happens to the
+a *deletion in progress* state
+* In this state, the following happens to the
 owner object:
 
 * The Kubernetes API server sets the object's `metadata.deletionTimestamp`
