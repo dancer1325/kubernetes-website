@@ -12,7 +12,7 @@ tags:
 ---
 
 * node
-  * == worker machine | Kubernetes
+  * == server/computer
   * | Kubernetes early versions,
     * "Minions"
   * types

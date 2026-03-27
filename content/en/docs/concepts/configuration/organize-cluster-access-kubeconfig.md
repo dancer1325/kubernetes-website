@@ -135,26 +135,13 @@ are stored absolutely.
 
 ## Proxy
 
-You can configure `kubectl` to use a proxy per cluster using `proxy-url` in your kubeconfig file, like this:
+* goal
+  * specify a proxy / cluster
 
-```yaml
-apiVersion: v1
-kind: Config
-
-clusters:
-- cluster:
-    proxy-url: http://proxy.example.org:3128
-    server: https://k8s.example.org/k8s/clusters/c-xxyyzz
-  name: development
-
-users:
-- name: developer
-
-contexts:
-- context:
-  name: development
-```
-
+* steps
+  * | your kubeconfig file,
+    * specify `clusters[SOME].proxy-url`
+  You can configure `kubectl` to use a proxy per cluster using `proxy-url` in 
 
 ## {{% heading "whatsnext" %}}
 
