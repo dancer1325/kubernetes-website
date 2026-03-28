@@ -17,7 +17,7 @@ weight: 10
 ---
 
 
-<!-- overview -->
+* [service](../../reference/glossary/service.md)
 
 {{< glossary_definition term_id="service" length="short" prepend="In Kubernetes, a Service is" >}}
 
