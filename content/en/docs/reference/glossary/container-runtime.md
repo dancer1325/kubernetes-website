@@ -18,3 +18,7 @@ tags:
       - lifecycle
     - 1 is configured by default | ANY Kubernetes cluster
   - if you need to use >1 CR | Kubernetes cluster -> specify [RuntimeClass](../../concepts/containers/runtime-class.md)
+  - requirements
+    - | Kubernetes v1.26+,
+      - support CRI API v1
+        - Reason:🧠otherwise, Kubelet can NOT register the node🧠

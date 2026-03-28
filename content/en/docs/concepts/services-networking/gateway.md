@@ -11,6 +11,8 @@ weight: 55
 (or its predecessor, [Ingress](/docs/concepts/services-networking/ingress/))
 allows you to make Services accessible to clients that are outside the cluster.
 
+- if you use a [supported cloud provider](../../reference/glossary/cloud-provider.md) & want simpler & less-configurable -> use Service API's [`type: LoadBalancer`](service.md#loadbalancer)
+
 * There are many [implementations of the Gateway API](https://gateway-api.sigs.k8s.io/implementations/),
   some of which are specific to particular cloud environments, some more
   focused on "bare metal" environments, and others more generic.

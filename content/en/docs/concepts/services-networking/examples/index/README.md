@@ -1,3 +1,6 @@
+* goal
+  * Kubernetes Network Model
+
 # Pre requisites
 * Locally or cluster you fully control (=== configure control plane), where you can
   * Run some docker daemon
@@ -10,19 +13,31 @@
     * [minikube]  `minikube start`
     * [kind] `kind create cluster`
 
-----
-
-# Goal
-* Kubernetes Network Model
-
 ---
 
-# IP-per-pod
+# 1! IP / EACH cluster's pod
 * `kubectl apply -f deployment.yaml`
-  * `kubectl describe PodName`
+  * `kubectl get pods -o wide`
     * Check that
       * each of the pods has got it's own IP
       * IP addresses are into the same subnet
+
+## ❌you do NOT need MANUALLY to❌
+### pod1 <- link -> pod2
+* `kubectl get pods -o wide`
+  * get `<PodName1>` & `<Pod2IP>`
+* `kubectl exec <PodName1> -- curl -s <Pod2IP>`
+  * reach DIRECTLY -- through -- IP
+
+### container’s ports <- map to -> host’s ports
+* `kubectl run nginx --image=nginx --port=80`
+  * `kubectl get pod nginx -o jsonpath="{.spec.containers[0].ports}"`
+    * `containerPort: 80` exist
+    * ❌NO exist `hostPort`❌
+  * `kubectl get pod nginx -o wide`
+    * Get `<PodIP>`
+  * `kubectl run test --image=nicolaka/netshoot --rm -it --restart=Never -- curl -s <PodIP>:80`
+    * reaches nginx DIRECTLY via pod IP / WITHOUT ANY host port mapping
 
 # Networking implementation
 ## Any node’s pod — can communicate without NAT with — any other node2’s pod

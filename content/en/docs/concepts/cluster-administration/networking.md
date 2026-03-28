@@ -6,6 +6,9 @@ content_type: concept
 weight: 50
 ---
 
+* goal
+  * how to set up networking | your cluster
+
 * TODO:
 
 <!-- overview -->
