@@ -16,7 +16,7 @@ description: >
         * solution2: map container ports -- to -- host ports
           * Reason:🧠make them reachable by containers | other hosts🧠
   * | Kubernetes
-    * pods == VMs| physical hosts, about
+    * pods == VMs | physical hosts, about
       * port allocation
       * naming
       * service discovery
@@ -37,7 +37,7 @@ description: >
     - SOME are implemented by Kubernetes
     - ⚠️SOME is provided -- , through Kubernetes API, by -- other parts⚠️
   - networking implementation
-    - available | DIFFERENT CR (Container Runtime)
+    - AVAILABLE | DIFFERENT CR (Container Runtime)
 
 ## 1! IP / EACH cluster's pod
 
@@ -48,12 +48,15 @@ description: >
     - == -- through -- IP
   - container’s ports <- map to -> host’s ports
   - Reason:🧠abstracted & managed by Kubernetes🧠
+- 👀allocated -- by -- [network plugins](../extend-kubernetes/compute-storage-net/network-plugins.md)👀
 
 ```mermaid
 flowchart TB
     subgraph CLUSTER["☁️ Kubernetes Cluster"]
         direction TB
-  
+
+        CNI["🔌 Network Plugin"]
+
         subgraph NODE1["🖥️ Node 1"]
             subgraph POD1["Pod A · IP: 10.0.1.1"]
                 C1["container1"]
@@ -64,19 +67,24 @@ flowchart TB
                 C3["container3"]
             end
         end
-  
+
         subgraph NODE2["🖥️ Node 2"]
             subgraph POD3["Pod C · IP: 10.0.2.1"]
                 C4["container4"]
             end
         end
-  
-        POD1 <-->|"direct IP (== WITHOUT proxy OR NATs) & AUTOMATICALLY (NO MANUAL link needed)"| POD2
-        POD1 <-->|"direct IP (== WITHOUT proxy OR NATs) & AUTOMATICALLY (NO MANUAL link needed)"| POD3
-        POD2 <-->|"direct IP (== WITHOUT proxy OR NATs) & AUTOMATICALLY (NO MANUAL link needed)"| POD3
+
+        CNI -->|"assigns IP"| POD1
+        CNI -->|"assigns IP"| POD2
+        CNI -->|"assigns IP"| POD3
+
+        POD1 <-->|"direct IP"| POD2
+        POD1 <-->|"direct IP"| POD3
+        POD2 <-->|"direct IP"| POD3
     end
-  
+
     style CLUSTER fill:#e8f4fd,stroke:#2196F3,stroke-width:2px
+    style CNI fill:#f3e5f5,stroke:#9C27B0,stroke-width:2px
     style NODE1 fill:#fff3e0,stroke:#FF9800
     style NODE2 fill:#fff3e0,stroke:#FF9800
     style POD1 fill:#e8f5e9,stroke:#4CAF50

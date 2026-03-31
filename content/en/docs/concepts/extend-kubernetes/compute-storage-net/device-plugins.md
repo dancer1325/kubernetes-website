@@ -7,6 +7,10 @@ content_type: concept
 weight: 20
 ---
 
+Device plugins allow a node to discover new Node facilities (in addition to the
+built-in node resources such as `cpu` and `memory`), and provide these custom node-local
+facilities to Pods that request them.
+
 <!-- overview -->
 {{< feature-state for_k8s_version="v1.26" state="stable" >}}
 

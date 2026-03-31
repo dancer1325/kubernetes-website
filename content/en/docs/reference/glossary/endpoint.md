@@ -7,14 +7,9 @@ short_description: >
 tags:
 - networking
 ---
-A deprecated API that represents the set of all endpoints for a
-{{< glossary_tooltip text="Service" term_id="service" >}}.
 
-<!--more-->
-
-Since v1.21, Kubernetes uses 
-{{< glossary_tooltip text="EndpointSlices" term_id="endpoint-slice" >}}
-rather than Endpoints; the original Endpoints API was deprecated due to
-concerns about scalability.
-
-To learn more about Endpoints, read [Endpoints](/docs/concepts/services-networking/service/#endpoints).
+* ⚠️deprecated⚠️
+  * replaced -- by -- [EndpointSlices](endpoint-slice.md)
+  * Reason:🧠-- due to -- scalability problems🧠
+* == Kubernetes API /
+  * == set of service's endpoints

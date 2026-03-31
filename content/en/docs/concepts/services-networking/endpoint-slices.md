@@ -13,17 +13,13 @@ description: >-
   list of healthy backends efficiently.
 ---
 
+* [overview](../../reference/glossary/endpoint-slice.md)
 
-<!-- overview -->
-
-{{< feature-state for_k8s_version="v1.21" state="stable" >}}
-
-{{< glossary_definition term_id="endpoint-slice" length="short" >}}
-
-<!-- body -->
+* | {{< feature-state for_k8s_version="v1.21" state="stable" >}}
 
 ## EndpointSlice API {#endpointslice-resource}
 
+TODO: 
 In Kubernetes, an EndpointSlice contains references to a set of network
 endpoints. The control plane automatically creates EndpointSlices
 for any Kubernetes Service that has a {{< glossary_tooltip text="selector"
@@ -31,8 +27,8 @@ term_id="selector" >}} specified. These EndpointSlices include
 references to all the Pods that match the Service selector. EndpointSlices group
 network endpoints together by unique combinations of IP family, protocol,
 port number, and Service name.
-The name of a EndpointSlice object must be a valid
-[DNS subdomain name](/docs/concepts/overview/working-with-objects/names#dns-subdomain-names).
+* ⚠️requirements⚠️
+  * EndpointSlice object's naming MUST be a valid [DNS subdomain name](../overview/working-with-objects/names#dns-subdomain-names)
 
 As an example, here's a sample EndpointSlice object, that's owned by the `example`
 Kubernetes Service.
@@ -141,6 +137,17 @@ an EndpointSlice.
 The endpoint slice controller sets `endpointslice-controller.k8s.io` as the value
 for this label on all EndpointSlices it manages. Other entities managing
 EndpointSlices should also set a unique value for this label.
+
+- TODO:setting the labels
+  - `kubernetes.io/serviceName` — links to the → service
+  - `endpointslice.kubernetes.io/managed-by`
+    - for EndpointSlices created by your own
+    - values
+      - `“controller”` — managed by Kubernetes —
+      - `"my-domain.example/name-of-controller”` — managed by your own controller —
+      - `“nameOfTheToolInLowerCaseReplacingSpacesByDashes”` — managed by a TP tool —
+      - `“randomNameToDescribeTheTool”` — managed by `kubectl` —
+        *Example:* `“staff”` , `“cluster-admins”`
 
 ### Ownership
 

@@ -9,13 +9,13 @@ tags:
 - core-object
 ---
 
-* Service
+* Servicee
   * := method /
     * allows
       * exposing a network application / 
         * is running | >=1 cluster's podS
         * targeted set of pods is determined -- by a -- [selector](selector.md)
-          * ⚠️if number of pods is changed -> set of pods / match de selector change⚠️
+          * ⚠️if number of pods is changed -> set of pods / match the selector change⚠️
   * ALLOWED mechanisms
     
     | Mechanism                             | Service types                           |
@@ -23,6 +23,7 @@ tags:
     | IP networking (IPv4 / IPv6 / both)    | `ClusterIP`, `NodePort`, `LoadBalancer` |
     | External name reference -- via -- DNS | `ExternalName`                          |
 
+    * != old days / you needed to modify your code -- to integrate with -- client / library 
   * enables: [Ingress](ingress.md) & [Gateway](gateway.md)
     * == ⚠️require a service⚠️
   * 👀default service👀
