@@ -1,0 +1,33 @@
+---
+# TOOD: add
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: startup-probe
+spec:
+  containers:
+    - name: startup-probe
+      image: nginx:latest
+      ports:
+        - name: liveness-port
+          containerPort: 8080
+
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: liveness-port
+        failureThreshold: 1
+        periodSeconds: 10
+
+      # 5' == 30*10
+      #   application should finish its start up BEFORE 5'
+      startupProbe:
+        httpGet:
+          path: /healthz
+          port: liveness-port
+        failureThreshold: 30
+        periodSeconds: 10
+---
+# TOOD: add

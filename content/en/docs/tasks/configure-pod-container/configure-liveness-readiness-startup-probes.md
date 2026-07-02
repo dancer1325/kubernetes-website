@@ -4,12 +4,15 @@ content_type: task
 weight: 140
 ---
 
-<!-- overview -->
+* goal
+  * how to configure | containers,
+    * liveness,
+    * readiness
+    * startup probes
 
-This page shows how to configure liveness, readiness and startup probes for containers.
+* [MAIN ideas](/content/en/docs/concepts/configuration/liveness-readiness-startup-probes.md)
 
-For more information about probes, see [Liveness, Readiness and Startup Probes](/docs/concepts/configuration/liveness-readiness-startup-probes)
-
+TODO:
 The [kubelet](/docs/reference/command-line-tools-reference/kubelet/) uses
 liveness probes to know when to restart a container. For example, liveness
 probes could catch a deadlock, where an application is running, but unable to
@@ -310,41 +313,8 @@ livenessProbe:
 
 ## Protect slow starting containers with startup probes {#define-startup-probes}
 
-Sometimes, you have to deal with applications that require additional startup
-time on their first initialization. In such cases, it can be tricky to set up
-liveness probe parameters without compromising the fast response to deadlocks
-that motivated such a probe. The solution is to set up a startup probe with the
-same command, HTTP or TCP check, with a `failureThreshold * periodSeconds` long
-enough to cover the worst case startup time.
-
-So, the previous example would become:
-
-```yaml
-ports:
-- name: liveness-port
-  containerPort: 8080
-
-livenessProbe:
-  httpGet:
-    path: /healthz
-    port: liveness-port
-  failureThreshold: 1
-  periodSeconds: 10
-
-startupProbe:
-  httpGet:
-    path: /healthz
-    port: liveness-port
-  failureThreshold: 30
-  periodSeconds: 10
-```
-
-Thanks to the startup probe, the application will have a maximum of 5 minutes
-(30 * 10 = 300s) to finish its startup.
-Once the startup probe has succeeded once, the liveness probe takes over to
-provide a fast response to container deadlocks.
-If the startup probe never succeeds, the container is killed after 300s and
-subject to the pod's `restartPolicy`.
+* steps to configure
+  * 💡set `initialDelaySeconds + (failureThreshold * periodSeconds)` long / <= the slowest startup time💡
 
 ## Define readiness probes
 
@@ -352,8 +322,10 @@ Sometimes, applications are temporarily unable to serve traffic.
 For example, an application might need to load large data or configuration
 files during startup, or depend on external services after startup.
 In such cases, you don't want to kill the application,
-but you don't want to send it requests either. Kubernetes provides
-readiness probes to detect and mitigate these situations. A pod with containers
+but you don't want to send it requests either
+* Kubernetes provides
+readiness probes to detect and mitigate these situations
+* A pod with containers
 reporting that they are not ready does not receive traffic through Kubernetes
 Services.
 
@@ -367,7 +339,8 @@ If you want to wait before executing a readiness probe, you should use
 `initialDelaySeconds` or a `startupProbe`.
 {{< /caution >}}
 
-Readiness probes are configured similarly to liveness probes. The only difference
+Readiness probes are configured similarly to liveness probes
+* The only difference
 is that you use the `readinessProbe` field instead of the `livenessProbe` field.
 
 ```yaml
