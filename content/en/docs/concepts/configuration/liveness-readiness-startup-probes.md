@@ -4,38 +4,36 @@ content_type: concept
 weight: 40
 ---
 
-<!-- overview -->
-
-Kubernetes has various types of probes:
-
-- [Liveness probe](#liveness-probe)
-- [Readiness probe](#readiness-probe)
-- [Startup probe](#startup-probe)
-
-<!-- body -->
+* types of probes
+  * [Liveness probe](#liveness-probe)
+  * [Readiness probe](#readiness-probe)
+  * [Startup probe](#startup-probe)
 
 ## Liveness probe
 
-Liveness probes determine when to restart a container
-* For example, liveness probes could catch a deadlock when an application is running but unable to make progress.
-
-If a container fails its liveness probe repeatedly, the kubelet restarts the container.
-
-Liveness probes do not wait for readiness probes to succeed
-* If you want to wait before executing a liveness probe, you can either define `initialDelaySeconds` or use a
-[startup probe](#startup-probe).
-
+* Liveness probes
+  * responsible for
+    * determine when to restart a container
+      * _Example:_ deadlock
+        * == application / is running BUT UNABLE to make progress
+  * if a container fails its liveness probe REPEATEDLY -> the kubelet restarts the container
+  * ⚠️succeed INDEPENDENTLY of readiness probes⚠️
+  * ways to delay liveness probe execution
+    * define `initialDelaySeconds`
+    * use a [startup probe](#startup-probe)
 
 ## Readiness probe
 
-Readiness probes determine when a container is ready to accept traffic
-* This is useful when waiting for an application to perform time-consuming initial tasks that depend on its backing services; for example: establishing network connections, loading files, and warming caches
-* Readiness probes can also be useful later in the container’s lifecycle, for example, when recovering from temporary faults or overloads.
-
-If the readiness probe returns a failed state, Kubernetes removes the pod from all matching service endpoints.
-
-Readiness probes run on the container during its whole lifecycle.
-
+* Readiness probes
+  * responsible for
+    * determine when a container is ready -- to -- accept traffic
+  * use cases
+    * application / perform time-consuming initial tasks
+      * _Example:_ establish network connections, load files, and warming caches
+    * | container’s lifecycle
+      * _Example:_ | recover -- from -- temporary faults OR overloads
+  * if it returns a failed state -> Kubernetes removes the pod | ALL matching service endpoints
+  * run | container | its WHOLE lifecycle
 
 ## Startup probe
 
